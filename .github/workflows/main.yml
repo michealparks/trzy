@@ -40,7 +40,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          npm ci --audit=false --force
+          npm ci --audit=false --legacy-peer-deps
           npm run build
 
       - name: Publish 🚀

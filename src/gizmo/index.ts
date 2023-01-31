@@ -201,7 +201,7 @@ export class OrbitControlsGizmo {
       // Loop through each layer
       for (let i = 0, length = axes.length; i < length; i += 1) {
         const axis = axes[i]!
-        vec.copy(axis.position).divideScalar(dpr)
+        vec.copy(axis.position).divideScalar(window.devicePixelRatio)
         const distance = mouse.distanceTo(vec)
   
         if (distance < axis.size) {
