@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "main": "./dist/trzy.umd.js",
   "module": "./dist/trzy.js",
   "types": "./dist/main.d.ts",
