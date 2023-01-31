@@ -4,7 +4,7 @@ const callbacks: Callback[] = []
 
 export const runUpdates = (time: number, delta: number) => {
   for (let i = 0, l = callbacks.length; i < l; i += 1) {
-    callbacks[i](time, delta)
+    callbacks[i]!(time, delta)
   }
 }
 

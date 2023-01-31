@@ -2,11 +2,20 @@
   "name": "trzy",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
   "type": "module",
+  "main": "./dist/trzy.umd.js",
+  "module": "./dist/trzy.js",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/trzy.js",
+      "require": "./dist/trzy.umd.js"
+    }
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "start": "vite",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "check": "tsc --noEmit",
     "preview": "vite preview"
   },
   "repository": {

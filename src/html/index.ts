@@ -1,16 +1,32 @@
-import * as THREE from 'three'
+import {
+  Object3D,
+  Vector3,
+  type PerspectiveCamera,
+  type OrthographicCamera
+} from 'three'
 
-type Cameras = THREE.PerspectiveCamera | THREE.OrthographicCamera
+type Cameras = PerspectiveCamera | OrthographicCamera
 
-const vec = new THREE.Vector3()
+const vec = new Vector3()
 
-export const html = (el: HTMLElement, object: THREE.Object3D, camera: Cameras, canvas: HTMLCanvasElement) => {
+export interface Props {
+  el: HTMLElement
+  object3D: Object3D
+  camera: Cameras
+  canvas: HTMLCanvasElement
+}
+
+export const html = ({
+  el,
+  object3D,
+  camera,
+  canvas
+}: Props) => {
   const update = () => {
     // get the normalized screen coordinate of that position
     // x and y will be in the -1 to +1 range with x = -1 being
     // on the left and y = -1 being on the bottom
-    vec.copy(object.position)
-    vec.project(camera)
+    vec.copy(object3D.position).project(camera)
 
     // convert the normalized position to CSS coordinates
     const x = (vec.x *  0.5 + 0.5) * canvas.clientWidth
@@ -23,5 +39,5 @@ export const html = (el: HTMLElement, object: THREE.Object3D, camera: Cameras, c
     el.style.zIndex = String((-vec.z * 0.5 + 0.5) * 100_000 | 0)
   }
 
-  return update
+  return { update }
 }
