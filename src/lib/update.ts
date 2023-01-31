@@ -2,7 +2,14 @@ type Callback = (time: number, delta: number) => void
 
 const callbacks: Callback[] = []
 
-export const runUpdates = (time: number, delta: number) => {
+let time = performance.now()
+let then = performance.now()
+
+export const runUpdates = () => {
+  time = performance.now()
+  const delta = time - then
+  then = time
+
   for (let i = 0, l = callbacks.length; i < l; i += 1) {
     callbacks[i]!(time, delta)
   }

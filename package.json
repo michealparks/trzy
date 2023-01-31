@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "type": "module",
   "files": [
@@ -33,6 +33,8 @@
   "homepage": "https://github.com/michealparks/trzy#readme",
   "dependencies": {
     "@types/three": "^0.149.0",
+    "postprocessing": "^6.29.3",
+    "simplex-noise": "^4.0.1",
     "three": "^0.149.0"
   },
   "devDependencies": {
