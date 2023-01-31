@@ -12,10 +12,10 @@ type Cameras = PerspectiveCamera | OrthographicCamera
 interface Axis {
   axis: 'x' | 'y' | 'z' | '-x' | '-y' | '-z'
   color: string[]
-  direction: THREE.Vector3
+  direction: Vector3
   label?: 'X' | 'Y' | 'Z'
   line?: number
-  position: THREE.Vector3
+  position: Vector3
   size: number
 }
 
@@ -78,7 +78,7 @@ export const orbitControlsGizmo = ({
 
   const context = canvas.getContext('2d')!
 
-  const drawCircle = (point: THREE.Vector3, radius = 10, color = '#FF0000') => {
+  const drawCircle = (point: Vector3, radius = 10, color = '#FF0000') => {
     context.beginPath()
     context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
     context.fillStyle = color
@@ -86,7 +86,7 @@ export const orbitControlsGizmo = ({
     context.closePath()
   }
 
-  const drawLine = (point1: THREE.Vector3, point2: THREE.Vector3, width = 1, color = '#FF0000') => {
+  const drawLine = (point1: Vector3, point2: Vector3, width = 1, color = '#FF0000') => {
     context.beginPath()
     context.moveTo(point1.x, point1.y)
     context.lineTo(point2.x, point2.y)
