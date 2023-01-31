@@ -1,5 +1,5 @@
 export { CameraShake } from './camera-shake'
-export { orbitControlsGizmo } from './gizmo'
-export { html } from './html'
+export { OrbitControlsGizmo } from './gizmo'
+export { Html } from './html'
 export { resizeRendererToDisplaySize } from './lib/render-to-display-size'
-export * from './lib/update'
+export { runUpdates, update, removeUpdate } from './lib/update'
