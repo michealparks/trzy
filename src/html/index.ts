@@ -11,15 +11,15 @@ const vec = new Vector3()
 export interface Props {
   camera: PerspectiveCamera | OrthographicCamera
   canvas: HTMLCanvasElement
-  el: HTMLElement
-  object3D: Object3D
+  el?: HTMLElement
+  object3D?: Object3D
 }
 
 export class Html {
   camera: PerspectiveCamera | OrthographicCamera
   canvas: HTMLCanvasElement
-  el: HTMLElement
-  object3D: Object3D
+  el: HTMLElement | undefined
+  object3D: Object3D | undefined
 
   constructor ({
     camera,
@@ -36,6 +36,10 @@ export class Html {
   }
 
   handleUpdate = () => {
+    if (this.object3D === undefined || this.el === undefined) {
+      return
+    }
+  
     // get the normalized screen coordinate of that position
     // x and y will be in the -1 to +1 range with x = -1 being
     // on the left and y = -1 being on the bottom
