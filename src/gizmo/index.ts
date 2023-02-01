@@ -7,22 +7,22 @@ import {
   type OrthographicCamera,
 } from 'three'
 
-type Cameras = PerspectiveCamera | OrthographicCamera
-
 interface Axis {
   axis: 'x' | 'y' | 'z' | '-x' | '-y' | '-z'
   color: string[]
   direction: Vector3
-  label?: 'X' | 'Y' | 'Z'
+  label?: string
   line?: number
   position: Vector3
   size: number
 }
 
 export interface Props {
-  camera: Cameras
+  camera: PerspectiveCamera | OrthographicCamera
   el: HTMLElement
   orbitControls: OrbitControls
+  axes?: string
+  size?: number
 }
 
 // Generate list of axes
@@ -42,13 +42,14 @@ const rotateDelta = new Vector2()
 
 export class OrbitControlsGizmo {
   dispose: () => void
+  camera: PerspectiveCamera | OrthographicCamera
+  orbitControls: OrbitControls
 
-  constructor ({
-    camera,
-    el,
-    orbitControls
-  }: Props) {
-    const unscaledSize = 80
+  constructor (props: Props) {
+    this.camera = props.camera
+    this.orbitControls = props.orbitControls
+
+    const unscaledSize = props.size ?? 80
     const size = unscaledSize * window.devicePixelRatio
     const primarySize = 8 * window.devicePixelRatio
     const secondarySize = 6 * window.devicePixelRatio
@@ -67,12 +68,13 @@ export class OrbitControlsGizmo {
     canvas.width = size
     canvas.height = size
     canvas.className = 'orbit-controls-gizmo'
-    el.append(canvas)
+    props.el.append(canvas)
 
+    const labels = (props.axes ?? 'xyz').toUpperCase().split('')
     const axes: Axis[] = [
-      { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: 'X', line, position: new Vector3(), size: primarySize },
-      { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: 'Y', line, position: new Vector3(), size: primarySize },
-      { axis: 'z', color: colors.z, direction: new Vector3(0, 0, 1), label: 'Z', line, position: new Vector3(), size: primarySize },
+      { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: labels[0], line, position: new Vector3(), size: primarySize },
+      { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: labels[1], line, position: new Vector3(), size: primarySize },
+      { axis: 'z', color: colors.z, direction: new Vector3(0, 0, 1), label: labels[2], line, position: new Vector3(), size: primarySize },
       { axis: '-x', color: colors.x, direction: new Vector3(-1, 0, 0), position: new Vector3(), size: secondarySize },
       { axis: '-y', color: colors.y, direction: new Vector3(0, -1, 0), position: new Vector3(), size: secondarySize },
       { axis: '-z', color: colors.z, direction: new Vector3(0, 0, -1), position: new Vector3(), size: secondarySize },
@@ -142,8 +144,8 @@ export class OrbitControlsGizmo {
     }
 
     const update = () => {
-      camera.updateMatrix()
-      invRotMat.extractRotation(camera.matrix).invert()
+      this.camera.updateMatrix()
+      invRotMat.extractRotation(this.camera.matrix).invert()
   
       for (let i = 0, length = axes.length; i < length; i += 1) {
         setAxisPosition(axes[i]!)
@@ -177,7 +179,7 @@ export class OrbitControlsGizmo {
         isDragging = false
       }, 0)
       canvas.classList.remove('dragging')
-      orbitControls.enabled = orbitState
+      this.orbitControls.enabled = orbitState
       window.removeEventListener('pointermove', onDrag, false)
       window.removeEventListener('pointerup', onPointerUp, false)
     }
@@ -216,8 +218,8 @@ export class OrbitControlsGizmo {
 
     const onPointerDown = (e: PointerEvent) => {
       rotateStart.set(e.clientX, e.clientY)
-      orbitState = orbitControls.enabled
-      orbitControls.enabled = false
+      orbitState = this.orbitControls.enabled
+      this.orbitControls.enabled = false
       window.addEventListener('pointermove', onDrag, false)
       window.addEventListener('pointerup', onPointerUp, false)
     }
@@ -228,7 +230,7 @@ export class OrbitControlsGizmo {
       }
   
       const vec = selectedAxis.direction.clone()
-      const distance = camera.position.distanceTo(orbitControls.target)
+      const distance = this.camera.position.distanceTo(this.orbitControls.target)
       vec.multiplyScalar(distance)
   
       const duration = 400
@@ -239,8 +241,8 @@ export class OrbitControlsGizmo {
         const now = performance.now()
         const delta = now - start
         const alpha = Math.min(delta / duration, maxAlpha)
-        camera.position.lerp(vec, alpha)
-        orbitControls.update()
+        this.camera.position.lerp(vec, alpha)
+        this.orbitControls.update()
   
         if (alpha !== maxAlpha) {
           requestAnimationFrame(loop)
@@ -255,9 +257,9 @@ export class OrbitControlsGizmo {
       selectedAxis = null
     }
 
-    orbitControls.addEventListener('change', update)
-    orbitControls.addEventListener('start', () => canvas.classList.add('inactive'))
-    orbitControls.addEventListener('end', () => canvas.classList.remove('inactive'))
+    this.orbitControls.addEventListener('change', update)
+    this.orbitControls.addEventListener('start', () => canvas.classList.add('inactive'))
+    this.orbitControls.addEventListener('end', () => canvas.classList.remove('inactive'))
 
     canvas.addEventListener('pointerdown', onPointerDown, false)
     canvas.addEventListener('pointerenter', onPointerEnter, false)
@@ -267,9 +269,9 @@ export class OrbitControlsGizmo {
     update()
   
     this.dispose = () => {
-      orbitControls.removeEventListener('change', update)
-      orbitControls.removeEventListener('start', () => canvas.classList.add('inactive'))
-      orbitControls.removeEventListener('end', () => canvas.classList.remove('inactive'))
+      this.orbitControls.removeEventListener('change', update)
+      this.orbitControls.removeEventListener('start', () => canvas.classList.add('inactive'))
+      this.orbitControls.removeEventListener('end', () => canvas.classList.remove('inactive'))
   
       canvas.removeEventListener('pointerdown', onPointerDown, false)
       canvas.removeEventListener('pointerenter', onPointerEnter, false)
