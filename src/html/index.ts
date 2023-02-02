@@ -43,7 +43,7 @@ export class Html {
     // get the normalized screen coordinate of that position
     // x and y will be in the -1 to +1 range with x = -1 being
     // on the left and y = -1 being on the bottom
-    vec.copy(this.object3D.position).project(this.camera)
+    this.object3D.getWorldPosition(vec).project(this.camera)
 
     // convert the normalized position to CSS coordinates
     const x = (vec.x *  0.5 + 0.5) * this.canvas.clientWidth
