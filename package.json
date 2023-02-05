@@ -19,7 +19,9 @@
     "start": "vite",
     "build": "vite build && tsc --emitDeclarationOnly",
     "check": "tsc --noEmit",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "repository": {
     "type": "git",
@@ -32,13 +34,27 @@
   },
   "homepage": "https://github.com/michealparks/trzy#readme",
   "dependencies": {
-    "@types/three": "^0.149.0",
-    "postprocessing": "^6.29.3",
-    "simplex-noise": "^4.0.1",
-    "three": "^0.149.0"
+    "simplex-noise": "^4.0.1"
+  },
+  "peerDependencies": {
+    "three": "*"
   },
   "devDependencies": {
+    "@types/three": "^0.149.0",
+    "postprocessing": "^6.29.3",
+    "@babel/core": "^7.20.12",
+    "@storybook/addon-actions": "^7.0.0-beta.41",
+    "@storybook/addon-essentials": "^7.0.0-beta.41",
+    "@storybook/addon-interactions": "^7.0.0-beta.41",
+    "@storybook/addon-links": "^7.0.0-beta.41",
+    "@storybook/html": "^7.0.0-beta.41",
+    "@storybook/html-vite": "^7.0.0-beta.41",
+    "@storybook/testing-library": "^0.0.14-next.1",
+    "babel-loader": "^9.1.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "^7.0.0-beta.41",
     "typescript": "^4.9.5",
-    "vite": "^4.1.0-beta.1"
+    "vite": "^4.1.1"
   }
 }

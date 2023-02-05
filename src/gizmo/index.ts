@@ -17,14 +17,6 @@ interface Axis {
   size: number
 }
 
-export interface Props {
-  camera: PerspectiveCamera | OrthographicCamera
-  el: HTMLElement
-  orbitControls: OrbitControls
-  axes?: string
-  size?: number
-}
-
 // Generate list of axes
 const colors = {
   x: ['#f73c3c', '#942424'],
@@ -45,7 +37,13 @@ export class OrbitControlsGizmo {
   camera: PerspectiveCamera | OrthographicCamera
   orbitControls: OrbitControls
 
-  constructor (props: Props) {
+  constructor (props: {
+    camera: PerspectiveCamera | OrthographicCamera
+    el: HTMLElement
+    orbitControls: OrbitControls
+    axes?: string
+    size?: number
+  }) {
     this.camera = props.camera
     this.orbitControls = props.orbitControls
 
@@ -71,6 +69,7 @@ export class OrbitControlsGizmo {
     props.el.append(canvas)
 
     const labels = (props.axes ?? 'xyz').toUpperCase().split('')
+
     const axes: Axis[] = [
       { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: labels[0], line, position: new Vector3(), size: primarySize },
       { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: labels[1], line, position: new Vector3(), size: primarySize },
