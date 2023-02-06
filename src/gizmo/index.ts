@@ -105,7 +105,7 @@ export class OrbitControlsGizmo {
       }
   
       // For each layer, draw the axis
-      for (let i = 0, length = axes.length; i < length; i += 1) {
+      for (let i = 0, l = axes.length; i < l; i += 1) {
         const axis = axes[i]!
   
         // Set the color
@@ -143,10 +143,10 @@ export class OrbitControlsGizmo {
     }
 
     const update = () => {
-      this.camera.updateMatrix()
+      // this.camera.updateMatrix()
       invRotMat.extractRotation(this.camera.matrix).invert()
   
-      for (let i = 0, length = axes.length; i < length; i += 1) {
+      for (let i = 0, l = axes.length; i < l; i += 1) {
         setAxisPosition(axes[i]!)
       }
   
@@ -200,11 +200,11 @@ export class OrbitControlsGizmo {
       }
   
       // Loop through each layer
-      for (let i = 0, length = axes.length; i < length; i += 1) {
+      for (let i = 0, l = axes.length; i < l; i += 1) {
         const axis = axes[i]!
         vec.copy(axis.position).divideScalar(window.devicePixelRatio)
         const distance = mouse.distanceTo(vec)
-  
+
         if (distance < axis.size) {
           selectedAxis = axis
         }
@@ -224,10 +224,10 @@ export class OrbitControlsGizmo {
     }
 
     const onMouseClick = () => {
-      if (isDragging || !selectedAxis) {
+      if (/* isDragging || */ !selectedAxis) {
         return
       }
-  
+
       const vec = selectedAxis.direction.clone()
       const distance = this.camera.position.distanceTo(this.orbitControls.target)
       vec.multiplyScalar(distance)
@@ -263,7 +263,7 @@ export class OrbitControlsGizmo {
     canvas.addEventListener('pointerdown', onPointerDown, false)
     canvas.addEventListener('pointerenter', onPointerEnter, false)
     canvas.addEventListener('pointermove', onPointerMove, false)
-    canvas.addEventListener('click', onMouseClick, false)
+    canvas.addEventListener('click', onMouseClick)
 
     update()
   
@@ -275,7 +275,7 @@ export class OrbitControlsGizmo {
       canvas.removeEventListener('pointerdown', onPointerDown, false)
       canvas.removeEventListener('pointerenter', onPointerEnter, false)
       canvas.removeEventListener('pointermove', onPointerMove, false)
-      canvas.removeEventListener('click', onMouseClick, false)
+      canvas.removeEventListener('click', onMouseClick)
       window.removeEventListener('pointermove', onDrag, false)
       window.removeEventListener('pointerup', onPointerUp, false)
   

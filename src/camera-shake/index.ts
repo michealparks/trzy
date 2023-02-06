@@ -33,7 +33,7 @@ export class CameraShake {
     this.camera = camera
   }
 
-  updateRotation () {
+  updateRotation = () => {
     this.initialRotation = this.camera.rotation.clone()
   }
 
@@ -63,7 +63,12 @@ export class CameraShake {
 
     if (this.decay && this.intensity > 0) {
       this.intensity -= this.decayRate * delta
-      this.constrainIntensity()
+      
+      if (this.intensity < 0) {
+        this.intensity = 0
+      } else if (this.intensity > 1) {
+        this.intensity = 1
+      }
     }
   }
 
@@ -73,14 +78,6 @@ export class CameraShake {
     if (this.activeControls) {
       this.activeControls.removeEventListener('change', this.updateRotation)
       this.activeControls = null
-    }
-  }
-
-  constrainIntensity () {
-    if (this.intensity < 0) {
-      this.intensity = 0
-    } else if (this.intensity > 1) {
-      this.intensity = 1
     }
   }
 }

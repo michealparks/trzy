@@ -1,7 +1,6 @@
 
 import type { Meta, StoryObj } from '@storybook/html';
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { threeInstance, CameraShake } from '../main';
 
 const meta: Meta = {
