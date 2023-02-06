@@ -40,7 +40,7 @@ float findBlocker( sampler2D shadowMap, const in vec2 uv, const in float zReceiv
   float searchRadius = LIGHT_SIZE_UV * ( zReceiver - NEAR_PLANE ) / zReceiver;
   float blockerDepthSum = 0.0;
   float shadowMapDepth = 0.0;
-  int numBlockers = 0;  
+  int numBlockers = 0;
   #pragma unroll_loop_start
   for( int i = 0; i < ${samples}; i++ ) {
     shadowMapDepth = unpackRGBAToDepth(texture2D(shadowMap, uv + poissonDisk[i] * searchRadius));

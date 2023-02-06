@@ -21,7 +21,7 @@ export const Primary: StoryObj = {
     container.append(el)
 
     const orbitControls = new OrbitControls(camera, canvas)
-    
+
     new OrbitControlsGizmo({ camera, el, orbitControls })
 
     scene.add(new THREE.AmbientLight(undefined, 0.2))
@@ -29,7 +29,7 @@ export const Primary: StoryObj = {
     const light = new THREE.DirectionalLight(undefined, 0.5)
     light.position.set(-5, 2, 5)
     scene.add(light)
-    
+
     const cube = new THREE.Mesh(
       new THREE.BoxGeometry(),
       new THREE.MeshStandardMaterial(),

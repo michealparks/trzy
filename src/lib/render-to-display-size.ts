@@ -5,6 +5,7 @@ export const resizeRendererToDisplaySize = (
   camera: PerspectiveCamera | OrthographicCamera,
   renderer: WebGLRenderer,
   composer?: EffectComposer,
+  force = false,
   dpi = window.devicePixelRatio
 ) => {
   const canvas = renderer.domElement
@@ -12,7 +13,7 @@ export const resizeRendererToDisplaySize = (
   const height = canvas.clientHeight * dpi | 0
   const needResize = canvas.width !== width || canvas.height !== height
 
-  if (needResize) {
+  if (needResize || force) {
     const aspect = canvas.clientWidth / canvas.clientHeight
 
     if ((camera as THREE.PerspectiveCamera).isPerspectiveCamera) {

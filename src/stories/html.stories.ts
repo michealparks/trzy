@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/html'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { threeInstance, Html } from '../main'
+import { threeInstance, Html, update } from '../main'
 
 const meta: Meta = {
   /* 👇 The title prop is optional.
@@ -42,7 +42,12 @@ export const Primary: StoryObj = {
       new THREE.BoxGeometry(),
       new THREE.MeshStandardMaterial(),
     )
+    cube.add(new THREE.AxesHelper())
     cube.position.set(1, 0, 1)
+
+    update(() => {
+      cube.rotation.y += 0.01
+    })
 
     new Html({ camera, canvas, el, object3D: cube })
 

@@ -143,8 +143,10 @@ export class OrbitControlsGizmo {
     }
 
     const update = () => {
-      // this.camera.updateMatrix()
+      this.camera.updateMatrix()
       invRotMat.extractRotation(this.camera.matrix).invert()
+
+      console.log(invRotMat.clone())
   
       for (let i = 0, l = axes.length; i < l; i += 1) {
         setAxisPosition(axes[i]!)
@@ -161,15 +163,15 @@ export class OrbitControlsGizmo {
       if (!isDragging) {
         canvas.classList.add('dragging')
       }
-  
+
       isDragging = true
-  
+
       selectedAxis = null
-  
+
       rotateEnd.set(e.clientX, e.clientY)
-  
+
       rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(0.5)
-  
+
       rotateStart.copy(rotateEnd)
     }
 
@@ -193,12 +195,12 @@ export class OrbitControlsGizmo {
       }
   
       const currentAxis = selectedAxis
-  
+
       selectedAxis = null
       if (e !== undefined) {
         mouse.set(e.clientX - rect.left, e.clientY - rect.top, 0)
       }
-  
+
       // Loop through each layer
       for (let i = 0, l = axes.length; i < l; i += 1) {
         const axis = axes[i]!
@@ -209,7 +211,7 @@ export class OrbitControlsGizmo {
           selectedAxis = axis
         }
       }
-  
+
       if (currentAxis !== selectedAxis) {
         drawLayers(false)
       }
@@ -231,7 +233,7 @@ export class OrbitControlsGizmo {
       const vec = selectedAxis.direction.clone()
       const distance = this.camera.position.distanceTo(this.orbitControls.target)
       vec.multiplyScalar(distance)
-  
+
       const duration = 400
       const start = performance.now()
       const maxAlpha = 1
@@ -265,7 +267,7 @@ export class OrbitControlsGizmo {
     canvas.addEventListener('pointermove', onPointerMove, false)
     canvas.addEventListener('click', onMouseClick)
 
-    update()
+    requestAnimationFrame(update)
   
     this.dispose = () => {
       this.orbitControls.removeEventListener('change', update)
