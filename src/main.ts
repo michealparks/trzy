@@ -1,3 +1,4 @@
+export { AxesHelper } from './axes-helper'
 export { CameraShake } from './camera-shake'
 export { OrbitControlsGizmo } from './gizmo'
 export { Html } from './html'

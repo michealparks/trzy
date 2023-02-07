@@ -146,8 +146,6 @@ export class OrbitControlsGizmo {
       this.camera.updateMatrix()
       invRotMat.extractRotation(this.camera.matrix).invert()
 
-      console.log(invRotMat.clone())
-  
       for (let i = 0, l = axes.length; i < l; i += 1) {
         setAxisPosition(axes[i]!)
       }
