@@ -13,7 +13,12 @@ export default defineConfig({
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['three', 'three/*'],
+      external: [
+        'three',
+        'three/examples/jsm/lines/LineMaterial',
+        'three/examples/jsm/lines/LineGeometry',
+        'three/examples/jsm/lines/Line2',
+      ],
       output: {
         inlineDynamicImports: true,
         manualChunks: undefined,
