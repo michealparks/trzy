@@ -6,14 +6,14 @@ export const xrState = {
   sessionGranted: false,
 }
 
-export const xrSupportState = {
+export const xrSupportStates = {
   ALLOWED: 0,
   NOT_ALLOWED: 1,
   NOT_SECURE: 2,
   NOT_SUPPORTED: 3,
 } as const
 
-export const xrSupportStateMessage = {
+export const xrSupportStateMessages = {
   0: 'Enter VR',
   1: 'VR is not allowed',
   2: 'VR requires HTTPS',
@@ -22,23 +22,23 @@ export const xrSupportStateMessage = {
 
 export const requestXrSessionSupport = async () => {
   if (navigator.xr === undefined) {
-    return xrSupportState.NOT_SUPPORTED
+    return xrSupportStates.NOT_SUPPORTED
   }
 
   if (!window.isSecureContext) {
-    return xrSupportState.NOT_SECURE
+    return xrSupportStates.NOT_SECURE
   }
 
   try {
     const supported = await navigator.xr.isSessionSupported('immersive-vr')
 
     if (supported) {
-      return xrSupportState.ALLOWED
+      return xrSupportStates.ALLOWED
     }
 
-    return xrSupportState.NOT_SUPPORTED
+    return xrSupportStates.NOT_SUPPORTED
   } catch {
-    return xrSupportState.NOT_ALLOWED
+    return xrSupportStates.NOT_ALLOWED
   }
 }
 
@@ -57,29 +57,29 @@ export const requestSession = async (renderer: WebGLRenderer) => {
   })
 
   return renderer.xr.setSession(session)
-};
+}
 
 export const endSession = () => {
   if (session === undefined) {
-    throw new Error('Tried to end undefined session!');
+    throw new Error('Tried to end undefined session!')
   }
-  session.end();
-};
+  session.end()
+}
 
 export const createXrButton = async (renderer: WebGLRenderer) => {
-  const xrSupport = await requestXrSessionSupport();
-  const button = document.createElement('v-button') as HTMLElement & { label: string };
-  button.label = xrSupportStateMessage[xrSupport];
+  const xrSupport = await requestXrSessionSupport()
+  const button = document.createElement('button')
+  button.textContent = xrSupportStateMessages[xrSupport]
 
-  if (xrSupport === xrSupportState.ALLOWED) {
+  if (xrSupport === xrSupportStates.ALLOWED) {
     button.addEventListener('click', () => {
-      renderer.domElement.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;';
-      return requestSession(renderer);
-    });
+      renderer.domElement.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;'
+      return requestSession(renderer)
+    })
   }
 
-  return button;
-};
+  return button
+}
 
 /*
  * WebXRViewer (based on Firefox) has a bug where addEventListener
@@ -92,6 +92,6 @@ if (
   // Do nothing
 } else {
   navigator.xr.addEventListener('sessiongranted', () => {
-    xrState.sessionGranted = true;
-  });
+    xrState.sessionGranted = true
+  })
 }
