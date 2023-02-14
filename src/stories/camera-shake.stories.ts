@@ -4,20 +4,11 @@ import * as THREE from 'three'
 import { threeInstance, CameraShake } from '../main';
 
 const meta: Meta = {
-  /* 👇 The title prop is optional.
-   * See https://storybook.js.org/docs/html/configure/overview#configure-story-loading
-   * to learn how to generate automatic titles
-   */
   title: 'Camera Shake',
 }
 
 export default meta
 
-/*
- *👇 Render functions are a framework specific feature to allow you control on how the component renders.
- * See https://storybook.js.org/docs/7.0/html/api/csf
- * to learn how to use render functions.
- */
 export const Primary: StoryObj = {
   render: () => {
     const { scene, camera, canvas } = threeInstance()

@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "type": "module",
   "files": [
@@ -43,17 +43,17 @@
     "@types/three": "^0.149.0",
     "postprocessing": "^6.29.3",
     "@babel/core": "^7.20.12",
-    "@storybook/addon-actions": "^7.0.0-beta.41",
-    "@storybook/addon-essentials": "^7.0.0-beta.41",
-    "@storybook/addon-interactions": "^7.0.0-beta.41",
-    "@storybook/addon-links": "^7.0.0-beta.41",
-    "@storybook/html": "^7.0.0-beta.41",
-    "@storybook/html-vite": "^7.0.0-beta.41",
+    "@storybook/addon-actions": "v7.0.0-beta.47",
+    "@storybook/addon-essentials": "v7.0.0-beta.47",
+    "@storybook/addon-interactions": "v7.0.0-beta.47",
+    "@storybook/addon-links": "v7.0.0-beta.47",
+    "@storybook/html": "v7.0.0-beta.47",
+    "@storybook/html-vite": "v7.0.0-beta.47",
     "@storybook/testing-library": "^0.0.14-next.1",
     "babel-loader": "^9.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "storybook": "^7.0.0-beta.41",
+    "storybook": "v7.0.0-beta.47",
     "typescript": "^4.9.5",
     "vite": "^4.1.1"
   }
