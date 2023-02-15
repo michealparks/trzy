@@ -23,7 +23,7 @@ export const Primary: StoryObj = {
   render: () => {
     const { scene, camera, canvas } = threeInstance()
 
-    scene.add(new AxesHelper().setColors('yellow', 'blue', 'orange'))
+    scene.add(new AxesHelper().setColors('yellow', 'blue', 'pink'))
     
     scene.add(new THREE.AmbientLight(undefined, 0.2))
 
@@ -34,7 +34,7 @@ export const Primary: StoryObj = {
     scene.add(light)
 
     const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(),
+      new THREE.BoxGeometry(0.3, 0.3, 0.3),
       new THREE.MeshStandardMaterial(),
     )
 
