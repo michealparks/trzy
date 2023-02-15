@@ -32,6 +32,9 @@ const rotateStart = new Vector2()
 const rotateEnd = new Vector2()
 const rotateDelta = new Vector2()
 
+const mousedown = new Vector2()
+const mouseup = new Vector2()
+
 export class OrbitControlsGizmo {
   dispose: () => void
   camera: PerspectiveCamera | OrthographicCamera
@@ -164,8 +167,6 @@ export class OrbitControlsGizmo {
 
       isDragging = true
 
-      selectedAxis = null
-
       rotateEnd.set(e.clientX, e.clientY)
 
       rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(0.5)
@@ -173,10 +174,15 @@ export class OrbitControlsGizmo {
       rotateStart.copy(rotateEnd)
     }
 
-    const onPointerUp = () => {
-      setTimeout(() => {
-        isDragging = false
-      }, 0)
+    const onPointerUp = (event: PointerEvent) => {
+      mouseup.set(event.clientX, event.clientY)
+
+      isDragging = false
+
+      if (mousedown.distanceToSquared(mouseup) < 3) {
+        onMouseClick()
+      }
+
       canvas.classList.remove('dragging')
       this.orbitControls.enabled = orbitState
       window.removeEventListener('pointermove', onDrag, false)
@@ -187,25 +193,25 @@ export class OrbitControlsGizmo {
       rect = canvas.getBoundingClientRect()
     }
 
-    const onPointerMove = (e?: PointerEvent) => {
+    const onPointerMove = (event?: PointerEvent) => {
       if (isDragging) {
         return
       }
-  
+
       const currentAxis = selectedAxis
 
       selectedAxis = null
-      if (e !== undefined) {
-        mouse.set(e.clientX - rect.left, e.clientY - rect.top, 0)
+
+      if (event !== undefined) {
+        mouse.set(event.clientX - rect.left, event.clientY - rect.top, 0)
       }
 
       // Loop through each layer
       for (let i = 0, l = axes.length; i < l; i += 1) {
         const axis = axes[i]!
         vec.copy(axis.position).divideScalar(window.devicePixelRatio)
-        const distance = mouse.distanceTo(vec)
 
-        if (distance < axis.size) {
+        if (mouse.distanceTo(vec) < axis.size) {
           selectedAxis = axis
         }
       }
@@ -217,6 +223,7 @@ export class OrbitControlsGizmo {
 
     const onPointerDown = (e: PointerEvent) => {
       rotateStart.set(e.clientX, e.clientY)
+      mousedown.set(e.clientX, e.clientY)
       orbitState = this.orbitControls.enabled
       this.orbitControls.enabled = false
       window.addEventListener('pointermove', onDrag, false)
@@ -224,9 +231,11 @@ export class OrbitControlsGizmo {
     }
 
     const onMouseClick = () => {
-      if (/* isDragging || */ !selectedAxis) {
+      if (selectedAxis === null) {
         return
       }
+
+      console.log(selectedAxis.axis)
 
       const vec = selectedAxis.direction.clone()
       const distance = this.camera.position.distanceTo(this.orbitControls.target)
@@ -263,7 +272,6 @@ export class OrbitControlsGizmo {
     canvas.addEventListener('pointerdown', onPointerDown, false)
     canvas.addEventListener('pointerenter', onPointerEnter, false)
     canvas.addEventListener('pointermove', onPointerMove, false)
-    canvas.addEventListener('click', onMouseClick)
 
     requestAnimationFrame(update)
   
@@ -275,7 +283,6 @@ export class OrbitControlsGizmo {
       canvas.removeEventListener('pointerdown', onPointerDown, false)
       canvas.removeEventListener('pointerenter', onPointerEnter, false)
       canvas.removeEventListener('pointermove', onPointerMove, false)
-      canvas.removeEventListener('click', onMouseClick)
       window.removeEventListener('pointermove', onDrag, false)
       window.removeEventListener('pointerup', onPointerUp, false)
   

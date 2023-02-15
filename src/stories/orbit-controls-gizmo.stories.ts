@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/html'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { threeInstance, OrbitControlsGizmo } from '../main'
+import { threeInstance, AxesHelper, OrbitControlsGizmo } from '../main'
 
 const meta: Meta = {
   title: 'Orbit Controls Gizmo',
@@ -34,6 +34,8 @@ export const Primary: StoryObj = {
       new THREE.BoxGeometry(),
       new THREE.MeshStandardMaterial(),
     )
+
+    cube.add(new AxesHelper())
 
     scene.add(cube)
 
