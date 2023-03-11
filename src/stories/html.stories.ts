@@ -5,11 +5,32 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { threeInstance, Html, update } from '../main'
 
 const meta: Meta = {
-  /* 👇 The title prop is optional.
-   * See https://storybook.js.org/docs/html/configure/overview#configure-story-loading
-   * to learn how to generate automatic titles
-   */
   title: 'HTML',
+  parameters: {
+    docs: {
+      source: {
+        type: 'code',
+        code: `
+<script>
+...
+
+const el = document.createElement('div')
+container.append(el)
+el.innerHTML = 'CUBE'
+
+const object3D = new THREE.Mesh(
+  new THREE.BoxGeometry(),
+  new THREE.MeshStandardMaterial(),
+)
+scene.add(object3D)
+
+new Html({ camera, canvas, el, object3D })
+
+</script>
+        `,
+      }
+    }
+  }
 }
 
 export default meta

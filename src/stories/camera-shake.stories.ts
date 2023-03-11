@@ -5,6 +5,23 @@ import { threeInstance, CameraShake } from '../main';
 
 const meta: Meta = {
   title: 'Camera Shake',
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<script>
+...
+
+const cameraShake = new CameraShake(camera)
+cameraShake.enable()
+
+cameraShake.disable()
+
+</script>
+        `
+      }
+    }
+  }
 }
 
 export default meta

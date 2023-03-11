@@ -6,6 +6,20 @@ import { threeInstance, AxesHelper, OrbitControlsGizmo } from '../main'
 
 const meta: Meta = {
   title: 'Orbit Controls Gizmo',
+  parameters: {
+    docs: {
+      source: {
+        code: `
+<script>
+...
+
+new OrbitControlsGizmo({ camera, el, orbitControls }),
+
+</script>
+        `
+      }
+    }
+  }
 }
 
 export default meta
