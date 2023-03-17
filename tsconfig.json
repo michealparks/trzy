@@ -13,7 +13,6 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
