@@ -2,7 +2,8 @@ import * as THREE from 'three'
 import { resizeRendererToDisplaySize } from './render-to-display-size'
 import { runUpdates, runPostUpdates } from './update'
 
-THREE.ColorManagement.legacyMode = false
+// @ts-expect-error Types are behind.
+THREE.ColorManagement.enabled = true
 
 let cache: null | {
   camera: THREE.PerspectiveCamera
@@ -11,7 +12,16 @@ let cache: null | {
   scene: THREE.Scene
 } = null
 
-export const three = (props = {}) => {
+export const three = (props: {
+  antialias?: boolean,
+  checkShaderErrors?: boolean,
+  depth?: boolean,
+  outputEncoding?: THREE.TextureEncoding,
+  shadowMap?: THREE.ShadowMapType,
+  stencil?: boolean,
+  toneMapping?: THREE.ToneMapping,
+  xr?: boolean,
+} = {}) => {
   if (cache !== null) {
     return cache
   }
@@ -27,7 +37,6 @@ export const threeInstance = (props: {
   checkShaderErrors?: boolean,
   depth?: boolean,
   outputEncoding?: THREE.TextureEncoding,
-  physicallyCorrectLights?: boolean,
   shadowMap?: THREE.ShadowMapType,
   stencil?: boolean,
   toneMapping?: THREE.ToneMapping,
@@ -40,13 +49,14 @@ export const threeInstance = (props: {
     powerPreference: 'high-performance',
     stencil: props.stencil,
   })
+  // @ts-expect-error Types are behind.
+  renderer.useLegacyLights = false
   renderer.debug.checkShaderErrors = props.checkShaderErrors ?? true
-  renderer.physicallyCorrectLights = props.physicallyCorrectLights ?? false
   renderer.xr.enabled = props.xr ?? false
   renderer.outputEncoding = props.outputEncoding ?? THREE.sRGBEncoding
   renderer.toneMapping = props.toneMapping ?? THREE.ACESFilmicToneMapping
 
-  if (props.shadowMap) {
+  if (props.shadowMap !== undefined) {
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = props.shadowMap
   }
@@ -73,8 +83,6 @@ export const threeInstance = (props: {
   const run = () => {
     renderer.setAnimationLoop(loop)
   }
-
-  run()
 
   return {
     camera,

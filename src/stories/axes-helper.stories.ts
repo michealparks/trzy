@@ -10,6 +10,20 @@ const meta: Meta = {
    * to learn how to generate automatic titles
    */
   title: 'Axes Helper',
+  parameters: {
+    docs: {
+      source: {
+        code: `<script>
+
+import { AxesHelper } from 'trzy'
+
+const helper = new AxesHelper()
+scene.add(helper.setColors('yellow', 'blue', 'pink'))
+
+</script>`
+      }
+    }
+  }
 }
 
 export default meta
@@ -21,7 +35,7 @@ export default meta
  */
 export const Primary: StoryObj = {
   render: () => {
-    const { scene, camera, canvas } = threeInstance()
+    const { scene, camera, canvas, run } = threeInstance()
 
     scene.add(new AxesHelper().setColors('yellow', 'blue', 'pink'))
     
@@ -44,6 +58,8 @@ export const Primary: StoryObj = {
     camera.lookAt(0, 0, 0)
 
     canvas.style.cssText = 'width: 100%; height: 400px;'
+
+    run()
 
     return canvas
   },

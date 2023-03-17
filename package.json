@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "",
   "type": "module",
   "files": [
@@ -56,6 +56,7 @@
     "react-dom": "^18.2.0",
     "storybook": "v7.0.0-rc.1",
     "three": "^0.150.0",
+    "three-inspect": "^0.2.4",
     "typescript": "^4.9.5",
     "vite": "^4.1.4"
   }

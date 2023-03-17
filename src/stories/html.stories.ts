@@ -12,19 +12,15 @@ const meta: Meta = {
         type: 'code',
         code: `
 <script>
-...
 
-const el = document.createElement('div')
-container.append(el)
-el.innerHTML = 'CUBE'
+import { Html } from 'trzy'
 
-const object3D = new THREE.Mesh(
-  new THREE.BoxGeometry(),
-  new THREE.MeshStandardMaterial(),
-)
-scene.add(object3D)
-
-new Html({ camera, canvas, el, object3D })
+new Html({
+  el: document.querySelector('el')
+  camera,
+  canvas,
+  object3D
+})
 
 </script>
         `,
@@ -43,13 +39,10 @@ export default meta
 export const Primary: StoryObj = {
   render: () => {
     const container = document.createElement('div')
+    container.style.cssText = 'position: relative; width: 100%; height: 400px;'
 
-    const { scene, camera, canvas } = threeInstance()
+    const { scene, camera, canvas, run } = threeInstance()
     container.append(canvas)
-
-    const el = document.createElement('div')
-    container.append(el)
-    el.innerHTML = 'CUBE'
 
     new OrbitControls(camera, canvas)
 
@@ -59,27 +52,40 @@ export const Primary: StoryObj = {
     light.position.set(-5, 2, 5)
     scene.add(light)
 
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(),
-      new THREE.MeshStandardMaterial(),
-    )
-    cube.add(new THREE.AxesHelper())
-    cube.position.set(1, 0, 1)
+    const cubes: THREE.Mesh[] = []
+
+    for (let i = 0; i < 6; i += 1) {
+      const el = document.createElement('div')
+      container.append(el)
+      el.innerHTML = `Cube ${i}`
+      el.style.cssText = 'position: absolute; top: 0; left: 0; background: #eee; padding: 0.5rem 1rem;'
+
+      const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(),
+        new THREE.MeshStandardMaterial(),
+      )
+      cube.position.set((i - 3) * 2, 0, 0)
+      scene.add(cube)
+      cubes.push(cube)
+
+      new Html({ camera, canvas, el, object3D: cube })
+    }
+
+    scene.add(new THREE.AxesHelper())
 
     update(() => {
-      cube.rotation.y += 0.01
+      for (let i = 0; i < 6; i += 1) {
+        cubes[i]!.rotation.y += 0.01
+      }
     })
-
-    new Html({ camera, canvas, el, object3D: cube })
-
-    scene.add(cube)
 
     camera.position.set(5, 5, 5)
     camera.lookAt(0, 0, 0)
 
-    el.style.cssText = 'position: absolute; top: 0; left: 0; background: #eee; padding: 0.5rem 1rem;'
-    container.style.cssText = 'position: relative; width: 100%; height: 400px;'
+   
     canvas.style.cssText = 'width: 100%; height: 100%;'
+
+    run()
 
     return container
   },

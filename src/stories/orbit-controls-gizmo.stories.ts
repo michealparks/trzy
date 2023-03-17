@@ -28,7 +28,7 @@ export const Primary: StoryObj = {
   render: () => {
     const container = document.createElement('div')
 
-    const { scene, camera, canvas } = threeInstance()
+    const { scene, camera, canvas, run } = threeInstance()
     container.append(canvas)
 
     const el = document.createElement('div')
@@ -59,6 +59,8 @@ export const Primary: StoryObj = {
     el.style.cssText = 'position: absolute; top: 50px; right: 40px;'
     container.style.cssText = 'width: 100%; height: 400px;'
     canvas.style.cssText = 'width: 100%; height: 100%;'
+
+    run()
 
     return container
   },

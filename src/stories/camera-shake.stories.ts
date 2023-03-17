@@ -8,17 +8,16 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        code: `
-<script>
-...
+        code: `<script>
+
+import { CameraShake } from 'trzy'
 
 const cameraShake = new CameraShake(camera)
 cameraShake.enable()
 
 cameraShake.disable()
 
-</script>
-        `
+</script>`
       }
     }
   }
@@ -28,7 +27,7 @@ export default meta
 
 export const Primary: StoryObj = {
   render: () => {
-    const { scene, camera, canvas } = threeInstance()
+    const { scene, camera, canvas, run } = threeInstance()
     const cameraShake = new CameraShake(camera)
 
     scene.add(new THREE.AxesHelper())
@@ -52,6 +51,8 @@ export const Primary: StoryObj = {
     canvas.style.cssText = 'width: 100%; height: 400px;'
 
     cameraShake.enable()
+
+    run()
 
     return canvas
   },

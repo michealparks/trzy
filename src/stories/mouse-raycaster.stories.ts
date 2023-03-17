@@ -11,7 +11,8 @@ const meta: Meta = {
         type: 'code',
         code: `
 <script>
-...
+
+import { MouseRaycaster } from 'trzy'
 
 const raycaster = new MouseRaycaster({ camera, canvas, scene, move: true })
 
@@ -39,10 +40,7 @@ export default meta
  */
 export const Primary: StoryObj = {
   render: () => {
-    const container = document.createElement('div')
-
-    const { scene, camera, canvas } = threeInstance()
-    container.append(canvas)
+    const { scene, camera, canvas, run } = threeInstance()
 
     scene.add(new THREE.AmbientLight(undefined, 0.2))
 
@@ -93,7 +91,6 @@ export const Primary: StoryObj = {
     })
 
     raycaster.addEventListener('click', (event) => {
-      console.log('click')
       for (const intersection of event.intersections) {
         const { instanceId } = intersection
         cube.setColorAt(instanceId, color.set('hotpink'))
@@ -107,9 +104,10 @@ export const Primary: StoryObj = {
     camera.position.set(5, 5, 5)
     camera.lookAt(0, 0, 0)
 
-    container.style.cssText = 'position: relative; width: 100%; height: 400px;'
-    canvas.style.cssText = 'width: 100%; height: 100%;'
+    canvas.style.cssText = 'width: 100%; height: 400px;'
 
-    return container
+    run()
+
+    return canvas
   },
 }

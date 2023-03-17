@@ -2,91 +2,101 @@
 
 import * as THREE from 'three'
 
-const pcss = (
-  frustum: number,
-  size: number,
-  near: number,
-  samples: number,
-  rings: number
-) => `#define LIGHT_WORLD_SIZE ${size}
-#define LIGHT_FRUSTUM_WIDTH ${frustum}
-#define LIGHT_SIZE_UV (LIGHT_WORLD_SIZE / LIGHT_FRUSTUM_WIDTH)
-#define NEAR_PLANE ${near}
-#define NUM_SAMPLES ${samples}
-#define NUM_RINGS ${rings}
-#define BLOCKER_SEARCH_NUM_SAMPLES NUM_SAMPLES
-vec2 poissonDisk[NUM_SAMPLES];
-void initPoissonSamples( const in vec2 randomSeed ) {
-  float ANGLE_STEP = PI2 * float( NUM_RINGS ) / float( NUM_SAMPLES );
-  float INV_NUM_SAMPLES = 1.0 / float( NUM_SAMPLES );
-  // jsfiddle that shows sample pattern: https://jsfiddle.net/a16ff1p7/
-  float angle = rand( randomSeed ) * PI2;
-  float radius = INV_NUM_SAMPLES;
-  float radiusStep = radius;
-  #pragma unroll_loop_start
-  for( int i = 0; i < ${samples}; i ++ ) {
-    poissonDisk[i] = vec2( cos( angle ), sin( angle ) ) * pow( radius, 0.75 );
-    radius += radiusStep;
-    angle += ANGLE_STEP;
-  }
-  #pragma unroll_loop_end
+const pcss = (focus: number, size: number, samples: number) => `
+#define PENUMBRA_FILTER_SIZE float(${size})
+#define RGB_NOISE_FUNCTION(uv) (randRGB(uv))
+vec3 randRGB(vec2 uv) {
+  return vec3(
+    fract(sin(dot(uv, vec2(12.75613, 38.12123))) * 13234.76575),
+    fract(sin(dot(uv, vec2(19.45531, 58.46547))) * 43678.23431),
+    fract(sin(dot(uv, vec2(23.67817, 78.23121))) * 93567.23423)
+  );
+}
+vec3 lowPassRandRGB(vec2 uv) {
+  // 3x3 convolution (average)
+  // can be implemented as separable with an extra buffer for a total of 6 samples instead of 9
+  vec3 result = vec3(0);
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(-1.0, +1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2( 0.0, +1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, -1.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0,  0.0));
+  result += RGB_NOISE_FUNCTION(uv + vec2(+1.0, +1.0));
+  result *= 0.111111111; // 1.0 / 9.0
+  return result;
+}
+vec3 highPassRandRGB(vec2 uv) {
+  // by subtracting the low-pass signal from the original signal, we're being left with the high-pass signal
+  // hp(x) = x - lp(x)
+  return RGB_NOISE_FUNCTION(uv) - lowPassRandRGB(uv) + 0.5;
+}
+vec2 vogelDiskSample(int sampleIndex, int sampleCount, float angle) {
+  const float goldenAngle = 2.399963f; // radians
+  float r = sqrt(float(sampleIndex) + 0.5f) / sqrt(float(sampleCount));
+  float theta = float(sampleIndex) * goldenAngle + angle;
+  float sine = sin(theta);
+  float cosine = cos(theta);
+  return vec2(cosine, sine) * r;
 }
 float penumbraSize( const in float zReceiver, const in float zBlocker ) { // Parallel plane estimation
   return (zReceiver - zBlocker) / zBlocker;
 }
-float findBlocker( sampler2D shadowMap, const in vec2 uv, const in float zReceiver ) {
-  // This uses similar triangles to compute what
-  // area of the shadow map we should search
-  float searchRadius = LIGHT_SIZE_UV * ( zReceiver - NEAR_PLANE ) / zReceiver;
-  float blockerDepthSum = 0.0;
-  float shadowMapDepth = 0.0;
-  int numBlockers = 0;
+float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
+  float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
+  float blockerDepthSum = float(${focus});
+  float blockers = 0.0;
+  int j = 0;
+  vec2 offset = vec2(0.);
+  float depth = 0.;
   #pragma unroll_loop_start
-  for( int i = 0; i < ${samples}; i++ ) {
-    shadowMapDepth = unpackRGBAToDepth(texture2D(shadowMap, uv + poissonDisk[i] * searchRadius));
-    if ( shadowMapDepth < zReceiver ) {
-      blockerDepthSum += shadowMapDepth;
-      numBlockers ++;
+  for(int i = 0; i < ${samples}; i ++) {
+    offset = (vogelDiskSample(j, ${samples}, angle) * texelSize) * 2.0 * PENUMBRA_FILTER_SIZE;
+    depth = unpackRGBAToDepth( texture2D( shadowMap, uv + offset));
+    if (depth < compare) {
+      blockerDepthSum += depth;
+      blockers++;
     }
+    j++;
   }
   #pragma unroll_loop_end
-  if( numBlockers == 0 ) return -1.0;
-  return blockerDepthSum / float( numBlockers );
+  if (blockers > 0.0) {
+    return blockerDepthSum / blockers;
+  }
+  return -1.0;
 }
-float PCF_Filter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRadius ) {
-  float sum = 0.0;
-  float depth;
+        
+float vogelFilter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRadius, float angle) {
+  float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
+  float shadow = 0.0f;
+  int j = 0;
+  vec2 vogelSample = vec2(0.0);
+  vec2 offset = vec2(0.0);
   #pragma unroll_loop_start
-  for( int i = 0; i < ${samples}; i ++ ) {
-    depth = unpackRGBAToDepth( texture2D( shadowMap, uv + poissonDisk[ i ] * filterRadius ) );
-    if( zReceiver <= depth ) sum += 1.0;
+  for (int i = 0; i < ${samples}; i++) {
+    vogelSample = vogelDiskSample(j, ${samples}, angle) * texelSize;
+    offset = vogelSample * (1.0 + filterRadius * float(${size}));
+    shadow += step( zReceiver, unpackRGBAToDepth( texture2D( shadowMap, uv + offset ) ) );
+    j++;
   }
   #pragma unroll_loop_end
-  #pragma unroll_loop_start
-  for( int i = 0; i < ${samples}; i ++ ) {
-    depth = unpackRGBAToDepth( texture2D( shadowMap, uv + -poissonDisk[ i ].yx * filterRadius ) );
-    if( zReceiver <= depth ) sum += 1.0;
-  }
-  #pragma unroll_loop_end
-  return sum / ( 2.0 * float( ${samples} ) );
+  return shadow * 1.0 / ${samples}.0;
 }
-float PCSS ( sampler2D shadowMap, vec4 coords ) {
+float PCSS (sampler2D shadowMap, vec4 coords) {
   vec2 uv = coords.xy;
   float zReceiver = coords.z; // Assumed to be eye-space z in this code
-  initPoissonSamples( uv );
-  // STEP 1: blocker search
-  float avgBlockerDepth = findBlocker( shadowMap, uv, zReceiver );
-  //There are no occluders so early out (this saves filtering)
-  if( avgBlockerDepth == -1.0 ) return 1.0;
-  // STEP 2: penumbra size
-  float penumbraRatio = penumbraSize( zReceiver, avgBlockerDepth );
-  float filterRadius = penumbraRatio * LIGHT_SIZE_UV * NEAR_PLANE / zReceiver;
-  // STEP 3: filtering
-  //return avgBlockerDepth;
-  return PCF_Filter( shadowMap, uv, zReceiver, filterRadius );
+  float angle = highPassRandRGB(gl_FragCoord.xy).r * PI2;
+  float avgBlockerDepth = findBlocker(shadowMap, uv, zReceiver, angle);
+  if (avgBlockerDepth == -1.0) {
+    return 1.0;
+  }
+  float penumbraRatio = penumbraSize(zReceiver, avgBlockerDepth);
+  return vogelFilter(shadowMap, uv, zReceiver, 1.25 * penumbraRatio, angle);
 }`
 
-const reset = (
+export const resetSoftShadows = (
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   camera: THREE.Camera
@@ -109,40 +119,36 @@ const reset = (
 }
 
 export const softShadows = ({
-  renderer,
-  scene,
-  camera,
-  frustum = 3.75,
-  size = 0.005,
-  near = 9.5,
-  samples = 10,
-  rings = 11,
+  focus = 0,
+  size = 25,
+  samples = 10
 }: {
-  renderer: THREE.WebGLRenderer
-  scene: THREE.Scene
-  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
-  frustum?: number
+  focus?: number
   size?: number
-  near?: number
   samples?: number
-  rings?: number
-}) => {
+} = {}) => {
   const original = THREE.ShaderChunk.shadowmap_pars_fragment
 
   THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
     .replace(
       '#ifdef USE_SHADOWMAP',
-      '#ifdef USE_SHADOWMAP\n' + pcss(frustum, size, near, samples, rings)
+      '#ifdef USE_SHADOWMAP\n' + pcss(focus, size, samples)
     )
     .replace(
       '#if defined( SHADOWMAP_TYPE_PCF )',
       '\nreturn PCSS(shadowMap, shadowCoord);\n#if defined( SHADOWMAP_TYPE_PCF )'
     )
 
-  reset(renderer, scene, camera)
-
-  return () => {
+  return ({
+    renderer,
+    scene,
+    camera
+  }: {
+    renderer: THREE.WebGLRenderer
+    scene: THREE.Scene
+    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
+  }) => {
     THREE.ShaderChunk.shadowmap_pars_fragment = original
-    reset(renderer, scene, camera)
+    resetSoftShadows(renderer, scene, camera)
   }
 }
