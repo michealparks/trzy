@@ -5,15 +5,15 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false
 
       - name: Install and Build 🔧
         run: |
@@ -23,7 +23,6 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: storybook-static
           CLEAN: true
@@ -41,7 +40,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          npm ci --audit=false --legacy-peer-deps
+          npm ci --audit=false
           npm run build
 
       - name: Publish 🚀
