@@ -38,6 +38,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
   get alphaMap () { return this.uniforms.alphaMap.value }
   set alphaMap (value) { this.uniforms.alphaMap.value = value }
 
+  // @ts-expect-error @todo
   override get alphaTest () { return this.uniforms.alphaTest.value }
   override set alphaTest (value: number) { this.uniforms.alphaTest.value = value }
 
@@ -62,6 +63,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
   get map () { return this.uniforms.map.value }
   set map (value) { this.uniforms.map.value = value }
 
+  // @ts-expect-error @todo
   override get opacity () { return this.uniforms.opacity.value }
   override set opacity (value: number) {
     if (this.uniforms) {

@@ -32,8 +32,8 @@ export function raycast (this: THREE.Mesh, raycaster: THREE.Raycaster, intersect
 
   if (index !== null) {
     const indices = index.array
-    const positions = attributes.position.array
-    const widths = attributes.width.array
+    const positions = (attributes.position as THREE.BufferAttribute).array
+    const widths = (attributes.width as THREE.BufferAttribute).array
 
     for (let i = 0, l = indices.length - 1; i < l; i += step) {
       const a = indices[i]!
@@ -41,8 +41,9 @@ export function raycast (this: THREE.Mesh, raycaster: THREE.Raycaster, intersect
 
       vStart.fromArray(positions, a * 3)
       vEnd.fromArray(positions, b * 3)
-      const width = widths[Math.floor(i / 3)] === undefined ? 1 : widths[Math.floor(i / 3)]
-      const precision = (raycaster.params.Line!.threshold + (this.material.lineWidth * width)) / 2
+      const lineWidth = (this.material as unknown as { lineWidth: number }).lineWidth
+      const width = widths[Math.floor(i / 3)] === undefined ? 1 : widths[Math.floor(i / 3)]!
+      const precision = (raycaster.params.Line!.threshold + (lineWidth * width)) / 2
       const precisionSq = precision ** 2
 
       const distSq = ray.distanceSqToSegment(vStart, vEnd, interRay, interSegment)
@@ -63,7 +64,7 @@ export function raycast (this: THREE.Mesh, raycaster: THREE.Raycaster, intersect
       intersects.push({
         distance,
         face: null,
-        faceIndex: null,
+        faceIndex: undefined,
         index: i,
         object: this,
         /*

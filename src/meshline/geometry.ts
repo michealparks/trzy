@@ -193,9 +193,9 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
    * @param position
    */
   advance (position: THREE.Vector3) {
-    const positions = (this.attributes.position as THREE.BufferAttribute).array
+    const positions = (this.attributes.position as THREE.BufferAttribute).array as number[]
     const previous = (this.attributes.previous as THREE.BufferAttribute).array
-    const next = (this.attributes.next as THREE.BufferAttribute).array
+    const next = (this.attributes.next as THREE.BufferAttribute).array as number[]
     const l = positions.length
 
     // PREVIOUS
