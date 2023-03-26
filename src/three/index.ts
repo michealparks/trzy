@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import { resizeRendererToDisplaySize } from './render-to-display-size'
-import { runUpdates, runPostUpdates } from './update'
+import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
+import { runUpdates, runPostUpdates } from '../lib/update'
 
 // @ts-expect-error Types are behind.
 THREE.ColorManagement.enabled = true
@@ -10,6 +10,9 @@ let cache: null | {
   canvas: HTMLCanvasElement
   renderer: THREE.WebGLRenderer
   scene: THREE.Scene
+  setCamera: (camera: THREE.PerspectiveCamera | THREE.OrthographicCamera) => void
+  pause: () => void
+  run: () => void
 } = null
 
 export const three = (props: {
@@ -61,9 +64,10 @@ export const threeInstance = (props: {
     renderer.shadowMap.type = props.shadowMap
   }
 
-  const scene = new THREE.Scene()
-
   let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera = new THREE.PerspectiveCamera()
+
+  const scene = new THREE.Scene()
+  scene.add(camera)
 
   const loop = () => {
     resizeRendererToDisplaySize(camera, renderer)
