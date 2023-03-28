@@ -41,15 +41,15 @@ export class CameraShake {
     this.then = performance.now()
     this.initialRotation.copy(this.camera.rotation)
   
-    update(this.handleUpdate)
+    update(this.update)
   
     if (controls) {
       this.activeControls = controls
       this.activeControls.addEventListener('change', this.updateRotation)
     }
   } 
-  
-  handleUpdate = (time: number, delta: number) => {
+
+  update = (time: number, delta: number) => {
     const shake = this.intensity ** 2
     const yaw = this.maxYaw * shake * this.yawNoise(time * this.yawFrequency, 1)
     const pitch = this.maxPitch * shake * this.pitchNoise(time * this.pitchFrequency, 1)
@@ -73,7 +73,7 @@ export class CameraShake {
   }
 
   disable () {
-    removeUpdate(this.handleUpdate)
+    removeUpdate(this.update)
 
     if (this.activeControls) {
       this.activeControls.removeEventListener('change', this.updateRotation)

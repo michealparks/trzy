@@ -13,7 +13,10 @@ const meta: Meta = {
 
 import { keyboardManager } from 'trzy'
 
-const { keyboard } = keyboardManager()
+const { keyboard, disposeKeyboard } = keyboardManager({ element: renderer.domElement, preventDefault: true })
+
+// later
+disposeKeyboard()
 
 </script>
         `,

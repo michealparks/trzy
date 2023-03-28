@@ -1,5 +1,3 @@
-import { removeUpdate, update } from '../main'
-
 export const gamepadManager = () => {
   const gamepad = {
     A: 0,
@@ -49,7 +47,7 @@ export const gamepadManager = () => {
     gamepad.padX = -buttons[14]!.value || buttons[15]!.value
   }
 
-  const tick = () => {
+  const updateGamepad = () => {
     const [pad1, pad2] = window.navigator.getGamepads()
   
     if (pad1 !== null && pad1 !== undefined) {
@@ -62,7 +60,6 @@ export const gamepadManager = () => {
   }
 
   const handleGamepadDisconnected = () => {
-    removeUpdate(tick)
     gamepad.connected = false
   }
   
@@ -78,19 +75,15 @@ export const gamepadManager = () => {
   
     gamepad.connected = true
 
-    update(tick)
-
     window.addEventListener('gamepaddisconnected', handleGamepadDisconnected)
   }
 
-  const dispose = () => {
-    removeUpdate(tick)
+  const disposeGamepad = () => {
     window.removeEventListener('gamepadconnected', handleGamepadConnected)
     window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected)
   }
 
-  window.addEventListener('gamepadconnected', handleGamepadConnected, { passive: true })
+  window.addEventListener('gamepadconnected', handleGamepadConnected)
 
-  return { gamepad, dispose }
+  return { gamepad, updateGamepad, disposeGamepad }
 }
-

@@ -2,7 +2,6 @@ import * as THREE from 'three'
 import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
 import { runUpdates, runPostUpdates } from '../lib/update'
 
-// @ts-expect-error Types are behind.
 THREE.ColorManagement.enabled = true
 
 let cache: null | {
@@ -52,7 +51,7 @@ export const threeInstance = (props: {
     powerPreference: 'high-performance',
     stencil: props.stencil,
   })
-  // @ts-expect-error Types are behind.
+ 
   renderer.useLegacyLights = false
   renderer.debug.checkShaderErrors = props.checkShaderErrors ?? true
   renderer.xr.enabled = props.xr ?? false

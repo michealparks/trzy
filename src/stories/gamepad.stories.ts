@@ -1,6 +1,6 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { gamepadManager, update, threeInstance } from '../main'
+import { gamepadManager } from '../main'
 
 const meta: Meta = {
   title: 'Gamepad',
@@ -13,7 +13,17 @@ const meta: Meta = {
 
 import { gamepadManager } from 'trzy'
 
-const { gamepad } = gamepadManager()
+const { gamepad, updateGamepad, disposeGamepad } = gamepadManager()
+
+const frame = () => {
+  requestAnimationFrame(frame)
+  update()
+}
+
+frame()
+
+// later
+disposeGamepad()
 
 </script>
         `,
@@ -37,14 +47,15 @@ export const Primary: StoryObj = {
     const pre = document.createElement('pre')
     container.append(pre)
 
-    const { run } = threeInstance()
-    const { gamepad } = gamepadManager()
+    const { gamepad, updateGamepad } = gamepadManager()
 
-    update(() => {
+    const frame = () => {
+      requestAnimationFrame(frame)
+      updateGamepad()
       pre.innerHTML = JSON.stringify(gamepad, null, '  ')
-    })
+    }
 
-    run()
+    frame()
 
     return container
   },

@@ -17,8 +17,12 @@ const meta: Meta = {
 
 import { AxesHelper } from 'trzy'
 
-const helper = new AxesHelper()
+const helper = new AxesHelper({ size: 1.5, width: 0.0025 })
+
 scene.add(helper.setColors('yellow', 'blue', 'pink'))
+
+// later
+helper.dispose()
 
 </script>`
       }
@@ -37,7 +41,7 @@ export const Primary: StoryObj = {
   render: () => {
     const { scene, camera, canvas, run } = threeInstance()
 
-    scene.add(new AxesHelper().setColors('yellow', 'blue', 'pink'))
+    scene.add(new AxesHelper({ size: 1.5, width: 0.0025 }).setColors('yellow', 'blue', 'pink'))
     
     scene.add(new THREE.AmbientLight(undefined, 0.2))
 

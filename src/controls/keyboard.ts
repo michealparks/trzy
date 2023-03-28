@@ -1,7 +1,22 @@
-export const keyboardManager = () => {
+/**
+ * 
+ * @param options
+ * @param options.element The element to attach the keyboard and blur event listeners. Default is window.
+ * @param options.preventDefault If true, prevents default on every keyup / keydown. Default is true.
+ */
+export const keyboardManager = (options: {
+  element?: HTMLElement
+  preventDefault?: boolean
+} = {}) => {
+  const {
+    element = window,
+    preventDefault = true
+  } = options
+
   const pressedKeys = new Set<string>()
 
   const keyboard = {
+    keys: {} as Record<string, boolean>,
     controlling: false,
     shift: 0,
     space: 0,
@@ -11,7 +26,9 @@ export const keyboardManager = () => {
   }
 
   const handleKey = (key: string, pressed: number) => {
-    switch (key.toLowerCase()) {
+    const lowerkey = key.toLowerCase()
+  
+    switch (lowerkey) {
     case 's':
     case 'arrowdown':
       keyboard.y = -1 * pressed
@@ -43,9 +60,20 @@ export const keyboardManager = () => {
     default:
       break
     }
+
+    if (pressed === 1) {
+      keyboard.keys[lowerkey] = true
+    } else {
+      delete keyboard.keys[lowerkey]
+    }
   }
 
-  const handleKeyDown = (event: { key: string }) => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (preventDefault) {
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    }
+
     const key = event.key.toLowerCase()
     keyboard.controlling = true
   
@@ -56,7 +84,12 @@ export const keyboardManager = () => {
     }
   }
 
-  const handleKeyUp = (event: { key: string }) => {
+  const handleKeyUp = (event: KeyboardEvent) => {
+    if (preventDefault) {
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    }
+    
     const key = event.key.toLowerCase()
     pressedKeys.delete(key)
   
@@ -65,19 +98,32 @@ export const keyboardManager = () => {
     for (const pressedKey of pressedKeys) {
       handleKey(pressedKey, 1)
     }
-  
+
     if (pressedKeys.size === 0) {
       keyboard.controlling = false
     }
   }  
 
-  const dispose = () => {
-    window.removeEventListener('keydown', handleKeyDown)
-    window.removeEventListener('keyup', handleKeyUp)
+  const handleBlur = () => {
+    for (const pressedKey of pressedKeys) {
+      handleKey(pressedKey, 0)
+    }
+    pressedKeys.clear()
   }
 
-  window.addEventListener('keydown', handleKeyDown, { passive: true })
-  window.addEventListener('keyup', handleKeyUp, { passive: true })
+  const disposeKeyboard = () => {
+    // @ts-expect-error :|
+    element.removeEventListener('keydown', handleKeyDown)
+    // @ts-expect-error :|
+    element.removeEventListener('keyup', handleKeyUp)
+    element.addEventListener('blur', handleBlur)
+  }
 
-  return { keyboard, dispose }
+  // @ts-expect-error :|
+  element.addEventListener('keydown', handleKeyDown)
+  // @ts-expect-error :|
+  element.addEventListener('keyup', handleKeyUp)
+  element.addEventListener('blur', handleBlur)
+
+  return { keyboard, disposeKeyboard }
 }

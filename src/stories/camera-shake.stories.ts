@@ -13,9 +13,13 @@ const meta: Meta = {
 import { CameraShake } from 'trzy'
 
 const cameraShake = new CameraShake(camera)
-cameraShake.enable()
 
+// If using with three() and run()
+cameraShake.enable()
 cameraShake.disable()
+
+// If using your own game loop
+cameraShake.update(time, delta)
 
 </script>`
       }

@@ -30,10 +30,10 @@ export class Html {
     this.canvas = canvas
     this.object3D = object3D
     
-    postUpdate(this.handleUpdate)
+    postUpdate(this.update)
   }
 
-  handleUpdate = () => {
+  update = () => {
     if (this.object3D === undefined || this.el === undefined) {
       return
     }
@@ -56,6 +56,6 @@ export class Html {
   }
 
   dispose () {
-    removePostUpdate(this.handleUpdate)
+    removePostUpdate(this.update)
   }
 }
