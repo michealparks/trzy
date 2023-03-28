@@ -4,4 +4,4 @@ Trzy is a Three.js utilities and extras library. It provides a collection of add
 
 ### Docs
 
-See the storybook.
+See the [storybook](https://michealparks.github.io/trzy/?path=/docs/axes-helper--docs).
