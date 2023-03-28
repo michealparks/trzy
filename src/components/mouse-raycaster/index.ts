@@ -3,14 +3,19 @@ import {
   type OrthographicCamera,
   type PerspectiveCamera,
   type Scene,
+  type WebGLRenderer,
   Raycaster,
   Vector2,
-  EventDispatcher
+  EventDispatcher,
+  Event,
+  EventListener,
 } from 'three'
+
+type Events = 'click' | 'move'
 
 export class MouseRaycaster extends EventDispatcher {
   camera: PerspectiveCamera | OrthographicCamera
-  canvas: HTMLCanvasElement
+  
   raycaster: Raycaster
   objects: Object3D[] = []
   pointerDown = new Vector2()
@@ -18,39 +23,65 @@ export class MouseRaycaster extends EventDispatcher {
   pointerMove = new Vector2()
   recursive = true
 
+  renderer: WebGLRenderer
+  #events = { click: 0, move: 0 }
+
   constructor (props: {
+    scene?: Scene
     camera: PerspectiveCamera | OrthographicCamera
-    canvas: HTMLCanvasElement
+    renderer: WebGLRenderer
     raycaster?: Raycaster
     objects?: Object3D[]
-    scene?: Scene
     recursive?: boolean
-    move?: boolean
   }) {
     super()
     this.camera = props.camera
-    this.canvas = props.canvas
+    this.renderer = props.renderer
     this.raycaster = props.raycaster ?? new Raycaster()
     this.objects = props.objects ?? (props.scene ? [props.scene] : [])
     this.recursive = props.recursive ?? true
+  }
 
-    this.canvas.addEventListener('pointerdown', this.onPointerDown, { passive: true })
-    this.canvas.addEventListener('pointerup', this.onPointerUp, { passive: true })
-    
-    if (props.move) {
-      this.canvas.addEventListener('pointermove', this.onPointerMove, { passive: true })
+  on(type: Events, listener: EventListener<Event, Events, this>): void {
+    super.addEventListener<Events>(type, listener)
+
+    const canvas = this.renderer.domElement
+
+    if (type === 'move' && this.#events.move === 0) {
+      canvas.addEventListener('pointermove', this.onPointerMove, { passive: true })
+    } else if (type === 'click' && this.#events.click === 0) {
+      canvas.addEventListener('pointerdown', this.onPointerDown, { passive: true })
+      canvas.addEventListener('pointerup', this.onPointerUp, { passive: true })
+    }
+
+    this.#events[type] += 1
+  }
+
+  off(type: Events, listener: EventListener<Event, Events, this>): void {
+    super.removeEventListener<Events>(type, listener)
+
+    const canvas = this.renderer.domElement
+
+    this.#events[type] -= 1
+
+    if (type === 'move' && this.#events.move <= 0) {
+      canvas.removeEventListener('pointermove', this.onPointerMove)
+    } else if (type === 'click' && this.#events.click <= 0) {
+      canvas.addEventListener('pointerdown', this.onPointerDown, { passive: true })
+      canvas.addEventListener('pointerup', this.onPointerUp, { passive: true })
     }
   }
 
   getNormalizedCoordinates (event: PointerEvent, vec: Vector2) {
-    const rect = this.canvas.getBoundingClientRect()
+    const canvas = this.renderer.domElement
+    const rect = canvas.getBoundingClientRect()
 
     /*
      * Calculate pointer position in normalized device coordinates
      * (-1 to +1) for both components
      */
-    vec.x = (((event.clientX - rect.x) / this.canvas.clientWidth) * 2) - 1
-    vec.y = -(((event.clientY - rect.y) / this.canvas.clientHeight) * 2) + 1
+    vec.x = (((event.clientX - rect.x) / canvas.clientWidth) * 2) - 1
+    vec.y = -(((event.clientY - rect.y) / canvas.clientHeight) * 2) + 1
   }
 
   onPointerDown = (event: PointerEvent) => {
@@ -83,7 +114,10 @@ export class MouseRaycaster extends EventDispatcher {
   }
 
   dispose () {
-    this.canvas.removeEventListener('pointerdown', this.onPointerDown)
-    this.canvas.removeEventListener('pointerup', this.onPointerUp)
+    const canvas = this.renderer.domElement
+
+    canvas.removeEventListener('pointerdown', this.onPointerDown)
+    canvas.removeEventListener('pointerup', this.onPointerUp)
+    canvas.removeEventListener('pointermove', this.onPointerMove)
   }
 }

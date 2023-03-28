@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import * as THREE from 'three'
-import { shadows } from '../lib/shadows'
+import { shadows } from '../components/lib/shadows'
 import { threeInstance, update } from '../main'
 
 const meta: Meta = {

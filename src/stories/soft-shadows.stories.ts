@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/html'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { shadows } from '../lib/shadows'
+import { shadows } from '../components/lib/shadows'
 import { threeInstance, softShadows, update } from '../main'
 
 const meta: Meta = {

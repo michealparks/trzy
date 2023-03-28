@@ -1,5 +1,5 @@
 import type { WebGLRenderer } from 'three'
-import { update } from '../main'
+import { update } from '../../main'
 
 export const xrControllerManager = (renderer: WebGLRenderer, gamepad: Record<string, number | boolean>) => {
   const xrControllers: {

@@ -14,15 +14,18 @@ const meta: Meta = {
 
 import { MouseRaycaster } from 'trzy'
 
-const raycaster = new MouseRaycaster({ camera, canvas, scene, move: true })
-
-raycaster.addEventListener('move', (event) => {
-  /* ... */
+const raycaster = new MouseRaycaster({
+  scene, // alternatively, pass objects: THREE.Object3D[]
+  camera,
+  renderer,
+  recursive: true,
 })
 
-raycaster.addEventListener('click', (event) => {
-  /* ... */
-})
+raycaster.on('move', (event) => console.log(event.intersections))
+raycaster.on('click', (event) => console.log(event.intersections))
+
+// later
+raycaster.dispose()
 
 </script>
         `,
@@ -40,7 +43,7 @@ export default meta
  */
 export const Primary: StoryObj = {
   render: () => {
-    const { scene, camera, canvas, run } = threeInstance()
+    const { scene, camera, renderer, run } = threeInstance()
 
     scene.add(new THREE.AmbientLight(undefined, 0.2))
 
@@ -69,9 +72,9 @@ export const Primary: StoryObj = {
       cube.setColorAt(i, color.set('yellow'))
     }
 
-    const raycaster = new MouseRaycaster({ camera, canvas, scene, move: true })
+    const raycaster = new MouseRaycaster({ scene, camera, renderer })
 
-    raycaster.addEventListener('move', (event) => {
+    raycaster.on('move', (event) => {
       for (let i = 0; i < n; i += 1) {
         cube.getMatrixAt(i, m4_2)
         m4.makeScale(1, 1, 1)
@@ -90,7 +93,7 @@ export const Primary: StoryObj = {
       cube.instanceMatrix.needsUpdate = true
     })
 
-    raycaster.addEventListener('click', (event) => {
+    raycaster.on('click', (event) => {
       for (const intersection of event.intersections) {
         const { instanceId } = intersection
         cube.setColorAt(instanceId, color.set('hotpink'))
@@ -104,10 +107,10 @@ export const Primary: StoryObj = {
     camera.position.set(5, 5, 5)
     camera.lookAt(0, 0, 0)
 
-    canvas.style.cssText = 'width: 100%; height: 400px;'
+    renderer.domElement.style.cssText = 'width: 100%; height: 400px;'
 
     run()
 
-    return canvas
+    return renderer.domElement
   },
 }

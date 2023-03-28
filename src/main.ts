@@ -1,19 +1,19 @@
-export { AxesHelper } from './axes-helper'
-export { CameraShake } from './camera-shake'
-export { MeshDiscardMaterial } from './discard-material'
-export { OrbitControlsGizmo } from './gizmo'
-export { Html } from './html'
-export { MeshLineGeometry, MeshLineMaterial, Trail } from './meshline'
-export { MouseRaycaster } from './mouse-raycaster'
-export { PerformanceMonitor } from './performance-monitor'
-export { shaderMaterial } from './shader-material'
-export { softShadows } from './soft-shadows'
-export { xr } from './xr'
-export { gamepadManager } from './controls/gamepad'
-export { keyboardManager } from './controls/keyboard'
-export { getBasisTransform, axesToAsciiImage } from './lib/basis-transform'
-export { resizeRendererToDisplaySize } from './lib/render-to-display-size'
-export { three, threeInstance } from './three'
+export { AxesHelper } from './components/axes-helper'
+export { CameraShake } from './components/camera-shake'
+export { MeshDiscardMaterial } from './components/discard-material'
+export { OrbitControlsGizmo } from './components/gizmo'
+export { Html } from './components/html'
+export { MeshLineGeometry, MeshLineMaterial, Trail } from './components/meshline'
+export { MouseRaycaster } from './components/mouse-raycaster'
+export { PerformanceMonitor } from './components/performance-monitor'
+export { shaderMaterial } from './components/shader-material'
+export { softShadows } from './components/soft-shadows'
+export { xr } from './components/xr'
+export { gamepadManager } from './components/controls/gamepad'
+export { keyboardManager } from './components/controls/keyboard'
+export { getBasisTransform, axesToAsciiImage } from './components/lib/basis-transform'
+export { resizeRendererToDisplaySize } from './components/lib/render-to-display-size'
+export { three, threeInstance } from './components/three'
 
 export {
   runUpdates,
@@ -22,4 +22,4 @@ export {
   postUpdate,
   removeUpdate,
   removePostUpdate
-} from './lib/update'
+} from './components/lib/update'

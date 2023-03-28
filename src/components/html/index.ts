@@ -4,7 +4,7 @@ import {
   type PerspectiveCamera,
   type OrthographicCamera
 } from 'three'
-import { postUpdate, removePostUpdate } from '../main'
+import { postUpdate, removePostUpdate } from '../../main'
 
 const vec = new Vector3()
 
