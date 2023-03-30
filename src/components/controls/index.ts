@@ -18,7 +18,7 @@ const { keyboard } = useKeyboard()
  * @param options.map An input map.
  */
 export const useNormalizedInputs = (map: InputMap) => {
-  const inputs: Record<string, number> = {}
+  const inputs: Record<string, string | number | boolean> = {}
   const entries = Object.entries(map)
 
   const updateInputs = () => {
