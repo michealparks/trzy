@@ -8,27 +8,37 @@ const meta: Meta = {
   title: 'Three',
   parameters: {
     docs: {
+      description: {
+        component: 'Instantiates a scene, camera, renderer, and frame loop.'
+      },
       source: {
         type: 'code',
-        code: `
-<script>
+        code: `import * as THREE from 'three'
+import { three, update, postUpdate } from 'trzy'
 
-import { three } from 'trzy'
-
-const {
-  scene,
-  camera,
-  canvas,
-  renderer,
-  setCamera,
-  run,
-  pause,
-} = three()
+const { scene, camera, canvas, renderer, setCamera, run, pause } = three({
+  // defaults.
+  alpha: false,
+  antialias: false,
+  camera: 'perspective' // or 'orthographic'
+  checkShaderErrors: true,
+  depth: true,
+  outputEncoding: THREE.sRGBEncoding,
+  shadowMap: undefined // can be any THREE.ShadowMapType,
+  stencil: true,
+  toneMapping: THREE.ACESFilmicToneMapping,
+  xr: false,
+})
 
 run()
 
-</script>
-        `,
+update(() => {
+  // Will run before each frame.
+})
+
+postUpdate(() => {
+  // Will run after each frame.
+})`,
       }
     }
   }

@@ -5,7 +5,7 @@ import { runUpdates, runPostUpdates } from '../lib/update'
 THREE.ColorManagement.enabled = true
 
 let cache: null | {
-  camera: THREE.PerspectiveCamera
+  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
   canvas: HTMLCanvasElement
   renderer: THREE.WebGLRenderer
   scene: THREE.Scene
@@ -36,6 +36,7 @@ export const three = (props: {
 export const threeInstance = (props: {
   alpha?: boolean,
   antialias?: boolean,
+  camera?: 'perspective' | 'orthographic'
   checkShaderErrors?: boolean,
   depth?: boolean,
   outputEncoding?: THREE.TextureEncoding,
@@ -63,7 +64,9 @@ export const threeInstance = (props: {
     renderer.shadowMap.type = props.shadowMap
   }
 
-  let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera = new THREE.PerspectiveCamera()
+  let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera = props.camera === 'orthographic'
+    ? new THREE.OrthographicCamera()
+    : new THREE.PerspectiveCamera()
 
   const scene = new THREE.Scene()
   scene.add(camera)

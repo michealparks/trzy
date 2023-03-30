@@ -7,6 +7,12 @@ export const parameters = {
     },
   },
   docs: {
+    source: {
+      language: 'typescript',
+    },
+    story: {
+      inline: true,
+    },
     canvas: {
       sourceState: 'shown'
     },

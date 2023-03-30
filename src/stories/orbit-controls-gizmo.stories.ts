@@ -9,14 +9,9 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        code: `
-<script>
-...
+        code: `import { OrbitControlsGizmo } from 'trzy'
 
-new OrbitControlsGizmo({ camera, el, orbitControls }),
-
-</script>
-        `
+new OrbitControlsGizmo({ camera, el, orbitControls })`
       }
     }
   }

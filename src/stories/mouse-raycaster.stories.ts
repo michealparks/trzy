@@ -8,11 +8,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        type: 'code',
-        code: `
-<script>
-
-import { MouseRaycaster } from 'trzy'
+        code: `import { MouseRaycaster } from 'trzy'
 
 const raycaster = new MouseRaycaster({
   scene, // alternatively, pass objects: THREE.Object3D[]
@@ -25,10 +21,7 @@ raycaster.on('move', (event) => console.log(event.intersections))
 raycaster.on('click', (event) => console.log(event.intersections))
 
 // later
-raycaster.dispose()
-
-</script>
-        `,
+raycaster.dispose()`,
       }
     }
   }

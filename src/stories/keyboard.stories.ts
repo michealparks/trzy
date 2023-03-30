@@ -1,25 +1,18 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { keyboardManager, update, threeInstance } from '../main'
+import { useKeyboard, update, threeInstance } from '../main'
 
 const meta: Meta = {
   title: 'Keyboard',
   parameters: {
     docs: {
       source: {
-        type: 'code',
-        code: `
-<script>
+        code: `import { useKeyboard } from 'trzy'
 
-import { keyboardManager } from 'trzy'
-
-const { keyboard, disposeKeyboard } = keyboardManager({ element: renderer.domElement, preventDefault: true })
+const { keyboard, disposeKeyboard } = useKeyboard({ preventDefault: true })
 
 // later
-disposeKeyboard()
-
-</script>
-        `,
+disposeKeyboard()`,
       }
     }
   }
@@ -40,7 +33,7 @@ export const Primary: StoryObj = {
     const pre = document.createElement('pre')
     container.append(pre)
 
-    const { keyboard } = keyboardManager()
+    const { keyboard } = useKeyboard()
     const { run } = threeInstance()
 
     update(() => {

@@ -2,7 +2,6 @@
 import type { MapControls, OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 import { Euler, type OrthographicCamera, type PerspectiveCamera } from 'three'
-import { removeUpdate, update } from '../lib/update'
 import { createNoise2D } from 'simplex-noise'
 
 export type Controls =
@@ -40,9 +39,7 @@ export class CameraShake {
   enable (controls?: OrbitControls) {
     this.then = performance.now()
     this.initialRotation.copy(this.camera.rotation)
-  
-    update(this.update)
-  
+
     if (controls) {
       this.activeControls = controls
       this.activeControls.addEventListener('change', this.updateRotation)
@@ -73,8 +70,6 @@ export class CameraShake {
   }
 
   disable () {
-    removeUpdate(this.update)
-
     if (this.activeControls) {
       this.activeControls.removeEventListener('change', this.updateRotation)
       this.activeControls = null

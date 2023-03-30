@@ -1,32 +1,25 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { gamepadManager } from '../main'
+import { useGamepad } from '../main'
 
 const meta: Meta = {
   title: 'Gamepad',
   parameters: {
     docs: {
       source: {
-        type: 'code',
-        code: `
-<script>
+        code: `import { useGamepad } from 'trzy'
 
-import { gamepadManager } from 'trzy'
-
-const { gamepad, updateGamepad, disposeGamepad } = gamepadManager()
+const { gamepad, gamepad2, updateGamepad, disposeGamepad } = useGamepad()
 
 const frame = () => {
   requestAnimationFrame(frame)
-  update()
+  updateGamepad()
 }
 
 frame()
 
 // later
-disposeGamepad()
-
-</script>
-        `,
+disposeGamepad()`,
       }
     }
   }
@@ -42,17 +35,27 @@ export default meta
 export const Primary: StoryObj = {
   render: () => {
     const container = document.createElement('div')
-    container.style.cssText = 'position: relative; width: 100%; height: 400px;'
+    container.style.cssText = `
+      position: relative;
+      width: 600px;
+      height: 400px;
+      display: flex;
+      justify-content: space-between;
+    `
 
     const pre = document.createElement('pre')
     container.append(pre)
 
-    const { gamepad, updateGamepad } = gamepadManager()
+    const pre2 = document.createElement('pre')
+    container.append(pre2)
+
+    const { gamepad, gamepad2, updateGamepad } = useGamepad()
 
     const frame = () => {
       requestAnimationFrame(frame)
       updateGamepad()
-      pre.innerHTML = JSON.stringify(gamepad, null, '  ')
+      pre.innerHTML = `Gamepad 1\n\n${JSON.stringify(gamepad, null, '  ')}`
+      pre2.innerHTML = `Gamepad 2\n\n${JSON.stringify(gamepad2, null, '  ')}`
     }
 
     frame()

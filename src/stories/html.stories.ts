@@ -9,21 +9,14 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        type: 'code',
-        code: `
-<script>
-
-import { Html } from 'trzy'
+        code: `import { Html } from 'trzy'
 
 new Html({
   el: document.querySelector('el')
   camera,
   canvas,
   object3D
-})
-
-</script>
-        `,
+})`,
       }
     }
   }

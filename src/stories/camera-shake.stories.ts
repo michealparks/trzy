@@ -8,9 +8,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        code: `<script>
-
-import { CameraShake } from 'trzy'
+        code: `import { CameraShake } from 'trzy'
 
 const cameraShake = new CameraShake(camera)
 
@@ -19,9 +17,7 @@ cameraShake.enable()
 cameraShake.disable()
 
 // If using your own game loop
-cameraShake.update(time, delta)
-
-</script>`
+cameraShake.update(time, delta)`
       }
     }
   }

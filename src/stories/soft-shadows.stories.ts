@@ -10,16 +10,9 @@ const meta: Meta = {
   parameters: {
     docs: {
       source: {
-        type: 'code',
-        code: `
-<script>
+        code: `import { softShadows } from 'trzy'
 
-import { softShadows } from 'trzy'
-
-softShadows()
-
-</script>
-        `,
+softShadows()`,
       }
     }
   }

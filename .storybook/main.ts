@@ -1,15 +1,17 @@
-export default {
+import type { StorybookConfig } from '@storybook/html-vite'
+
+const config: StorybookConfig = {
   stories: [
-    "../src/**/*.stories.mdx",
-    "../src/**/*.stories.@(js|jsx|ts|tsx)"
+    '../src/**/*.stories.mdx',
+    '../src/**/*.stories.@(js|jsx|ts|tsx)'
   ],
   addons: [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
-    "@storybook/addon-interactions"
+    '@storybook/addon-links',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions'
   ],
   framework: {
-    name: "@storybook/html-vite",
+    name: '@storybook/html-vite',
     options: {}
   },
   features: {
@@ -17,5 +19,7 @@ export default {
   },
   docs: {
     autodocs: true
-  }
-};
+  },
+}
+
+export default config
