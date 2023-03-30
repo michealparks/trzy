@@ -31,6 +31,6 @@ export const useNormalizedInputs = (map: InputMap) => {
   return { inputs, updateInputs }
 }
 
-const { inputs } = useNormalizedInputs({
-  jump: { keyboard: 'space', gamepad: 'X' },
-})
+// const { inputs } = useNormalizedInputs({
+//   jump: { keyboard: 'space', gamepad: 'X' },
+// })
