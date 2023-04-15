@@ -71,11 +71,16 @@ export const threeInstance = (props: {
   let delta = 0
 
   const updates: ((time: number, delta: number) => void)[] = []
+  const beforeRenders: ((time: number, delta: number) => void)[] = []
 
   const loop = () => {
     time = performance.now()
     delta = time - then
     then = time
+
+    for (let i = 0, l = beforeRenders.length; i < l; i += 1) {
+      beforeRenders[i]!(time, delta)
+    }
 
     resizeRendererToDisplaySize(camera, renderer)
     renderer.render(scene, camera)
@@ -97,12 +102,14 @@ export const threeInstance = (props: {
     renderer.setAnimationLoop(loop)
   }
 
-  const update = (callback: (time: number, delta: number) => void) => {
-    updates.push(callback)
+  const beforeRender = (callback: (time: number, delta: number) => void) => {
+    beforeRenders.push(callback)
+    return () => beforeRenders.splice(beforeRenders.indexOf(callback), 1)
   }
 
-  const stopUpdate = (callback: (time: number, delta: number) => void) => {
-    updates.splice(updates.indexOf(callback), 1)
+  const update = (callback: (time: number, delta: number) => void) => {
+    updates.push(callback)
+    return () => updates.splice(updates.indexOf(callback), 1)
   }
 
   if (props.autostart !== false) {
@@ -117,7 +124,7 @@ export const threeInstance = (props: {
     setCamera,
     stop,
     start,
+    beforeRender,
     update,
-    stopUpdate,
   }
 }
