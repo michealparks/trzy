@@ -1,10 +1,10 @@
 import { Html, useRaf } from 'trzy'
 
 const html = new Html({
-  el: document.querySelector('el')
+  el: document.querySelector('el'),
   camera,
   canvas,
-  object3D
+  object3D,
 })
 
 useRaf(() => {

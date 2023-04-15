@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, CameraShake } from '../../main'
-import { controls, setup } from '../lib'
+import { setup } from '../lib'
 import code from './code?raw'
 
 const meta: Meta = {
