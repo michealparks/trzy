@@ -31,7 +31,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     }
   }
 
-  setPoints (value: Float32Array) {
+  setPoints (value: Float32Array): void {
     /*
      * As the points are mutated we store them
      * for later retreival when necessary (declaritive architectures)

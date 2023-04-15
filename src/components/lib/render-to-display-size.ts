@@ -7,7 +7,7 @@ export const resizeRendererToDisplaySize = (
   composer?: EffectComposer,
   force = false,
   dpi = window.devicePixelRatio
-) => {
+): void => {
   const canvas = renderer.domElement
   const width = canvas.clientWidth * dpi | 0
   const height = canvas.clientHeight * dpi | 0

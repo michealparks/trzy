@@ -19,6 +19,7 @@ export class CameraShake {
   pitchFrequency = 0.0005
   rollFrequency = 0.0005
   yawFrequency = 0.0005
+  time = 0
 
   yawNoise = createNoise2D()
   pitchNoise = createNoise2D()
@@ -32,11 +33,11 @@ export class CameraShake {
     this.camera = camera
   }
 
-  updateRotation = () => {
-    this.initialRotation = this.camera.rotation.clone()
+  updateRotation = (): void => {
+    this.initialRotation.copy(this.camera.rotation)
   }
 
-  enable (controls?: OrbitControls) {
+  enable (controls?: OrbitControls): void {
     this.then = performance.now()
     this.initialRotation.copy(this.camera.rotation)
 
@@ -46,11 +47,13 @@ export class CameraShake {
     }
   } 
 
-  update = (time: number, delta: number) => {
+  update = (delta: number): void => {
+    this.time += delta
+
     const shake = this.intensity ** 2
-    const yaw = this.maxYaw * shake * this.yawNoise(time * this.yawFrequency, 1)
-    const pitch = this.maxPitch * shake * this.pitchNoise(time * this.pitchFrequency, 1)
-    const roll = this.maxRoll * shake * this.rollNoise(time * this.rollFrequency, 1)
+    const yaw = this.maxYaw * shake * this.yawNoise(this.time * this.yawFrequency, 1)
+    const pitch = this.maxPitch * shake * this.pitchNoise(this.time * this.pitchFrequency, 1)
+    const roll = this.maxRoll * shake * this.rollNoise(this.time * this.rollFrequency, 1)
 
     this.camera.rotation.set(
       this.initialRotation.x + pitch,
@@ -69,7 +72,7 @@ export class CameraShake {
     }
   }
 
-  disable () {
+  disable (): void {
     if (this.activeControls) {
       this.activeControls.removeEventListener('change', this.updateRotation)
       this.activeControls = null

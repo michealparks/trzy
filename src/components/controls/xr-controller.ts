@@ -1,5 +1,4 @@
 import type { WebGLRenderer } from 'three'
-import { update } from '../../main'
 
 export const xrControllerManager = (renderer: WebGLRenderer, gamepad: Record<string, number | boolean>) => {
   const xrControllers: {
@@ -76,7 +75,7 @@ export const xrControllerManager = (renderer: WebGLRenderer, gamepad: Record<str
     }
   }
 
-  const tick = () => {
+  const update = () => {
     if (
       xrControllers.left?.gamepad !== undefined &&
       xrControllers.right?.gamepad !== undefined
@@ -102,7 +101,5 @@ export const xrControllerManager = (renderer: WebGLRenderer, gamepad: Record<str
   // @ts-expect-error this is not correctly typed
   controller2.addEventListener('disconnected', handleXrControllerDisconnected)
 
-  update(tick)
-
-  return { xrControllers }
+  return { xrControllers, update }
 }

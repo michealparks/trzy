@@ -12,7 +12,7 @@ const stringToAxes = (axes: string) => {
   })!
 }
 
-export const getBasisTransform = (from: string, to: string, targetMatrix: Matrix4) => {
+export const getBasisTransform = (from: string, to: string, targetMatrix: Matrix4): void => {
 	const fromAxes = stringToAxes(from)
 	const toAxes = stringToAxes(to)
 
@@ -31,7 +31,7 @@ export const getBasisTransform = (from: string, to: string, targetMatrix: Matrix
 	targetMatrix.makeBasis(orderedVectors[0], orderedVectors[1], orderedVectors[2])
 }
 
-export const axesToAsciiImage = (str: string) => {
+export const axesToAsciiImage = (str: string): string => {
 	const axes = stringToAxes( str )
 	const axis0 = axes[0]!
 	const r = axis0.negative ? ' ' : '-'

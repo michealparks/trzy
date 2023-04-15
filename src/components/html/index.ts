@@ -4,15 +4,16 @@ import {
   type PerspectiveCamera,
   type OrthographicCamera
 } from 'three'
-import { postUpdate, removePostUpdate } from '../../main'
 
 const vec = new Vector3()
 
+export let html = () => {}
+
 export class Html {
-  camera: PerspectiveCamera | OrthographicCamera
-  canvas: HTMLCanvasElement
-  el: HTMLElement | undefined
-  object3D: Object3D | undefined
+  camera?: PerspectiveCamera | OrthographicCamera
+  canvas?: HTMLCanvasElement
+  el?: HTMLElement
+  object3D?: Object3D
 
   constructor ({
     camera,
@@ -20,8 +21,8 @@ export class Html {
     el,
     object3D,
   }: {
-    camera: PerspectiveCamera | OrthographicCamera
-    canvas: HTMLCanvasElement
+    camera?: PerspectiveCamera | OrthographicCamera
+    canvas?: HTMLCanvasElement
     el?: HTMLElement
     object3D?: Object3D
   }) {
@@ -29,14 +30,13 @@ export class Html {
     this.camera = camera
     this.canvas = canvas
     this.object3D = object3D
-    
-    postUpdate(this.update)
   }
 
-  update = () => {
-    if (this.object3D === undefined || this.el === undefined) {
-      return
-    }
+  update = (): void => {
+    if (this.el === undefined) return
+    if (this.camera === undefined) return
+    if (this.canvas === undefined) return
+    if (this.object3D === undefined) return
   
     // get the normalized screen coordinate of that position
     // x and y will be in the -1 to +1 range with x = -1 being
@@ -55,7 +55,10 @@ export class Html {
     this.el.style.zIndex = String((-vec.z * 0.5 + 0.5) * 100_000 | 0)
   }
 
-  dispose () {
-    removePostUpdate(this.update)
+  dispose (): void {
+    this.el = undefined
+    this.camera = undefined
+    this.canvas = undefined
+    this.object3D = undefined
   }
 }

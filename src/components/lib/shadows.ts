@@ -6,7 +6,7 @@ export const shadows = (object: Object3D, {
 }: {
   castShadow?: boolean
   receiveShadow?: boolean
-} = {}) => {
+} = {}): void => {
   object.traverse((child) => {
     if (child instanceof AmbientLight) {
       return

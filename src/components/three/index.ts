@@ -1,25 +1,19 @@
 import * as THREE from 'three'
 import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
-import { runUpdates, runPostUpdates } from '../lib/update'
 
 THREE.ColorManagement.enabled = true
 
-let cache: null | {
-  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
-  canvas: HTMLCanvasElement
-  renderer: THREE.WebGLRenderer
-  scene: THREE.Scene
-  setCamera: (camera: THREE.PerspectiveCamera | THREE.OrthographicCamera) => void
-  pause: () => void
-  run: () => void
-} = null
+let cache: null | ReturnType<typeof threeInstance> = null
 
 export const three = (props: {
+  alpha?: boolean,
   antialias?: boolean,
+  autostart?: boolean,
+  camera?: 'perspective' | 'orthographic'
   checkShaderErrors?: boolean,
   depth?: boolean,
   outputEncoding?: THREE.TextureEncoding,
-  shadowMap?: THREE.ShadowMapType,
+  shadowMap?: THREE.ShadowMapType | false,
   stencil?: boolean,
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
@@ -36,11 +30,12 @@ export const three = (props: {
 export const threeInstance = (props: {
   alpha?: boolean,
   antialias?: boolean,
+  autostart?: boolean,
   camera?: 'perspective' | 'orthographic'
   checkShaderErrors?: boolean,
   depth?: boolean,
   outputEncoding?: THREE.TextureEncoding,
-  shadowMap?: THREE.ShadowMapType,
+  shadowMap?: THREE.ShadowMapType | false,
   stencil?: boolean,
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
@@ -59,9 +54,9 @@ export const threeInstance = (props: {
   renderer.outputEncoding = props.outputEncoding ?? THREE.sRGBEncoding
   renderer.toneMapping = props.toneMapping ?? THREE.ACESFilmicToneMapping
 
-  if (props.shadowMap !== undefined) {
+  if (props.shadowMap !== false) {
     renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = props.shadowMap
+    renderer.shadowMap.type = props.shadowMap ?? THREE.PCFSoftShadowMap
   }
 
   let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera = props.camera === 'orthographic'
@@ -71,23 +66,47 @@ export const threeInstance = (props: {
   const scene = new THREE.Scene()
   scene.add(camera)
 
+  let time = performance.now()
+  let then = performance.now()
+  let delta = 0
+
+  const updates: ((time: number, delta: number) => void)[] = []
+
   const loop = () => {
+    time = performance.now()
+    delta = time - then
+    then = time
+
     resizeRendererToDisplaySize(camera, renderer)
-    runUpdates()
     renderer.render(scene, camera)
-    runPostUpdates()
+
+    for (let i = 0, l = updates.length; i < l; i += 1) {
+      updates[i]!(time, delta)
+    }
   }
 
   const setCamera = (newCamera: THREE.PerspectiveCamera | THREE.OrthographicCamera) => {
     camera = newCamera
   }
 
-  const pause = () => {
+  const stop = () => {
     renderer.setAnimationLoop(null)
   }
 
-  const run = () => {
+  const start = () => {
     renderer.setAnimationLoop(loop)
+  }
+
+  const update = (callback: (time: number, delta: number) => void) => {
+    updates.push(callback)
+  }
+
+  const stopUpdate = (callback: (time: number, delta: number) => void) => {
+    updates.splice(updates.indexOf(callback), 1)
+  }
+
+  if (props.autostart !== false) {
+    start()
   }
 
   return {
@@ -96,7 +115,9 @@ export const threeInstance = (props: {
     renderer,
     scene,
     setCamera,
-    pause,
-    run,
+    stop,
+    start,
+    update,
+    stopUpdate,
   }
 }

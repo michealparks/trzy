@@ -21,12 +21,14 @@ const createGamepad = () => ({
   start: 0,
 })
 
+type Pad = ReturnType<typeof createGamepad>
+
 let initialized = false
 
-const gamepad = createGamepad()
+const gamepad1 = createGamepad()
 const gamepad2 = createGamepad()
 
-const handleGamepad = (pad: ReturnType<typeof createGamepad>, { axes, buttons }: Gamepad) => {
+const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
   pad.leftStickX = axes[0] ?? 0
   pad.leftStickY = axes[1] ?? 0
   pad.rightStickX = axes[2] ?? 0
@@ -52,11 +54,11 @@ const handleGamepad = (pad: ReturnType<typeof createGamepad>, { axes, buttons }:
   pad.padX = -buttons[14]!.value || buttons[15]!.value
 }
 
-const updateGamepad = () => {
+const updateGamepad = (): void => {
   const [pad1, pad2] = window.navigator.getGamepads()
 
   if (pad1 !== null && pad1 !== undefined) {
-    handleGamepad(gamepad, pad1)
+    handleGamepad(gamepad1, pad1)
   }
 
   if (pad2 !== null && pad2 !== undefined) {
@@ -64,37 +66,37 @@ const updateGamepad = () => {
   }
 }
 
-const handleGamepadDisconnected = (event: GamepadEvent) => {
+const handleGamepadDisconnected = (event: GamepadEvent): void => {
   const { id } = event.gamepad
 
-  if (id === gamepad.id) {
-    gamepad.connected = false
+  if (id === gamepad1.id) {
+    gamepad1.connected = false
   } else if (id === gamepad2.id) {
     gamepad2.connected = false
   }
 }
 
-const handleGamepadConnected = () => {
+const handleGamepadConnected = (): void => {
   const [pad1, pad2] = window.navigator.getGamepads()
 
-  gamepad.connected = pad1 !== null && pad1 !== undefined
-  gamepad.id = pad1?.id ?? ''
+  gamepad1.connected = (pad1 !== null && pad1 !== undefined)
+  gamepad1.id = pad1?.id ?? ''
 
-  gamepad2.connected = pad2 !== null && pad2 !== undefined
+  gamepad2.connected = (pad2 !== null && pad2 !== undefined)
   gamepad2.id = pad2?.id ?? ''
 }
 
-const disposeGamepad = () => {
+const disposeGamepad = (): void => {
   window.removeEventListener('gamepadconnected', handleGamepadConnected)
   window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected)
   initialized = false
 }
 
 export const useGamepad = (): {
-  gamepad: Readonly<ReturnType<typeof createGamepad>>
-  gamepad2: Readonly<ReturnType<typeof createGamepad>>
-  updateGamepad(): void
-  disposeGamepad(): void
+  gamepad1: Readonly<Pad>
+  gamepad2: Readonly<Pad>
+  updateGamepad: () => void
+  disposeGamepad: () => void
 } => {
   if (!initialized) {
     window.addEventListener('gamepadconnected', handleGamepadConnected)
@@ -102,5 +104,5 @@ export const useGamepad = (): {
     initialized = true
   }
 
-  return { gamepad, gamepad2, updateGamepad, disposeGamepad }
+  return { gamepad1, gamepad2, updateGamepad, disposeGamepad }
 }

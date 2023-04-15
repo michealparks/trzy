@@ -107,7 +107,7 @@ export class PerformanceMonitor {
     this.onFallback = onFallback
   }
 
-  handleUpdate () {
+  update (): void {
     const { frames, averages } = this
 
     // If the fallback has been reached do not continue running samples

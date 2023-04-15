@@ -13,6 +13,8 @@ const supportStates = {
   NOT_SUPPORTED: 3,
 } as const
 
+type SupportValues = typeof supportStates[keyof typeof supportStates]
+
 const supportStateMessages = {
   0: 'Enter VR',
   1: 'VR is not allowed',
@@ -20,7 +22,7 @@ const supportStateMessages = {
   3: 'VR not supported',
 } as const
 
-const requestSessionSupport = async () => {
+const requestSessionSupport = async (): Promise<SupportValues> => {
   if (navigator.xr === undefined) {
     return supportStates.NOT_SUPPORTED
   }
@@ -42,7 +44,7 @@ const requestSessionSupport = async () => {
   }
 }
 
-const requestSession = async (renderer: WebGLRenderer) => {
+const requestSession = async (renderer: WebGLRenderer): Promise<void> => {
   if (navigator.xr === undefined) {
     throw new Error('navigator.xr is undefined!')
   }
@@ -59,7 +61,7 @@ const requestSession = async (renderer: WebGLRenderer) => {
   return renderer.xr.setSession(session)
 }
 
-const endSession = () => {
+const endSession = (): void => {
   if (session === undefined) {
     throw new Error('Tried to end undefined session!')
   }

@@ -7,19 +7,11 @@ export { MeshLineGeometry, MeshLineMaterial, Trail } from './components/meshline
 export { MouseRaycaster } from './components/mouse-raycaster'
 export { PerformanceMonitor } from './components/performance-monitor'
 export { shaderMaterial } from './components/shader-material'
-export { softShadows } from './components/soft-shadows'
+export { softShadows, resetSoftShadows } from './components/soft-shadows'
 export { xr } from './components/xr'
 export { useGamepad } from './components/controls/gamepad'
 export { useKeyboard } from './components/controls/keyboard'
 export { getBasisTransform, axesToAsciiImage } from './components/lib/basis-transform'
 export { resizeRendererToDisplaySize } from './components/lib/render-to-display-size'
+export { useRaf } from './components/lib/raf'
 export { three, threeInstance } from './components/three'
-
-export {
-  runUpdates,
-  runPostUpdates,
-  update,
-  postUpdate,
-  removeUpdate,
-  removePostUpdate
-} from './components/lib/update'

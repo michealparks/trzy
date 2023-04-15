@@ -13,7 +13,7 @@ const keyboard = {
   y: 0,
 }
 
-const handleKey = (key: string, pressed: number) => {
+const handleKey = (key: string, pressed: number): void => {
   const lowerkey = key.toLowerCase()
 
   switch (lowerkey) {
@@ -56,7 +56,7 @@ const handleKey = (key: string, pressed: number) => {
   }
 }
 
-const handleKeyDown = (event: KeyboardEvent) => {
+const handleKeyDown = (event: KeyboardEvent): void => {
   if (preventDefault) {
     event.preventDefault()
     event.stopImmediatePropagation()
@@ -72,7 +72,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
   }
 }
 
-const handleKeyUp = (event: KeyboardEvent) => {
+const handleKeyUp = (event: KeyboardEvent): void => {
   if (preventDefault) {
     event.preventDefault()
     event.stopImmediatePropagation()
@@ -92,14 +92,14 @@ const handleKeyUp = (event: KeyboardEvent) => {
   }
 }  
 
-const handleBlur = () => {
+const handleBlur = (): void => {
   for (const pressedKey of pressedKeys) {
     handleKey(pressedKey, 0)
   }
   pressedKeys.clear()
 }
 
-const disposeKeyboard = () => {
+const disposeKeyboard = (): void => {
   window.removeEventListener('keydown', handleKeyDown)
   window.removeEventListener('keyup', handleKeyUp)
   window.addEventListener('blur', handleBlur)
@@ -111,7 +111,10 @@ const disposeKeyboard = () => {
  * @param options
  * @param options.preventDefault If true, prevents default on every keyup / keydown. Default is true.
  */
-export const useKeyboard = (options: { preventDefault?: boolean } = {}) => {
+export const useKeyboard = (options: { preventDefault?: boolean } = {}): {
+  keyboard: typeof keyboard,
+  disposeKeyboard: () => void
+} => {
   preventDefault = options.preventDefault ?? true
 
   if (!initialized) {

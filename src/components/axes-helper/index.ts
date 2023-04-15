@@ -1,7 +1,4 @@
-import {
-  Color,
-  type ColorRepresentation,
-} from 'three'
+import { Color, type ColorRepresentation } from 'three'
 import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial'
 import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry'
 import { Line2 } from 'three/examples/jsm/lines/Line2'
@@ -37,10 +34,10 @@ export class AxesHelper extends Line2 {
     this.computeLineDistances()
 	}
 
-	setColors( xAxisColor: ColorRepresentation, yAxisColor: ColorRepresentation, zAxisColor: ColorRepresentation ) {
-		const color1 = color.set(xAxisColor).toArray()
-		const color2 = color.set(yAxisColor).toArray()
-		const color3 = color.set(zAxisColor).toArray()
+	setColors(xAxis: ColorRepresentation, yAxis: ColorRepresentation, zAxis: ColorRepresentation): this {
+		const color1 = color.set(xAxis).toArray()
+		const color2 = color.set(yAxis).toArray()
+		const color3 = color.set(zAxis).toArray()
 
     this.geometry.setColors([
 			...color1, ...color1, ...color1,
@@ -51,7 +48,7 @@ export class AxesHelper extends Line2 {
 		return this
 	}
 
-	dispose() {
+	dispose(): void {
 		this.geometry.dispose()
     this.material.dispose()
 	}

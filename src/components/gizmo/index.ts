@@ -38,17 +38,17 @@ const mouseup = new Vector2()
 export class OrbitControlsGizmo {
   dispose: () => void
   camera: PerspectiveCamera | OrthographicCamera
-  orbitControls: OrbitControls
+  controls: OrbitControls
 
   constructor (props: {
     camera: PerspectiveCamera | OrthographicCamera
     el: HTMLElement
-    orbitControls: OrbitControls
+    controls: OrbitControls
     axes?: string
     size?: number
   }) {
     this.camera = props.camera
-    this.orbitControls = props.orbitControls
+    this.controls = props.controls
 
     const unscaledSize = props.size ?? 80
     const size = unscaledSize * window.devicePixelRatio
@@ -84,7 +84,7 @@ export class OrbitControlsGizmo {
 
     const context = canvas.getContext('2d')!
 
-    const drawCircle = (point: Vector3, radius = 10, color = '#FF0000') => {
+    const drawCircle = (point: Vector3, radius = 10, color = '#FF0000'): void => {
       context.beginPath()
       context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
       context.fillStyle = color
@@ -92,7 +92,7 @@ export class OrbitControlsGizmo {
       context.closePath()
     }
   
-    const drawLine = (point1: Vector3, point2: Vector3, width = 1, color = '#FF0000') => {
+    const drawLine = (point1: Vector3, point2: Vector3, width = 1, color = '#FF0000'): void => {
       context.beginPath()
       context.moveTo(point1.x, point1.y)
       context.lineTo(point2.x, point2.y)
@@ -102,7 +102,7 @@ export class OrbitControlsGizmo {
       context.closePath()
     }
 
-    const drawLayers = (clear: boolean) => {
+    const drawLayers = (clear: boolean): void => {
       if (clear) {
         context.clearRect(0, 0, canvas.width, canvas.height)
       }
@@ -136,7 +136,7 @@ export class OrbitControlsGizmo {
       }
     }  
 
-    const setAxisPosition = (axis: Axis) => {
+    const setAxisPosition = (axis: Axis): void => {
       const position = axis.direction.clone().applyMatrix4(invRotMat)
       axis.position.set(
         (position.x * (center.x - (axis.size / 2) - padding)) + center.x,
@@ -145,7 +145,7 @@ export class OrbitControlsGizmo {
       )
     }
 
-    const update = () => {
+    const update = (): void => {
       this.camera.updateMatrix()
       invRotMat.extractRotation(this.camera.matrix).invert()
 
@@ -160,7 +160,7 @@ export class OrbitControlsGizmo {
       drawLayers(true)
     }
 
-    const onDrag = (e: PointerEvent) => {
+    const onDrag = (e: PointerEvent): void => {
       if (!isDragging) {
         canvas.classList.add('dragging')
       }
@@ -174,7 +174,7 @@ export class OrbitControlsGizmo {
       rotateStart.copy(rotateEnd)
     }
 
-    const onPointerUp = (event: PointerEvent) => {
+    const onPointerUp = (event: PointerEvent): void => {
       mouseup.set(event.clientX, event.clientY)
 
       isDragging = false
@@ -184,16 +184,16 @@ export class OrbitControlsGizmo {
       }
 
       canvas.classList.remove('dragging')
-      this.orbitControls.enabled = orbitState
+      this.controls.enabled = orbitState
       window.removeEventListener('pointermove', onDrag, false)
       window.removeEventListener('pointerup', onPointerUp, false)
     }
 
-    const onPointerEnter = () => {
+    const onPointerEnter = (): void => {
       rect = canvas.getBoundingClientRect()
     }
 
-    const onPointerMove = (event?: PointerEvent) => {
+    const onPointerMove = (event?: PointerEvent): void => {
       if (isDragging) {
         return
       }
@@ -221,36 +221,34 @@ export class OrbitControlsGizmo {
       }
     }
 
-    const onPointerDown = (e: PointerEvent) => {
+    const onPointerDown = (e: PointerEvent): void => {
       rotateStart.set(e.clientX, e.clientY)
       mousedown.set(e.clientX, e.clientY)
-      orbitState = this.orbitControls.enabled
-      this.orbitControls.enabled = false
+      orbitState = this.controls.enabled
+      this.controls.enabled = false
       window.addEventListener('pointermove', onDrag, false)
       window.addEventListener('pointerup', onPointerUp, false)
     }
 
-    const onMouseClick = () => {
+    const onMouseClick = (): void => {
       if (selectedAxis === null) {
         return
       }
 
-      console.log(selectedAxis.axis)
-
       const vec = selectedAxis.direction.clone()
-      const distance = this.camera.position.distanceTo(this.orbitControls.target)
+      const distance = this.camera.position.distanceTo(this.controls.target)
       vec.multiplyScalar(distance)
 
       const duration = 400
       const start = performance.now()
       const maxAlpha = 1
   
-      const loop = () => {
+      const loop = (): void => {
         const now = performance.now()
         const delta = now - start
         const alpha = Math.min(delta / duration, maxAlpha)
         this.camera.position.lerp(vec, alpha)
-        this.orbitControls.update()
+        this.controls.update()
   
         if (alpha !== maxAlpha) {
           requestAnimationFrame(loop)
@@ -265,9 +263,9 @@ export class OrbitControlsGizmo {
       selectedAxis = null
     }
 
-    this.orbitControls.addEventListener('change', update)
-    this.orbitControls.addEventListener('start', () => canvas.classList.add('inactive'))
-    this.orbitControls.addEventListener('end', () => canvas.classList.remove('inactive'))
+    this.controls.addEventListener('change', update)
+    this.controls.addEventListener('start', () => canvas.classList.add('inactive'))
+    this.controls.addEventListener('end', () => canvas.classList.remove('inactive'))
 
     canvas.addEventListener('pointerdown', onPointerDown, false)
     canvas.addEventListener('pointerenter', onPointerEnter, false)
@@ -275,10 +273,10 @@ export class OrbitControlsGizmo {
 
     requestAnimationFrame(update)
   
-    this.dispose = () => {
-      this.orbitControls.removeEventListener('change', update)
-      this.orbitControls.removeEventListener('start', () => canvas.classList.add('inactive'))
-      this.orbitControls.removeEventListener('end', () => canvas.classList.remove('inactive'))
+    this.dispose = (): void => {
+      this.controls.removeEventListener('change', update)
+      this.controls.removeEventListener('start', () => canvas.classList.add('inactive'))
+      this.controls.removeEventListener('end', () => canvas.classList.remove('inactive'))
   
       canvas.removeEventListener('pointerdown', onPointerDown, false)
       canvas.removeEventListener('pointerenter', onPointerEnter, false)

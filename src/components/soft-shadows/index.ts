@@ -2,16 +2,20 @@
 
 import * as THREE from 'three'
 
+let added = false
+
 const pcss = (focus: number, size: number, samples: number) => `
 #define PENUMBRA_FILTER_SIZE float(${size})
-#define RGB_NOISE_FUNCTION(uv) (randRGB(uv))
-vec3 randRGB(vec2 uv) {
+#define RGB_NOISE_FUNCTION(uv) (randRgb(uv))
+
+vec3 randRgb(vec2 uv) {
   return vec3(
     fract(sin(dot(uv, vec2(12.75613, 38.12123))) * 13234.76575),
     fract(sin(dot(uv, vec2(19.45531, 58.46547))) * 43678.23431),
     fract(sin(dot(uv, vec2(23.67817, 78.23121))) * 93567.23423)
   );
 }
+
 vec3 lowPassRandRGB(vec2 uv) {
   // 3x3 convolution (average)
   // can be implemented as separable with an extra buffer for a total of 6 samples instead of 9
@@ -28,11 +32,13 @@ vec3 lowPassRandRGB(vec2 uv) {
   result *= 0.111111111; // 1.0 / 9.0
   return result;
 }
+
 vec3 highPassRandRGB(vec2 uv) {
   // by subtracting the low-pass signal from the original signal, we're being left with the high-pass signal
   // hp(x) = x - lp(x)
   return RGB_NOISE_FUNCTION(uv) - lowPassRandRGB(uv) + 0.5;
 }
+
 vec2 vogelDiskSample(int sampleIndex, int sampleCount, float angle) {
   const float goldenAngle = 2.399963f; // radians
   float r = sqrt(float(sampleIndex) + 0.5f) / sqrt(float(sampleCount));
@@ -41,9 +47,11 @@ vec2 vogelDiskSample(int sampleIndex, int sampleCount, float angle) {
   float cosine = cos(theta);
   return vec2(cosine, sine) * r;
 }
+
 float penumbraSize( const in float zReceiver, const in float zBlocker ) { // Parallel plane estimation
   return (zReceiver - zBlocker) / zBlocker;
 }
+
 float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   float texelSize = 1.0 / float(textureSize(shadowMap, 0).x);
   float blockerDepthSum = float(${focus});
@@ -84,6 +92,7 @@ float vogelFilter(sampler2D shadowMap, vec2 uv, float zReceiver, float filterRad
   #pragma unroll_loop_end
   return shadow * 1.0 / ${samples}.0;
 }
+
 float PCSS (sampler2D shadowMap, vec4 coords) {
   vec2 uv = coords.xy;
   float zReceiver = coords.z; // Assumed to be eye-space z in this code
@@ -118,6 +127,8 @@ export const resetSoftShadows = (
   renderer.compile(scene, camera)
 }
 
+let original: string
+
 export const softShadows = ({
   focus = 0,
   size = 25,
@@ -127,17 +138,21 @@ export const softShadows = ({
   size?: number
   samples?: number
 } = {}) => {
-  const original = THREE.ShaderChunk.shadowmap_pars_fragment
+  if (!added) {
+    original = THREE.ShaderChunk.shadowmap_pars_fragment
 
-  THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
-    .replace(
-      '#ifdef USE_SHADOWMAP',
-      '#ifdef USE_SHADOWMAP\n' + pcss(focus, size, samples)
-    )
-    .replace(
-      '#if defined( SHADOWMAP_TYPE_PCF )',
-      '\nreturn PCSS(shadowMap, shadowCoord);\n#if defined( SHADOWMAP_TYPE_PCF )'
-    )
+    THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
+      .replace(
+        '#ifdef USE_SHADOWMAP',
+        `#ifdef USE_SHADOWMAP\n${pcss(focus, size, samples)}`
+      )
+      .replace(
+        '#if defined( SHADOWMAP_TYPE_PCF )',
+        '\nreturn PCSS(shadowMap, shadowCoord);\n#if defined( SHADOWMAP_TYPE_PCF )'
+      )
+  }
+
+  added = true
 
   return ({
     renderer,

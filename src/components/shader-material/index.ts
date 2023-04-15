@@ -52,7 +52,7 @@ export const shaderMaterial = (
       // Assign parameters, this might include uniforms
       Object.assign(this, parameters)
 
-      if (onInit) onInit(this)
+      if (onInit !== undefined) onInit(this)
     }
   } as unknown as typeof THREE.ShaderMaterial & { key: string }
 

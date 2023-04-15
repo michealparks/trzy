@@ -4,13 +4,12 @@ import { useKeyboard } from './keyboard'
 interface InputMap {
   [key: string]: {
     keyboard: keyof ReturnType<typeof useKeyboard>['keyboard'],
-    gamepad: keyof ReturnType<typeof useGamepad>['gamepad']
+    gamepad: keyof ReturnType<typeof useGamepad>['gamepad1']
   }
 }
 
-const { gamepad } = useGamepad()
+const { gamepad1 } = useGamepad()
 const { keyboard } = useKeyboard()
-
 
 /**
  * 
@@ -24,7 +23,7 @@ export const useNormalizedInputs = (map: InputMap) => {
   const updateInputs = () => {
     for (let i = 0, l = entries.length; i < l; i += 1) {
       const [key, value] = entries[i]!
-      inputs[key] = gamepad[value.gamepad] ?? keyboard[value.keyboard] ?? 0
+      inputs[key] = gamepad1[value.gamepad] ?? keyboard[value.keyboard] ?? 0
     }
   }  
 

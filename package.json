@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "description": "",
   "type": "module",
   "files": [
@@ -33,27 +33,27 @@
     "url": "https://github.com/michealparks/trzy/issues"
   },
   "homepage": "https://github.com/michealparks/trzy#readme",
-  "dependencies": {},
   "peerDependencies": {
     "three": "*"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "v7.0.0-rc.8",
-    "@storybook/addon-docs": "v7.0.0-rc.8",
-    "@storybook/addon-essentials": "v7.0.0-rc.8",
-    "@storybook/addon-interactions": "v7.0.0-rc.8",
-    "@storybook/addon-links": "v7.0.0-rc.8",
-    "@storybook/html": "v7.0.0-rc.8",
-    "@storybook/html-vite": "v7.0.0-rc.8",
-    "@types/three": "^0.150.0",
-    "postprocessing": "^6.30.1",
+    "@storybook/addon-actions": "v7.0.4",
+    "@storybook/addon-docs": "v7.0.4",
+    "@storybook/addon-essentials": "v7.0.4",
+    "@storybook/addon-interactions": "v7.0.4",
+    "@storybook/addon-links": "v7.0.4",
+    "@storybook/html": "v7.0.4",
+    "@storybook/html-vite": "v7.0.4",
+    "@types/three": "^0.150.1",
+    "postprocessing": "^6.30.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simplex-noise": "^4.0.1",
-    "storybook": "v7.0.0-rc.8",
-    "three": "^0.150.1",
+    "storybook": "v7.0.4",
+    "three": "^0.151.3",
     "three-inspect": "^0.3.1",
-    "typescript": "^5.0.2",
+    "trzy": "^0.0.22",
+    "typescript": "^5.0.4",
     "vite": "^4.2.1"
   }
 }

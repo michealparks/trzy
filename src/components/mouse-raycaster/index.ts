@@ -72,7 +72,7 @@ export class MouseRaycaster extends EventDispatcher {
     }
   }
 
-  getNormalizedCoordinates (event: PointerEvent, vec: Vector2) {
+  getNormalizedCoordinates (event: PointerEvent, vec: Vector2): void {
     const canvas = this.renderer.domElement
     const rect = canvas.getBoundingClientRect()
 
@@ -84,11 +84,11 @@ export class MouseRaycaster extends EventDispatcher {
     vec.y = -(((event.clientY - rect.y) / canvas.clientHeight) * 2) + 1
   }
 
-  onPointerDown = (event: PointerEvent) => {
+  onPointerDown = (event: PointerEvent): void => {
     this.getNormalizedCoordinates(event, this.pointerDown)
   }
 
-  onPointerUp = (event: PointerEvent) => {
+  onPointerUp = (event: PointerEvent): void => {
     this.getNormalizedCoordinates(event, this.pointerUp)
 
     if (this.pointerDown.sub(this.pointerUp).lengthSq() > 0.001) {
@@ -103,7 +103,7 @@ export class MouseRaycaster extends EventDispatcher {
     this.dispatchEvent({ type: 'click', intersections })
   }
 
-  onPointerMove = (event: PointerEvent) => {
+  onPointerMove = (event: PointerEvent): void => {
     this.getNormalizedCoordinates(event, this.pointerMove)
 
     this.raycaster.setFromCamera(this.pointerMove, this.camera)
@@ -113,7 +113,7 @@ export class MouseRaycaster extends EventDispatcher {
     this.dispatchEvent({ type: 'move', intersections })
   }
 
-  dispose () {
+  dispose (): void {
     const canvas = this.renderer.domElement
 
     canvas.removeEventListener('pointerdown', this.onPointerDown)
