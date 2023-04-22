@@ -1,13 +1,11 @@
 import {
-  Object3D,
   Vector3,
+  type Object3D,
   type PerspectiveCamera,
   type OrthographicCamera
 } from 'three'
 
 const vec = new Vector3()
-
-export let html = () => {}
 
 export class Html {
   camera?: PerspectiveCamera | OrthographicCamera

@@ -2,7 +2,7 @@ import { Vector3, type Matrix4 } from 'three'
 
 const basesRegex = /^([+-][xyz])([+-][xyz])([+-][xyz])$/i
 const nameToIndex = { x: 0, y: 1, z: 2 } as const
-const orderedVectors = [ new Vector3(), new Vector3(), new Vector3() ] as const
+const orderedVectors = [new Vector3(), new Vector3(), new Vector3()] as const
 
 const stringToAxes = (axes: string) => {
 	return axes.toLowerCase().match(basesRegex)?.splice(1, 3).map((str) => {

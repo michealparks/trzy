@@ -1,23 +1,26 @@
-import { AmbientLight, Light, type Object3D } from 'three'
+import type * as THREE from 'three'
 
-export const shadows = (object: Object3D, {
-  castShadow = true,
-  receiveShadow = true,
-}: {
-  castShadow?: boolean
-  receiveShadow?: boolean
-} = {}): void => {
-  object.traverse((child) => {
-    if (child instanceof AmbientLight) {
-      return
+export const setMapSize = (light: THREE.Light, mapSize = 1024) => {
+  light.shadow.bias = -0.0001
+  light.shadow.mapSize.set(mapSize, mapSize)
+  light.shadow.dispose()
+  // @ts-expect-error 
+  light.shadow.map = null
+  light.shadow.needsUpdate = true
+}
+
+export const shadows = (object: THREE.Object3D, mapSize = 1024) => {
+  if ((object as THREE.AmbientLight).isAmbientLight !== true) {
+    object.castShadow = true
+    if ((object as THREE.Light).isLight) {
+      setMapSize(object as THREE.Light, mapSize)
+    } else {
+      object.receiveShadow = true
     }
+  }
 
-    child.castShadow = castShadow
-  
-    if (child instanceof Light) {
-      return 
-    }
-
-    child.receiveShadow = receiveShadow
-  })
+  const children = object.children
+  for (let i = 0, l = children.length; i < l; i ++) {
+    shadows(children[i]!, mapSize)
+  }
 }

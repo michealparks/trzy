@@ -14,12 +14,21 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { renderer, scene, camera } = three()
+  const { renderer, scene, camera, update } = three()
 
   softShadows()
   resetSoftShadows(renderer, scene, camera)
 
-  setup({ controls: true })
+  
+  setup({ controls: true }).then(() => {
+    const object = scene.getObjectByName('Strawberry')!
+    update(() => {
+      
+      object.rotation.y += 0.05
+    })
+  })
+
+  
 
   return renderer.domElement
 }
