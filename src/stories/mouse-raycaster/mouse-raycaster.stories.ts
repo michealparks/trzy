@@ -15,11 +15,11 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, renderer, update } = three()
-
   bvhRaycast()
 
-  setup({ controls: true }).then(() => {
+  const { scene, camera, canvas, renderer, update } = three()
+
+  setup({ scene, camera, canvas, update, controls: true }).then(() => {
     let scale = new THREE.Vector3(1, 1, 1)
     let hovered = false
     let clicked = false
@@ -55,7 +55,7 @@ const render = () => {
     update(() => obj.scale.lerp(scale, lerpSpeed))
   })
 
-  return renderer.domElement
+  return canvas
 }
 
 export const Primary: StoryObj = { render }

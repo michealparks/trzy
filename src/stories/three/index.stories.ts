@@ -19,9 +19,9 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { canvas } = three()
+  const { scene, camera, canvas, update } = three()
 
-  setup({ controls: true })
+  setup({ scene, camera, canvas, update, controls: true })
 
   return canvas
 }

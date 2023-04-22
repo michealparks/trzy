@@ -16,8 +16,8 @@ export default meta
 
 const render = () => {
   const { scene, camera, canvas, update } = three()
-  
-  setup({ controls: true })
+
+  setup({ scene, camera, canvas, update, controls: true })
 
   const container = document.createElement('div')
   container.style.cssText = 'position: relative; width: 100%; height: 400px;'

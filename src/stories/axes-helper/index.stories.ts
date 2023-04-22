@@ -19,9 +19,9 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, canvas } = three()
+  const { scene, camera, canvas, update } = three()
 
-  setup({ controls: true })
+  setup({ scene, camera, canvas, update, controls: true })
 
   scene.add(new AxesHelper({ size: 1.5, width: 0.0025 }).setColors('yellow', 'blue', 'pink'))
 

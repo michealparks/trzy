@@ -33,7 +33,7 @@ export const resizeRendererToDisplaySize = (
       composer.setSize(width, height, false)
     }
 
-    if (!renderer.xr.isPresenting) {
+    if (!renderer.xr?.isPresenting) {
       renderer.setSize(width, height, false)
     }
   }

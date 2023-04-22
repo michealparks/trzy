@@ -1,9 +1,31 @@
 import * as THREE from 'three'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
+import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
 import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
 
 THREE.ColorManagement.enabled = true
 
 let cache: null | ReturnType<typeof threeInstance> = null
+
+const createRenderer = (props: {
+  alpha?: boolean
+  antialias?: boolean
+  depth?: boolean
+  stencil?: boolean
+  webGPU?: boolean
+}): THREE.WebGLRenderer => {
+  if (props.webGPU === true && WebGPU.isAvailable()) {
+    return new WebGPURenderer()
+  } else {
+    return new THREE.WebGLRenderer({
+      alpha: props.alpha,
+      antialias: props.antialias,
+      depth: props.depth,
+      powerPreference: 'high-performance',
+      stencil: props.stencil,
+    })
+  }
+}
 
 export const three = (props: {
   alpha?: boolean,
@@ -17,6 +39,7 @@ export const three = (props: {
   stencil?: boolean,
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
+  webGPU?: boolean,
 } = {}) => {
   if (cache !== null) {
     return cache
@@ -39,22 +62,26 @@ export const threeInstance = (props: {
   stencil?: boolean,
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
+  webGPU?: boolean,
 } = {}) => {
-  const renderer = new THREE.WebGLRenderer({
-    alpha: props.alpha,
-    antialias: props.antialias,
-    depth: props.depth,
-    powerPreference: 'high-performance',
-    stencil: props.stencil,
-  })
+  const renderer = createRenderer(props)
  
   renderer.useLegacyLights = false
-  renderer.debug.checkShaderErrors = props.checkShaderErrors ?? true
-  renderer.xr.enabled = props.xr ?? false
+
+  if (renderer.debug !== undefined) {
+    renderer.debug.checkShaderErrors = props.checkShaderErrors ?? true
+  }
+
+  console.log(renderer)
+
+  if (renderer.xr !== undefined) {
+    renderer.xr.enabled = props.xr ?? false
+  }
+
   renderer.outputEncoding = props.outputEncoding ?? THREE.sRGBEncoding
   renderer.toneMapping = props.toneMapping ?? THREE.ACESFilmicToneMapping
 
-  if (props.shadowMap !== false) {
+  if (renderer.shadowMap !== undefined && props.shadowMap !== false) {
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = props.shadowMap ?? THREE.PCFSoftShadowMap
   }

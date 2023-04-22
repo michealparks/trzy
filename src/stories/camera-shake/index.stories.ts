@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, CameraShake } from '../../main'
-import { setup, controls } from '../lib'
+import { setup } from '../lib'
 import code from './code?raw'
 
 const meta: Meta = {
@@ -12,15 +12,15 @@ const meta: Meta = {
 }
 
 const render = () => {
-  const { camera, canvas, beforeRender } = three()
+  const { scene, camera, canvas, update, beforeRender } = three()
 
-  setup({ controls: true })
+  setup({ scene, camera, canvas, update, controls: true }).then((controls) => {
+    const cameraShake = new CameraShake(camera)
+    cameraShake.enable(controls!)
 
-  const cameraShake = new CameraShake(camera)
-  cameraShake.enable(controls)
-
-  beforeRender((_, delta) => {
-    cameraShake.update(delta)
+    beforeRender((_, delta) => {
+      cameraShake.update(delta)
+    })
   })
 
   return canvas

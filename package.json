@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.25",
+  "version": "0.0.26",
   "description": "",
   "type": "module",
   "files": [
@@ -51,7 +51,7 @@
     "react-dom": "^18.2.0",
     "simplex-noise": "^4.0.1",
     "storybook": "v7.0.6",
-    "three": "^0.151.3",
+    "three": "git://github.com/mrdoob/three.js.git#dev",
     "three-inspect": "^0.3.1",
     "trzy": "^0.0.25",
     "typescript": "^5.0.4",

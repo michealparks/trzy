@@ -14,13 +14,13 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { renderer, scene, camera, update } = three()
-
   softShadows()
+
+  const { scene, camera, canvas, renderer, update } = three()
+
   resetSoftShadows(renderer, scene, camera)
 
-  
-  setup({ controls: true }).then(() => {
+  setup({ scene, camera, canvas, update, controls: true }).then(() => {
     const object = scene.getObjectByName('Strawberry')!
     update(() => {
       

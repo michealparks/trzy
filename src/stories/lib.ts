@@ -1,24 +1,36 @@
 import * as THREE from 'three'
-import { three } from '../main'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { shadows } from '../components/lib/shadows'
+import { shadows } from '../main'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-const { scene, camera, canvas, update } = three()
 const loader = new GLTFLoader()
 
-export const controls = new OrbitControls(camera, canvas)
-controls.enableDamping = true
-controls.enablePan = false
+export const setup = async ({
+  camera,
+  canvas,
+  controls,
+  scene,
+  update,
+}: {
+  controls: boolean,
+  scene: THREE.Scene,
+  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
+  canvas: HTMLCanvasElement,
+  update: (cb: () => void) => void
+}) => {
+  let orbit: OrbitControls | undefined
 
-update(() => controls.update())
-
-export const setup = async (props: { controls: boolean }) => {
-  controls.enabled = props.controls
+  if (controls) {
+    orbit = new OrbitControls(camera, canvas)
+    orbit.enableDamping = true
+    orbit.enablePan = false
+    update(() => orbit?.update())
+  }
 
   scene.clear()
 
   const light = new THREE.DirectionalLight(undefined, 4)
+  light.name = 'Directional'
   light.position.set(5, 3, 5)
   scene.add(light)
 
@@ -39,4 +51,6 @@ export const setup = async (props: { controls: boolean }) => {
 
   camera.position.set(8, 2, 6)
   camera.lookAt(0, 0, 0)
+
+  return orbit
 }

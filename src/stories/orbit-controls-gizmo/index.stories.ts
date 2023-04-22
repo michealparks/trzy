@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, AxesHelper, OrbitControlsGizmo } from '../../main'
-import { setup, controls } from '../lib'
+import { setup } from '../lib'
 import code from './code?raw'
 
 const meta: Meta = {
@@ -14,20 +14,23 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, canvas } = three()
-
-  setup({ controls: true })
+  const { scene, camera, canvas, update } = three()
 
   const container = document.createElement('container')
-  container.append(canvas)
 
-  const el = document.createElement('div')
-  el.style.cssText = 'position: absolute; top: 50px; right: 40px;'
-  container.append(el)
+  setup({ scene, camera, canvas, update, controls: true }).then((controls) => {
+    
+    container.append(canvas)
 
-  new OrbitControlsGizmo({ camera, el, controls })
+    const el = document.createElement('div')
+    el.style.cssText = 'position: absolute; top: 50px; right: 40px;'
+    container.append(el)
 
-  scene.add(new AxesHelper({ size: 2, width: 0.002 }))
+    new OrbitControlsGizmo({ camera, el, controls: controls! })
+
+    scene.add(new AxesHelper({ size: 2, width: 0.002 }))
+
+  })
 
   return container
 }
