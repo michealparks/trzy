@@ -11,12 +11,14 @@ export const setup = async ({
   controls,
   scene,
   update,
+  webGPU
 }: {
   controls: boolean,
   scene: THREE.Scene,
   camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
   canvas: HTMLCanvasElement,
   update: (cb: () => void) => void
+  webGPU?: boolean
 }) => {
   let orbit: OrbitControls | undefined
 
@@ -48,6 +50,20 @@ export const setup = async ({
   scene.add(group)
 
   shadows(scene)
+
+  if (webGPU) {
+    console.log('here')
+    shadows(scene, 4096, 0.0001)
+    light.shadow.bias = 0.0001
+    light.shadow.camera.near = 1;
+    light.shadow.camera.far = 100;
+    light.shadow.camera.right = 17;
+    light.shadow.camera.left = - 17;
+    light.shadow.camera.top	= 17;
+    light.shadow.camera.bottom = -17;
+  } else {
+    shadows(scene)
+  }
 
   camera.position.set(8, 2, 6)
   camera.lookAt(0, 0, 0)

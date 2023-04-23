@@ -1,6 +1,6 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { three } from '../../main'
+import { threeInstance } from '../../main'
 import { setup } from '../lib'
 import code from './code?raw'
 
@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, canvas, update } = three()
+  const { scene, camera, canvas, update } = threeInstance()
 
   setup({ scene, camera, canvas, update, controls: true })
 

@@ -1,7 +1,7 @@
 import type * as THREE from 'three'
 
-export const setMapSize = (light: THREE.Light, mapSize = 1024) => {
-  light.shadow.bias = -0.0001
+export const setMapSize = (light: THREE.Light, mapSize = 1024, bias = -0.0001) => {
+  light.shadow.bias = bias
   light.shadow.mapSize.set(mapSize, mapSize)
   light.shadow.dispose()
   // @ts-expect-error 
@@ -9,7 +9,7 @@ export const setMapSize = (light: THREE.Light, mapSize = 1024) => {
   light.shadow.needsUpdate = true
 }
 
-export const shadows = (object: THREE.Object3D, mapSize = 1024) => {
+export const shadows = (object: THREE.Object3D, mapSize = 1024, bias = -0.0001) => {
   if ((object as THREE.AmbientLight).isAmbientLight !== true) {
     object.castShadow = true
     if ((object as THREE.Light).isLight) {
@@ -21,6 +21,6 @@ export const shadows = (object: THREE.Object3D, mapSize = 1024) => {
 
   const children = object.children
   for (let i = 0, l = children.length; i < l; i ++) {
-    shadows(children[i]!, mapSize)
+    shadows(children[i]!, mapSize, bias)
   }
 }
