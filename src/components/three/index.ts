@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-import * as POST from 'postprocessing'
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
 import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
@@ -41,7 +40,7 @@ export const three = (props: {
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
   webGPU?: boolean,
-  composer?: POST.EffectComposer
+  render?: () => void,
 } = {}) => {
   if (cache !== null) {
     return cache
@@ -65,9 +64,9 @@ export const threeInstance = (props: {
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
   webGPU?: boolean,
-  composer?: POST.EffectComposer
+  render?: (delta: number) => void,
 } = {}) => {
-  const { composer } = props
+  const { render } = props
   const renderer = createRenderer(props)
  
   renderer.useLegacyLights = false
@@ -111,11 +110,10 @@ export const threeInstance = (props: {
       beforeRenders[i]!(time, delta)
     }
 
-    resizeRendererToDisplaySize(camera, renderer, composer)
-
-    if (composer) {
-      composer.render(delta)
+    if (render !== undefined) {
+      render(delta)
     } else {
+      resizeRendererToDisplaySize(camera, renderer)
       renderer.render(scene, camera)
     }
 
