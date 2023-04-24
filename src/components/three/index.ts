@@ -40,7 +40,7 @@ export const three = (props: {
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
   webGPU?: boolean,
-  render?: () => void,
+  render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
 } = {}) => {
   if (cache !== null) {
     return cache
@@ -64,7 +64,7 @@ export const threeInstance = (props: {
   toneMapping?: THREE.ToneMapping,
   xr?: boolean,
   webGPU?: boolean,
-  render?: (delta: number) => void,
+  render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
 } = {}) => {
   const { render } = props
   const renderer = createRenderer(props)
@@ -111,7 +111,7 @@ export const threeInstance = (props: {
     }
 
     if (render !== undefined) {
-      render(delta)
+      render(delta, scene, camera, renderer)
     } else {
       resizeRendererToDisplaySize(camera, renderer)
       renderer.render(scene, camera)
