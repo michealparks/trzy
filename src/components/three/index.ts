@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
 import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
+import { EffectComposer } from 'postprocessing'
 
 THREE.ColorManagement.enabled = true
 
@@ -41,6 +42,7 @@ export const three = (props: {
   xr?: boolean,
   webGPU?: boolean,
   render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
+  composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
   if (cache !== null) {
     return cache
@@ -65,6 +67,7 @@ export const threeInstance = (props: {
   xr?: boolean,
   webGPU?: boolean,
   render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
+  composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
   const { render } = props
   const renderer = createRenderer(props)
@@ -94,6 +97,8 @@ export const threeInstance = (props: {
   const scene = new THREE.Scene()
   scene.add(camera)
 
+  const composer = props.composer?.(scene, camera, renderer)
+
   let time = performance.now()
   let then = performance.now()
   let delta = 0
@@ -113,8 +118,12 @@ export const threeInstance = (props: {
     if (render !== undefined) {
       render(delta, scene, camera, renderer)
     } else {
-      resizeRendererToDisplaySize(camera, renderer)
-      renderer.render(scene, camera)
+      resizeRendererToDisplaySize(camera, renderer, composer)
+      if (composer !== undefined) {
+        composer.render(delta)
+      } else {
+        renderer.render(scene, camera)
+      }
     }
 
     for (let i = 0, l = updates.length; i < l; i += 1) {
