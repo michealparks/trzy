@@ -21,8 +21,7 @@ export default meta
 const render = () => {
   const { canvas, camera, scene, renderer, update } = threeInstance({ webGPU: true })
 
-  // @ts-expect-error It's ok?
-  renderer.shadow.type = THREE.PCFSoftShadowMap
+  console.log(renderer)
 
   setup({ canvas, camera, scene, update, controls: true, webGPU: true })
 
