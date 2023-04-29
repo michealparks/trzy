@@ -8,7 +8,7 @@ export const preloadAudio = (src: string) => {
   audios[src] = audio
 }
 
-export const playAudio = (src: string, volume = 0.5) => {
+export const playAudio = (src: string, volume = 0.5, loop = false) => {
   let audio = audios[src]
 
   if (audio === undefined) {
@@ -19,6 +19,7 @@ export const playAudio = (src: string, volume = 0.5) => {
     audios[src] = audio
   }
 
+  audio.loop = loop
   audio.volume = volume
   audio.currentTime = 0
   audio.play()

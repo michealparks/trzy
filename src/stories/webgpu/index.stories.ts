@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/html'
 import { threeInstance } from '../../main'
 import { setup } from '../lib'
