@@ -19,3 +19,4 @@ export { getBasisTransform, axesToAsciiImage } from './components/lib/basis-tran
 export { resizeRendererToDisplaySize } from './components/lib/render-to-display-size'
 export { useRaf } from './components/lib/raf'
 export { three, threeInstance } from './components/three'
+export { loadGLTF, setPathGLTF } from './components/gltf'
