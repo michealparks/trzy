@@ -1,8 +1,8 @@
-import type { PerspectiveCamera, OrthographicCamera, WebGLRenderer } from 'three'
+import type { Camera, WebGLRenderer } from 'three'
 import type { EffectComposer } from 'postprocessing'
 
 export const resizeRendererToDisplaySize = (
-  camera: PerspectiveCamera | OrthographicCamera,
+  camera: Camera,
   renderer: WebGLRenderer,
   composer?: EffectComposer,
   force = false,

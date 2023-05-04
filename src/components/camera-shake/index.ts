@@ -1,5 +1,6 @@
 
-import type { MapControls, OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import type { MapControls } from 'three/examples/jsm/controls/MapControls'
 import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 import { Euler, type OrthographicCamera, type PerspectiveCamera } from 'three'
 import { createNoise2D } from 'simplex-noise'
