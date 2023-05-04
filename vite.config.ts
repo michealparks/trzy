@@ -5,6 +5,7 @@ import glsl from 'vite-plugin-glsl';
 export default defineConfig({
   plugins: [glsl()],
   build: {
+    copyPublicDir: false,
     minify: true,
     target: 'esnext',
     lib: {

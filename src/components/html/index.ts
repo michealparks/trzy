@@ -8,10 +8,10 @@ import {
 const vec = new Vector3()
 
 export class Html {
-  camera?: PerspectiveCamera | OrthographicCamera
-  canvas?: HTMLCanvasElement
-  el?: HTMLElement
-  object3D?: Object3D
+  camera?: PerspectiveCamera | OrthographicCamera | undefined
+  canvas?: HTMLCanvasElement | undefined
+  el?: HTMLElement | undefined
+  object3D?: Object3D | undefined
 
   constructor ({
     camera,

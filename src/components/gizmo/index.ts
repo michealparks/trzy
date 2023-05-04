@@ -74,9 +74,9 @@ export class OrbitControlsGizmo {
     const labels = (props.axes ?? 'xyz').toUpperCase().split('')
 
     const axes: Axis[] = [
-      { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: labels[0], line, position: new Vector3(), size: primarySize },
-      { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: labels[1], line, position: new Vector3(), size: primarySize },
-      { axis: 'z', color: colors.z, direction: new Vector3(0, 0, 1), label: labels[2], line, position: new Vector3(), size: primarySize },
+      { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: labels[0]!, line, position: new Vector3(), size: primarySize },
+      { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: labels[1]!, line, position: new Vector3(), size: primarySize },
+      { axis: 'z', color: colors.z, direction: new Vector3(0, 0, 1), label: labels[2]!, line, position: new Vector3(), size: primarySize },
       { axis: '-x', color: colors.x, direction: new Vector3(-1, 0, 0), position: new Vector3(), size: secondarySize },
       { axis: '-y', color: colors.y, direction: new Vector3(0, -1, 0), position: new Vector3(), size: secondarySize },
       { axis: '-z', color: colors.z, direction: new Vector3(0, 0, -1), position: new Vector3(), size: secondarySize },

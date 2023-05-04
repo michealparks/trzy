@@ -1,4 +1,6 @@
 import {
+  type Event,
+  type EventListener,
   type Object3D,
   type OrthographicCamera,
   type PerspectiveCamera,
@@ -7,8 +9,6 @@ import {
   Raycaster,
   Vector2,
   EventDispatcher,
-  Event,
-  EventListener,
 } from 'three'
 
 type Events = 'click' | 'move'

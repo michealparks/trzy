@@ -1,45 +1,40 @@
 {
   "compilerOptions": {
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "alwaysStrict": true,
-    "useDefineForClassFields": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "forceConsistentCasingInFileNames": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "strict": true,
-
     "target": "ESNext",
     "module": "ESNext",
-    "jsx": "preserve",
-    "removeComments": false,
-    "declaration": true,
-    "importHelpers": true,
-    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "moduleResolution": "node",
+
+    /**
+     * Typecheck JS in `.svelte` and `.js` files by default.
+     * Disable checkJs if you'd like to use dynamic types in JS.
+     * Note that setting allowJs false does not prevent the use
+     * of JS in `.svelte` files.
+     */
+    "allowJs": true,
+    "checkJs": true,
+    "verbatimModuleSyntax": true,
+
+    // Type-checking options
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "declaration": true,
+    "removeComments": false,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "types": ["vite/client",],
+    "types": ["vite/client"],
     "sourceMap": true,
     "lib": ["ESNext", "DOM", "DOM.iterable", "scripthost"],
     "outDir": "dist"
   },
-  "include": [
-    "src/**/*.ts",
-  ],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js"],
+  "exclude": ["src/stories/**/code.js"],
 }
