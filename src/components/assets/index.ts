@@ -13,7 +13,7 @@ export const loadFile = (file: string) => fileLoader.loadAsync(file)
 export const loadGLTF = (path: string) => gltfLoader.loadAsync(path)
 export const loadTexture = (file: string) => textureLoader.loadAsync(file)
 
-export const setPath = (path: string) => {
+export const setPath = (path: string): void => {
   audioLoader.setPath(path)
   fileLoader.setPath(path)
   gltfLoader.setPath(path)

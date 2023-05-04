@@ -1,4 +1,3 @@
-/* eslint-disable brace-style */
 import * as THREE from 'three'
 import { meshlineFrag, meshlineVert } from './shader'
 

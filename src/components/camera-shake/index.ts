@@ -2,7 +2,7 @@
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import type { MapControls } from 'three/examples/jsm/controls/MapControls'
 import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
-import { Euler, type OrthographicCamera, type PerspectiveCamera } from 'three'
+import * as THREE from 'three'
 import { createNoise2D } from 'simplex-noise'
 
 export type Controls =
@@ -27,10 +27,10 @@ export class CameraShake {
   rollNoise = createNoise2D()
   then = 0
   activeControls: Controls | null = null
-  initialRotation = new Euler()
-  camera: PerspectiveCamera | OrthographicCamera
+  initialRotation = new THREE.Euler()
+  camera: THREE.Camera
 
-  constructor (camera: PerspectiveCamera | OrthographicCamera) {
+  constructor (camera: THREE.Camera) {
     this.camera = camera
   }
 

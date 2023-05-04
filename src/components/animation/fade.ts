@@ -1,20 +1,20 @@
-import { type AnimationAction, LoopRepeat, LoopOnce } from 'three'
+import * as THREE from 'three'
 
 export const fadeToAction = (
-  lastAction: AnimationAction,
-  nextAction: AnimationAction,
+  lastAction: THREE.AnimationAction,
+  nextAction: THREE.AnimationAction,
   duration: number,
   loop = true
-) => {
+): THREE.AnimationAction => {
   if (lastAction !== nextAction) {
     lastAction.fadeOut(duration)
   }
 
   if (loop) {
-    nextAction.loop = LoopRepeat
+    nextAction.loop = THREE.LoopRepeat
     nextAction.clampWhenFinished = false
   } else {
-    nextAction.loop = LoopOnce
+    nextAction.loop = THREE.LoopOnce
     nextAction.clampWhenFinished = true
   }
 

@@ -1,4 +1,4 @@
-import type { WebGLRenderer } from 'three'
+import type * as THREE from 'three'
 
 let session: XRSession | undefined
 
@@ -44,7 +44,7 @@ const requestSessionSupport = async (): Promise<SupportValues> => {
   }
 }
 
-const requestSession = async (renderer: WebGLRenderer): Promise<void> => {
+const requestSession = async (renderer: THREE.WebGLRenderer): Promise<void> => {
   if (navigator.xr === undefined) {
     throw new Error('navigator.xr is undefined!')
   }
@@ -69,7 +69,7 @@ const endSession = (): void => {
   session.end()
 }
 
-const createButton = async (renderer: WebGLRenderer) => {
+const createButton = async (renderer: THREE.WebGLRenderer): Promise<HTMLButtonElement> => {
   const xrSupport = await requestSessionSupport()
   const button = document.createElement('button')
   button.textContent = supportStateMessages[xrSupport]

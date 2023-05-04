@@ -14,7 +14,7 @@ export const shadows = (object: THREE.Object3D, mapSize = 1024, bias = -0.0001) 
   if ((object as THREE.AmbientLight).isAmbientLight !== true) {
     object.castShadow = true
     if ((object as THREE.Light).isLight) {
-      setMapSize(object as THREE.Light, mapSize)
+      setMapSize(object as THREE.Light, mapSize, bias)
     } else {
       object.receiveShadow = true
     }

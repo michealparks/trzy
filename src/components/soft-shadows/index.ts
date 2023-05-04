@@ -19,12 +19,9 @@ export const resetSoftShadows = (
   camera: THREE.Camera
 ) => {
   scene.traverse((object) => {
-    if (
-      object instanceof THREE.Mesh &&
-      object.material instanceof THREE.Material
-    ) {
-      renderer.properties.remove(object.material)
-      object.material.dispose()
+    if ((object as THREE.Mesh).isMesh && ((object as THREE.Mesh).material as THREE.Material).isMaterial) {
+      ;renderer.properties.remove((object as THREE.Mesh).material as THREE.Material)
+      ;((object as THREE.Mesh).material as THREE.Material).dispose()
     }
   })
 
@@ -69,7 +66,7 @@ export const softShadows = ({
   }: {
     renderer: THREE.WebGLRenderer
     scene: THREE.Scene
-    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
+    camera: THREE.Camera
   }) => {
     THREE.ShaderChunk.shadowmap_pars_fragment = original
     resetSoftShadows(renderer, scene, camera)

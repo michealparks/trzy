@@ -1,17 +1,12 @@
-import {
-  Vector3,
-  type Object3D,
-  type PerspectiveCamera,
-  type OrthographicCamera
-} from 'three'
+import * as THREE from 'three'
 
-const vec = new Vector3()
+const vec = new THREE.Vector3()
 
 export class Html {
-  camera?: PerspectiveCamera | OrthographicCamera | undefined
+  camera?: THREE.Camera | undefined
   canvas?: HTMLCanvasElement | undefined
   el?: HTMLElement | undefined
-  object3D?: Object3D | undefined
+  object3D?: THREE.Object3D | undefined
 
   constructor ({
     camera,
@@ -19,10 +14,10 @@ export class Html {
     el,
     object3D,
   }: {
-    camera?: PerspectiveCamera | OrthographicCamera
+    camera?: THREE.Camera
     canvas?: HTMLCanvasElement
     el?: HTMLElement
-    object3D?: Object3D
+    object3D?: THREE.Object3D
   }) {
     this.el = el
     this.camera = camera

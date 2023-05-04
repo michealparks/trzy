@@ -1,19 +1,13 @@
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import {
-  Vector2,
-  Vector3,
-  Matrix4,
-  type PerspectiveCamera,
-  type OrthographicCamera,
-} from 'three'
+import * as THREE from 'three'
 
 interface Axis {
   axis: 'x' | 'y' | 'z' | '-x' | '-y' | '-z'
   color: string[]
-  direction: Vector3
+  direction: THREE.Vector3
   label?: string
   line?: number
-  position: Vector3
+  position: THREE.Vector3
   size: number
 }
 
@@ -25,23 +19,23 @@ const colors = {
 }
 
 // Internals
-const vec = new Vector3()
-const invRotMat = new Matrix4()
-const mouse = new Vector3()
-const rotateStart = new Vector2()
-const rotateEnd = new Vector2()
-const rotateDelta = new Vector2()
+const vec = new THREE.Vector3()
+const invRotMat = new THREE.Matrix4()
+const mouse = new THREE.Vector3()
+const rotateStart = new THREE.Vector2()
+const rotateEnd = new THREE.Vector2()
+const rotateDelta = new THREE.Vector2()
 
-const mousedown = new Vector2()
-const mouseup = new Vector2()
+const mousedown = new THREE.Vector2()
+const mouseup = new THREE.Vector2()
 
 export class OrbitControlsGizmo {
   dispose: () => void
-  camera: PerspectiveCamera | OrthographicCamera
+  camera: THREE.Camera
   controls: OrbitControls
 
   constructor (props: {
-    camera: PerspectiveCamera | OrthographicCamera
+    camera: THREE.Camera
     el: HTMLElement
     controls: OrbitControls
     axes?: string
@@ -56,7 +50,7 @@ export class OrbitControlsGizmo {
     const secondarySize = 6 * window.devicePixelRatio
     const padding = 8 * window.devicePixelRatio
     const line = 2 * window.devicePixelRatio
-    const center = new Vector3(size / 2, size / 2, 0)
+    const center = new THREE.Vector3(size / 2, size / 2, 0)
 
     let selectedAxis: Axis | null = null
     let isDragging = false
@@ -74,17 +68,17 @@ export class OrbitControlsGizmo {
     const labels = (props.axes ?? 'xyz').toUpperCase().split('')
 
     const axes: Axis[] = [
-      { axis: 'x', color: colors.x, direction: new Vector3(1, 0, 0), label: labels[0]!, line, position: new Vector3(), size: primarySize },
-      { axis: 'y', color: colors.y, direction: new Vector3(0, 1, 0), label: labels[1]!, line, position: new Vector3(), size: primarySize },
-      { axis: 'z', color: colors.z, direction: new Vector3(0, 0, 1), label: labels[2]!, line, position: new Vector3(), size: primarySize },
-      { axis: '-x', color: colors.x, direction: new Vector3(-1, 0, 0), position: new Vector3(), size: secondarySize },
-      { axis: '-y', color: colors.y, direction: new Vector3(0, -1, 0), position: new Vector3(), size: secondarySize },
-      { axis: '-z', color: colors.z, direction: new Vector3(0, 0, -1), position: new Vector3(), size: secondarySize },
+      { axis: 'x', color: colors.x, direction: new THREE.Vector3(1, 0, 0), label: labels[0]!, line, position: new THREE.Vector3(), size: primarySize },
+      { axis: 'y', color: colors.y, direction: new THREE.Vector3(0, 1, 0), label: labels[1]!, line, position: new THREE.Vector3(), size: primarySize },
+      { axis: 'z', color: colors.z, direction: new THREE.Vector3(0, 0, 1), label: labels[2]!, line, position: new THREE.Vector3(), size: primarySize },
+      { axis: '-x', color: colors.x, direction: new THREE.Vector3(-1, 0, 0), position: new THREE.Vector3(), size: secondarySize },
+      { axis: '-y', color: colors.y, direction: new THREE.Vector3(0, -1, 0), position: new THREE.Vector3(), size: secondarySize },
+      { axis: '-z', color: colors.z, direction: new THREE.Vector3(0, 0, -1), position: new THREE.Vector3(), size: secondarySize },
     ]
 
     const context = canvas.getContext('2d')!
 
-    const drawCircle = (point: Vector3, radius = 10, color = '#FF0000'): void => {
+    const drawCircle = (point: THREE.Vector3, radius = 10, color = '#FF0000'): void => {
       context.beginPath()
       context.arc(point.x, point.y, radius, 0, 2 * Math.PI, false)
       context.fillStyle = color
@@ -92,7 +86,7 @@ export class OrbitControlsGizmo {
       context.closePath()
     }
   
-    const drawLine = (point1: Vector3, point2: Vector3, width = 1, color = '#FF0000'): void => {
+    const drawLine = (point1: THREE.Vector3, point2: THREE.Vector3, width = 1, color = '#FF0000'): void => {
       context.beginPath()
       context.moveTo(point1.x, point1.y)
       context.lineTo(point2.x, point2.y)

@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [

@@ -1,48 +1,37 @@
-import {
-  type Event,
-  type EventListener,
-  type Object3D,
-  type OrthographicCamera,
-  type PerspectiveCamera,
-  type Scene,
-  type WebGLRenderer,
-  Raycaster,
-  Vector2,
-  EventDispatcher,
-} from 'three'
+import * as THREE from 'three'
 
 type Events = 'click' | 'move'
 
-export class MouseRaycaster extends EventDispatcher {
-  camera: PerspectiveCamera | OrthographicCamera
+export class MouseRaycaster extends THREE.EventDispatcher {
+  camera: THREE.Camera
   
-  raycaster: Raycaster
-  objects: Object3D[] = []
-  pointerDown = new Vector2()
-  pointerUp = new Vector2()
-  pointerMove = new Vector2()
+  raycaster: THREE.Raycaster
+  objects: THREE.Object3D[] = []
+  pointerDown = new THREE.Vector2()
+  pointerUp = new THREE.Vector2()
+  pointerMove = new THREE.Vector2()
   recursive = true
 
-  renderer: WebGLRenderer
+  renderer: THREE.WebGLRenderer
   #events = { click: 0, move: 0 }
 
   constructor (props: {
-    scene?: Scene
-    camera: PerspectiveCamera | OrthographicCamera
-    renderer: WebGLRenderer
-    raycaster?: Raycaster
-    objects?: Object3D[]
+    scene?: THREE.Scene
+    camera: THREE.Camera
+    renderer: THREE.WebGLRenderer
+    raycaster?: THREE.Raycaster
+    objects?: THREE.Object3D[]
     recursive?: boolean
   }) {
     super()
     this.camera = props.camera
     this.renderer = props.renderer
-    this.raycaster = props.raycaster ?? new Raycaster()
+    this.raycaster = props.raycaster ?? new THREE.Raycaster()
     this.objects = props.objects ?? (props.scene ? [props.scene] : [])
     this.recursive = props.recursive ?? true
   }
 
-  on(type: Events, listener: EventListener<Event, Events, this>): void {
+  on(type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
     super.addEventListener<Events>(type, listener)
 
     const canvas = this.renderer.domElement
@@ -57,7 +46,7 @@ export class MouseRaycaster extends EventDispatcher {
     this.#events[type] += 1
   }
 
-  off(type: Events, listener: EventListener<Event, Events, this>): void {
+  off(type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
     super.removeEventListener<Events>(type, listener)
 
     const canvas = this.renderer.domElement
@@ -72,7 +61,7 @@ export class MouseRaycaster extends EventDispatcher {
     }
   }
 
-  getNormalizedCoordinates (event: PointerEvent, vec: Vector2): void {
+  getNormalizedCoordinates (event: PointerEvent, vec: THREE.Vector2): void {
     const canvas = this.renderer.domElement
     const rect = canvas.getBoundingClientRect()
 

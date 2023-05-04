@@ -1,8 +1,8 @@
-import { Vector3, type Matrix4 } from 'three'
+import * as THREE from 'three'
 
 const basesRegex = /^([+-][xyz])([+-][xyz])([+-][xyz])$/i
 const nameToIndex = { x: 0, y: 1, z: 2 } as const
-const orderedVectors = [new Vector3(), new Vector3(), new Vector3()] as const
+const orderedVectors = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()] as const
 
 const stringToAxes = (axes: string) => {
 	return axes.toLowerCase().match(basesRegex)?.splice(1, 3).map((str) => {
@@ -12,7 +12,7 @@ const stringToAxes = (axes: string) => {
   })!
 }
 
-export const getBasisTransform = (from: string, to: string, targetMatrix: Matrix4): void => {
+export const getBasisTransform = (from: string, to: string, targetMatrix: THREE.Matrix4): void => {
 	const fromAxes = stringToAxes(from)
 	const toAxes = stringToAxes(to)
 

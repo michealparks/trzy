@@ -1,3 +1,5 @@
+import type * as THREE from 'three'
+
 export interface Settings {
   width?: number
   length: number

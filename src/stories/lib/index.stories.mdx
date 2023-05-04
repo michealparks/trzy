@@ -1,0 +1,40 @@
+
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+<Meta title='Lib' />
+
+### Animation
+
+Functions for more easily handling animations
+
+```ts
+import { fadeToAction } from 'trzy'
+
+fadeToAction(lastAction, nextAction, duration, loop)
+```
+
+### Assets
+
+Light abstractions on top of THREE loaders
+
+```ts
+import { setPath, loadAudio, loadFile, loadGLTF, loadTexture } from 'trzy'
+
+setPath('path/to/assets')
+
+const audio = await loadAudio('audio.mp3')
+const file = await loadFile('file.json')
+const gltf = await loadGLTF('cat.glb')
+const texture = await loadTexture('dog.png')
+```
+
+### Audio
+
+Additional audio helpers
+
+```ts
+import { preloadAudio, playAudio } from 'trzy'
+
+preloadAudio('rickroll.mp3')
+playAudio('rickroll.mp3', volume, loop)
+```

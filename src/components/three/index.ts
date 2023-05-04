@@ -90,7 +90,7 @@ export const threeInstance = (props: {
     renderer.shadowMap.type = props.shadowMap ?? THREE.PCFSoftShadowMap
   }
 
-  let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera = props.camera === 'orthographic'
+  let camera: THREE.Camera = props.camera === 'orthographic'
     ? new THREE.OrthographicCamera()
     : new THREE.PerspectiveCamera()
 
@@ -131,7 +131,7 @@ export const threeInstance = (props: {
     }
   }
 
-  const setCamera = (newCamera: THREE.PerspectiveCamera | THREE.OrthographicCamera) => {
+  const setCamera = (newCamera: THREE.Camera) => {
     camera = newCamera
   }
 

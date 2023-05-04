@@ -1,9 +1,9 @@
-import type { Camera, WebGLRenderer } from 'three'
+import type * as THREE from 'three'
 import type { EffectComposer } from 'postprocessing'
 
 export const resizeRendererToDisplaySize = (
-  camera: Camera,
-  renderer: WebGLRenderer,
+  camera: THREE.Camera,
+  renderer: THREE.WebGLRenderer,
   composer?: EffectComposer,
   force = false,
   dpi = window.devicePixelRatio

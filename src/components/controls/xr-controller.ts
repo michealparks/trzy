@@ -1,6 +1,6 @@
-import type { WebGLRenderer } from 'three'
+import * as THREE from 'three'
 
-export const xrControllerManager = (renderer: WebGLRenderer, gamepad: Record<string, number | boolean>) => {
+export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Record<string, number | boolean>) => {
   const xrControllers: {
     connected: boolean
     left: XRInputSource | undefined
