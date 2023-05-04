@@ -20,6 +20,9 @@ const config: StorybookConfig = {
   docs: {
     autodocs: true
   },
+  brand: {
+    name: 'My Custom Text',
+  }
 }
 
 export default config

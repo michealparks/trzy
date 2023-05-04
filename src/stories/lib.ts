@@ -15,7 +15,7 @@ export const setup = async ({
 }: {
   controls: boolean,
   scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
+  camera: THREE.Camera,
   canvas: HTMLCanvasElement,
   update: (cb: () => void) => void
   webGPU?: boolean
