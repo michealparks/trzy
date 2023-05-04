@@ -1,0 +1,1 @@
+{"version":3,"file":"index.stories-cb984f84.js","sources":["../../src/stories/webgpu/code.js?raw"],"sourcesContent":["export default \"import { three } from 'trzy'\\n\\nconst { update } = three({ webGPU: true })\\n\\nupdate(() => {\\n  // Will run after each frame is rendered.\\n})\\n\""],"names":["code"],"mappings":"8EAAA,MAAeA,EAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;"}
