@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -12,7 +12,7 @@
   ],
   "main": "./dist/trzy.umd.js",
   "module": "./dist/trzy.js",
-  "types": "./dist/main.d.ts",
+  "types": "./dist/src/main.d.ts",
   "exports": {
     ".": {
       "import": "./dist/trzy.js",
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build --assetsDir none && tsc --emitDeclarationOnly",
+    "build": "vite build && tsc --emitDeclarationOnly",
     "check": "tsc --noEmit",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
