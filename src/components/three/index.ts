@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
 import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
-import { resizeRendererToDisplaySize } from '../lib/render-to-display-size'
 import { EffectComposer } from 'postprocessing'
+import { addRendererResizer } from '../lib/resize'
 
 THREE.ColorManagement.enabled = true
 
@@ -35,6 +35,7 @@ export const three = (props: {
   camera?: 'perspective' | 'orthographic'
   checkShaderErrors?: boolean,
   depth?: boolean,
+  dpi?: number,
   outputEncoding?: THREE.TextureEncoding,
   shadowMap?: THREE.ShadowMapType | false,
   stencil?: boolean,
@@ -60,6 +61,7 @@ export const threeInstance = (props: {
   camera?: 'perspective' | 'orthographic'
   checkShaderErrors?: boolean,
   depth?: boolean,
+  dpi?: number,
   outputEncoding?: THREE.TextureEncoding,
   shadowMap?: THREE.ShadowMapType | false,
   stencil?: boolean,
@@ -106,6 +108,8 @@ export const threeInstance = (props: {
   const updates: ((time: number, delta: number) => void)[] = []
   const beforeRenders: ((time: number, delta: number) => void)[] = []
 
+  addRendererResizer(camera, renderer, composer, props.dpi)
+
   const loop = () => {
     time = performance.now()
     delta = time - then
@@ -118,7 +122,6 @@ export const threeInstance = (props: {
     if (render !== undefined) {
       render(delta, scene, camera, renderer)
     } else {
-      resizeRendererToDisplaySize(camera, renderer, composer)
       if (composer !== undefined) {
         composer.render(delta)
       } else {

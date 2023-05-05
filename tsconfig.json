@@ -35,6 +35,6 @@
     "lib": ["ESNext", "DOM", "DOM.iterable", "scripthost"],
     "outDir": "dist"
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js"],
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", ".storybook/**/*.ts"],
   "exclude": ["src/stories/**/code.js"],
 }
