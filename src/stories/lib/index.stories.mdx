@@ -38,3 +38,14 @@ import { preloadAudio, playAudio } from 'trzy'
 preloadAudio('rickroll.mp3')
 playAudio('rickroll.mp3', volume, loop)
 ```
+
+### Resizing
+
+Helpers for resizing the rendererer / effect composer
+
+```ts
+import { addRendererResizer } from 'trzy'
+
+const disposeResizer = addRendererResizer(camera, renderer, composer, dpi)
+
+```
