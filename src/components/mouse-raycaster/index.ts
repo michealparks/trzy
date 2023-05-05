@@ -3,7 +3,7 @@ import * as THREE from 'three'
 type Events = 'click' | 'move'
 
 export class MouseRaycaster extends THREE.EventDispatcher {
-  camera: THREE.Camera
+  camera: THREE.Camera | undefined
   
   raycaster: THREE.Raycaster
   objects: THREE.Object3D[] = []
@@ -17,7 +17,7 @@ export class MouseRaycaster extends THREE.EventDispatcher {
 
   constructor (props: {
     scene?: THREE.Scene
-    camera: THREE.Camera
+    camera?: THREE.Camera
     renderer: THREE.WebGLRenderer
     raycaster?: THREE.Raycaster
     objects?: THREE.Object3D[]
@@ -78,6 +78,8 @@ export class MouseRaycaster extends THREE.EventDispatcher {
   }
 
   onPointerUp = (event: PointerEvent): void => {
+    if (this.camera === undefined) return
+
     this.getNormalizedCoordinates(event, this.pointerUp)
 
     if (this.pointerDown.sub(this.pointerUp).lengthSq() > 0.001) {
@@ -93,6 +95,8 @@ export class MouseRaycaster extends THREE.EventDispatcher {
   }
 
   onPointerMove = (event: PointerEvent): void => {
+    if (this.camera === undefined) return
+
     this.getNormalizedCoordinates(event, this.pointerMove)
 
     this.raycaster.setFromCamera(this.pointerMove, this.camera)

@@ -15,7 +15,7 @@ const render = () => {
   const { scene, camera, canvas, update, beforeRender } = three()
 
   setup({ scene, camera, canvas, update, controls: true }).then((controls) => {
-    const cameraShake = new CameraShake(camera)
+    const cameraShake = new CameraShake(camera.current)
     cameraShake.enable(controls!)
 
     beforeRender((_, delta) => {

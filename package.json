@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -8,7 +8,8 @@
   ],
   "keywords": [
     "three",
-    "three.js"
+    "three.js",
+    "util"
   ],
   "main": "./dist/trzy.umd.js",
   "module": "./dist/trzy.js",

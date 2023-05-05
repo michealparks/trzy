@@ -43,14 +43,14 @@ const render = () => {
     `
 
     const object3D = new THREE.Mesh(
-      new THREE.BoxGeometry(0.5, 0.5, 0.5),
+      new THREE.BoxGeometry(),
       new THREE.MeshStandardMaterial(),
     )
     object3D.position.set(THREE.MathUtils.randInt(-2, 2), -0.25, THREE.MathUtils.randInt(-2, 2))
     scene.add(object3D)
     cubes.push(object3D)
 
-    htmls.push(new Html({ camera, canvas, el, object3D }))
+    htmls.push(new Html({ camera: camera.current, canvas, el, object3D }))
   }
 
   update(() => {

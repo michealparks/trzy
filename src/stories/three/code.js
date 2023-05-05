@@ -1,24 +1,9 @@
-import * as THREE from 'three'
 import { three } from 'trzy'
 
-// Also exports scene, camera, canvas, renderer, setCamera
-const { start, stop, update } = three({
-  // defaults.
-  alpha: false,
-  autoStart: true,
-  antialias: false,
-  camera: 'perspective', // or 'orthographic'
-  checkShaderErrors: true,
-  depth: true,
-  outputEncoding: THREE.sRGBEncoding,
-  shadowMap: undefined, // can be any THREE.ShadowMapType,
-  stencil: true,
-  toneMapping: THREE.ACESFilmicToneMapping,
-  xr: false,
-})
+const { renderer, scene, camera, start, stop, update } = three()
 
 // Will start the animation loop. Only needs to be called if 
-// autostart is explicitly false.
+// the autostart param is explicitly false.
 start()
 
 update(() => {
@@ -27,3 +12,53 @@ update(() => {
 
 // Will stop the animation loop.
 stop()
+
+// Can be called with optional parameters
+three({
+  parameters: {
+    alpha: true,
+    antialias: true
+  },
+  autostart: false,
+  shadowMap: undefined, // can be any THREE.ShadowMapType, or false.
+  dpi: 1,
+})
+
+/**
+ * Resetting the camera is possible
+ */
+import * as THREE from 'three'
+
+const { setCamera } = three()
+
+setCamera(new THREE.OrthographicCamera())
+
+/**
+ * Can be used with an EffectComposer
+ */
+import * as POST from 'postprocessing'
+
+three({
+  composer(scene, camera, renderer) {
+    const composer = new POST.EffectComposer(renderer)
+    composer.addPass(new POST.RenderPass(scene, camera))
+    composer.addPass(
+      new POST.EffectPass(
+        camera,
+        new POST.BloomEffect({
+          intensity: 1,
+          luminanceThreshold: 0.15,
+          height: 512,
+          width: 512,
+          luminanceSmoothing: 0.08,
+          mipmapBlur: true,
+          kernelSize: POST.KernelSize.MEDIUM
+        }),
+        new POST.SMAAEffect({
+          preset: POST.SMAAPreset.LOW
+        })
+      )
+    )
+    return composer
+  }
+})

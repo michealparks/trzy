@@ -9,7 +9,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Instantiates a scene, camera, renderer, and frame loop.'
+        component: `Instantiates a scene, camera, renderer, and frame loop.`
       },
       source: { code }
     }

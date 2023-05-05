@@ -18,17 +18,14 @@ const render = () => {
 
   const { scene, camera, canvas, renderer, update } = three()
 
-  resetSoftShadows(renderer, scene, camera)
+  resetSoftShadows(renderer, scene, camera.current)
 
   setup({ scene, camera, canvas, update, controls: true }).then(() => {
     const object = scene.getObjectByName('Strawberry')!
     update(() => {
-      
       object.rotation.y += 0.05
     })
   })
-
-  
 
   return renderer.domElement
 }

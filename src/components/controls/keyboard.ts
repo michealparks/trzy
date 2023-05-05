@@ -115,7 +115,7 @@ export const useKeyboard = (options: { preventDefault?: boolean } = {}): {
   keyboard: typeof keyboard,
   disposeKeyboard: () => void
 } => {
-  preventDefault = options.preventDefault ?? true
+  preventDefault = options.preventDefault ?? false
 
   if (!initialized) {
     window.addEventListener('keydown', handleKeyDown)

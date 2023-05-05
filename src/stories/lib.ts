@@ -15,7 +15,7 @@ export const setup = async ({
 }: {
   controls: boolean,
   scene: THREE.Scene,
-  camera: THREE.Camera,
+  camera: { current: THREE.Camera },
   canvas: HTMLCanvasElement,
   update: (cb: () => void) => void
   webGPU?: boolean
@@ -23,7 +23,7 @@ export const setup = async ({
   let orbit: OrbitControls | undefined
 
   if (controls) {
-    orbit = new OrbitControls(camera, canvas)
+    orbit = new OrbitControls(camera.current, canvas)
     orbit.enableDamping = true
     orbit.enablePan = false
     update(() => orbit?.update())
@@ -66,8 +66,8 @@ export const setup = async ({
     shadows(scene)
   }
 
-  camera.position.set(8, 2, 6)
-  camera.lookAt(0, 0, 0)
+  camera.current.position.set(8, 2, 6)
+  camera.current.lookAt(0, 0, 0)
 
   return orbit
 }

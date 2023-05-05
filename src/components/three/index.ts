@@ -9,40 +9,25 @@ THREE.ColorManagement.enabled = true
 let cache: null | ReturnType<typeof threeInstance> = null
 
 const createRenderer = (props: {
-  alpha?: boolean
-  antialias?: boolean
-  depth?: boolean
-  stencil?: boolean
+  parameters?: THREE.WebGLRendererParameters
   webGPU?: boolean
 }): THREE.WebGLRenderer => {
   if (props.webGPU === true && WebGPU.isAvailable()) {
-    return new WebGPURenderer()
+    return new WebGPURenderer(props.parameters)
   } else {
     return new THREE.WebGLRenderer({
-      alpha: props.alpha,
-      antialias: props.antialias,
-      depth: props.depth,
       powerPreference: 'high-performance',
-      stencil: props.stencil,
+      ...props.parameters
     })
   }
 }
 
 export const three = (props: {
-  alpha?: boolean,
-  antialias?: boolean,
+  parameters?: THREE.WebGLRendererParameters,
   autostart?: boolean,
-  camera?: 'perspective' | 'orthographic'
-  checkShaderErrors?: boolean,
-  depth?: boolean,
   dpi?: number,
-  outputEncoding?: THREE.TextureEncoding,
   shadowMap?: THREE.ShadowMapType | false,
-  stencil?: boolean,
-  toneMapping?: THREE.ToneMapping,
-  xr?: boolean,
   webGPU?: boolean,
-  render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
   composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
   if (cache !== null) {
@@ -55,103 +40,91 @@ export const three = (props: {
 }
 
 export const threeInstance = (props: {
-  alpha?: boolean,
-  antialias?: boolean,
+  parameters?: THREE.WebGLRendererParameters,
   autostart?: boolean,
-  camera?: 'perspective' | 'orthographic'
-  checkShaderErrors?: boolean,
-  depth?: boolean,
   dpi?: number,
-  outputEncoding?: THREE.TextureEncoding,
   shadowMap?: THREE.ShadowMapType | false,
-  stencil?: boolean,
-  toneMapping?: THREE.ToneMapping,
-  xr?: boolean,
   webGPU?: boolean,
-  render?: (delta: number, scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => void,
   composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
-  const { render } = props
   const renderer = createRenderer(props)
  
   renderer.useLegacyLights = false
 
-  if (renderer.debug !== undefined) {
-    renderer.debug.checkShaderErrors = props.checkShaderErrors ?? true
+  if (renderer.outputColorSpace === undefined) {
+    renderer.outputEncoding = THREE.sRGBEncoding
   }
 
-  if (renderer.xr !== undefined) {
-    renderer.xr.enabled = props.xr ?? false
-  }
-
-  renderer.outputEncoding = props.outputEncoding ?? THREE.sRGBEncoding
-  renderer.toneMapping = props.toneMapping ?? THREE.ACESFilmicToneMapping
+  renderer.toneMapping = THREE.ACESFilmicToneMapping
 
   if (renderer.shadowMap !== undefined && props.shadowMap !== false) {
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = props.shadowMap ?? THREE.PCFSoftShadowMap
   }
 
-  let camera: THREE.Camera = props.camera === 'orthographic'
-    ? new THREE.OrthographicCamera()
-    : new THREE.PerspectiveCamera()
+  let camera: { current: THREE.Camera } = { current: new THREE.PerspectiveCamera() }
 
   const scene = new THREE.Scene()
-  scene.add(camera)
+  scene.add(camera.current)
 
-  const composer = props.composer?.(scene, camera, renderer)
+  let composer = props.composer?.(scene, camera.current, renderer)
 
   let time = performance.now()
   let then = performance.now()
   let delta = 0
 
-  const updates: ((time: number, delta: number) => void)[] = []
-  const beforeRenders: ((time: number, delta: number) => void)[] = []
+  const ctx = {
+    canvas: renderer.domElement,
+    renderer,
+    scene,
+    camera,
+  }
 
-  addRendererResizer(camera, renderer, composer, props.dpi)
+  const updates: ((context: typeof ctx, delta: number) => void)[] = []
+  const beforeRenders: ((context: typeof ctx, delta: number) => void)[] = []
 
-  const loop = () => {
+  const frame = () => {
     time = performance.now()
     delta = time - then
     then = time
 
     for (let i = 0, l = beforeRenders.length; i < l; i += 1) {
-      beforeRenders[i]!(time, delta)
+      beforeRenders[i]!(ctx, delta)
     }
 
-    if (render !== undefined) {
-      render(delta, scene, camera, renderer)
+    if (composer !== undefined) {
+      composer.render(delta)
     } else {
-      if (composer !== undefined) {
-        composer.render(delta)
-      } else {
-        renderer.render(scene, camera)
-      }
+      renderer.render(scene, camera.current)
     }
 
     for (let i = 0, l = updates.length; i < l; i += 1) {
-      updates[i]!(time, delta)
+      updates[i]!(ctx, delta)
     }
   }
 
-  const setCamera = (newCamera: THREE.Camera) => {
-    camera = newCamera
+  let disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
+
+  const setCamera = (newCamera: THREE.Camera): void => {
+    disposeResizer()
+
+    camera.current = newCamera
+    scene.add(camera.current)
+
+    composer = props.composer?.(scene, camera.current, renderer)
+
+    disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
   }
 
-  const stop = () => {
-    renderer.setAnimationLoop(null)
-  }
+  const stop = (): void => renderer.setAnimationLoop(null)
+  const start = (): void => renderer.setAnimationLoop(frame)
 
-  const start = () => {
-    renderer.setAnimationLoop(loop)
-  }
-
-  const beforeRender = (callback: (time: number, delta: number) => void) => {
+  const beforeRender = (callback: (context: typeof ctx, delta: number) => void) => {
     beforeRenders.push(callback)
     return () => beforeRenders.splice(beforeRenders.indexOf(callback), 1)
   }
 
-  const update = (callback: (time: number, delta: number) => void) => {
+  const update = (callback: (context: typeof ctx, delta: number) => void) => {
     updates.push(callback)
     return () => updates.splice(updates.indexOf(callback), 1)
   }
@@ -161,10 +134,7 @@ export const threeInstance = (props: {
   }
 
   return {
-    camera,
-    canvas: renderer.domElement,
-    renderer,
-    scene,
+    ...ctx,
     setCamera,
     stop,
     start,

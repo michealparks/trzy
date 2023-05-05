@@ -27,7 +27,11 @@ const render = () => {
   
     const obj = scene.getObjectByName('Strawberry')!
     obj.traverse(child => (child as THREE.Mesh).geometry?.computeBoundsTree?.())
-    const raycaster = new MouseRaycaster({ scene, camera, renderer, recursive: true, objects: [obj] })
+
+    const raycaster = new MouseRaycaster({ renderer })
+    raycaster.recursive = true
+    raycaster.objects = [obj]
+    raycaster.camera = camera.current
 
     raycaster.on('move', (event) => {
       if (event.intersections.length > 0) {

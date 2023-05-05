@@ -26,7 +26,7 @@ const render = () => {
     el.style.cssText = 'position: absolute; top: 50px; right: 40px;'
     container.append(el)
 
-    new OrbitControlsGizmo({ camera, el, controls: controls! })
+    new OrbitControlsGizmo({ camera: camera.current, el, controls: controls! })
 
     scene.add(new AxesHelper({ size: 2, width: 0.002 }))
 
