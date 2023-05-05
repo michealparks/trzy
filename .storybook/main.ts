@@ -2,13 +2,14 @@ import type { StorybookConfig } from '@storybook/html-vite'
 
 const config: StorybookConfig = {
   stories: [
+    '../src/stories/three/index.stories.ts',
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)'
   ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/addon-interactions'
+    '@storybook/addon-interactions',
   ],
   framework: {
     name: '@storybook/html-vite',
@@ -16,6 +17,9 @@ const config: StorybookConfig = {
   },
   features: {
     storyStoreV7: true
+  },
+  core: {
+    disableTelemetry: true,
   },
   docs: {
     autodocs: true
