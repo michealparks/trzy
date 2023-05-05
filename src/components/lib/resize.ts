@@ -1,5 +1,6 @@
 import type * as THREE from 'three'
 import type { EffectComposer } from 'postprocessing'
+import { debounce } from './debounce'
 
 const resize = (
   width: number,
@@ -43,12 +44,11 @@ export const addRendererResizer = (
 ) => {
   resizeRenderer(camera, renderer, composer, dpi)
 
-  const observer = new ResizeObserver((entries) => {
-    for (let i = 0, l = entries.length; i < l; i += 1) {
-      const { width, height } = entries[i]!.contentRect
-      resize(width, height, dpi, camera, renderer, composer)
-    }
-  })
+  const observer = new ResizeObserver(debounce<ResizeObserverCallback>(([entry]) => {
+    // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry/devicePixelContentBoxSize
+    const { width, height } = entry!.contentRect
+    resize(width, height, dpi, camera, renderer, composer)
+  }, 30))
 
   observer.observe(renderer.domElement)
 

@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -57,7 +57,7 @@
     "storybook": "v7.0.8",
     "three": "^0.152.2",
     "three-inspect": "^0.3.2",
-    "trzy": "^0.0.37",
+    "trzy": "^0.0.39",
     "typescript": "^5.0.4",
     "vite": "^4.3.4"
   },
