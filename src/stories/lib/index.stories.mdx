@@ -49,3 +49,15 @@ import { addRendererResizer } from 'trzy'
 const disposeResizer = addRendererResizer(camera, renderer, composer, dpi)
 
 ```
+
+### Storage
+
+Localstorage but with JSON
+
+```ts
+import { save, load } from 'trzy'
+
+save('bill', { type: 'mage', health: 0.25 })
+
+const stats = load('bill')
+```
