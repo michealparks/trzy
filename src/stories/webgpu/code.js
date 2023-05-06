@@ -1,7 +1,10 @@
 import { three } from 'trzy'
+import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
+import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
 
-const { update } = three({ webGPU: true })
+const renderer = WebGPU.isAvailable() ? new WebGPURenderer() : undefined
+const { update } = three({ renderer })
 
 update(() => {
-  // Will run after each frame is rendered.
+  
 })

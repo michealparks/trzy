@@ -1,6 +1,4 @@
 import * as THREE from 'three'
-import WebGPU from 'three/examples/jsm/capabilities/WebGPU'
-import WebGPURenderer from 'three/examples/jsm/renderers/webgpu/WebGPURenderer'
 import { EffectComposer } from 'postprocessing'
 import { addRendererResizer } from '../lib/resize'
 
@@ -8,26 +6,12 @@ THREE.ColorManagement.enabled = true
 
 let cache: null | ReturnType<typeof threeInstance> = null
 
-const createRenderer = (props: {
-  parameters?: THREE.WebGLRendererParameters
-  webGPU?: boolean
-}): THREE.WebGLRenderer => {
-  if (props.webGPU === true && WebGPU.isAvailable()) {
-    return new WebGPURenderer(props.parameters)
-  } else {
-    return new THREE.WebGLRenderer({
-      powerPreference: 'high-performance',
-      ...props.parameters
-    })
-  }
-}
-
 export const three = (props: {
   parameters?: THREE.WebGLRendererParameters,
   autostart?: boolean,
   dpi?: number,
   shadowMap?: THREE.ShadowMapType | false,
-  webGPU?: boolean,
+  renderer?: THREE.WebGLRenderer
   composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
   if (cache !== null) {
@@ -44,10 +28,13 @@ export const threeInstance = (props: {
   autostart?: boolean,
   dpi?: number,
   shadowMap?: THREE.ShadowMapType | false,
-  webGPU?: boolean,
+  renderer?: THREE.WebGLRenderer
   composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
-  const renderer = createRenderer(props)
+  const renderer = props.renderer ?? new THREE.WebGLRenderer({
+    powerPreference: 'high-performance',
+    ...props.parameters
+  })
  
   renderer.useLegacyLights = false
 
