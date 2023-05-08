@@ -1,0 +1,1 @@
+{"version":3,"file":"index.stories-6c744a86.js","sources":["../../src/stories/orbit-controls-gizmo/code.js?raw"],"sourcesContent":["export default \"import { OrbitControlsGizmo } from 'trzy'\\n\\nnew OrbitControlsGizmo({ camera, el, controls })\\n\""],"names":["code"],"mappings":"+FAAA,MAAeA,EAAA;AAAA;AAAA;AAAA;;"}
