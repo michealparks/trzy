@@ -42,8 +42,6 @@ export const addRendererResizer = (
   composer?: EffectComposer,
   dpi = window.devicePixelRatio
 ) => {
-  resizeRenderer(camera, renderer, composer, dpi)
-
   const observer = new ResizeObserver(debounce<ResizeObserverCallback>(([entry]) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry/devicePixelContentBoxSize
     const { width, height } = entry!.contentRect
@@ -53,16 +51,4 @@ export const addRendererResizer = (
   observer.observe(renderer.domElement)
 
   return () => observer.disconnect()
-}
-
-export const resizeRenderer = (
-  camera: THREE.Camera,
-  renderer: THREE.WebGLRenderer,
-  composer?: EffectComposer,
-  dpi = window.devicePixelRatio
-) => {
-  const canvas = renderer.domElement
-  const width = canvas.clientWidth * dpi | 0
-  const height = canvas.clientHeight * dpi | 0
-  resize(width, height, dpi, camera, renderer, composer)
 }

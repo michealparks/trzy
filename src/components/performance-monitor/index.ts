@@ -1,12 +1,12 @@
 
-type PerformanceMonitorHookApi = {
+interface PerformanceMonitorHookApi {
   onIncline: (api: PerformanceMonitorApi) => void
   onDecline: (api: PerformanceMonitorApi) => void
   onChange: (api: PerformanceMonitorApi) => void
   onFallback: (api: PerformanceMonitorApi) => void
 }
 
-export type PerformanceMonitorApi = {
+export interface PerformanceMonitorApi {
   /** Current fps */
   fps: number
   /** Current performance factor, between 0 and 1 */
@@ -24,7 +24,7 @@ export type PerformanceMonitorApi = {
   subscribe: () => void
 }
 
-type PerformanceMonitorProps = {
+interface PerformanceMonitorProps {
   /** How much time in milliseconds to collect an average fps, 250 */
   ms?: number
   /** How many interations of averages to collect, 10 */
@@ -111,52 +111,64 @@ export class PerformanceMonitor {
     const { frames, averages } = this
 
     // If the fallback has been reached do not continue running samples
-    if (this.fallback) return
-
-    if (averages.length < this.iterations) {
-      frames.push(performance.now())
-      const msPassed = frames[frames.length - 1]! - frames[0]!
-      if (msPassed >= this.ms) {
-        this.fps = Math.round((frames.length / msPassed) * 1000 * decimalPlacesRatio) / decimalPlacesRatio
-        this.refreshrate = Math.max(this.refreshrate, this.fps)
-        averages[this.index++ % this.iterations] = this.fps
-        if (averages.length === this.iterations) {
-          const [lower, upper] = this.bounds(this.refreshrate)
-          const upperBounds = averages.filter((value) => value >= upper)
-          const lowerBounds = averages.filter((value) => value < lower)
-          // Trigger incline when more than -threshold- avgs exceed the upper bound
-          if (upperBounds.length > this.iterations * this.threshold) {
-            this.factor = Math.min(1, this.factor + this.step)
-            this.flipped++
-            if (this.onIncline) this.onIncline(this)
-            this.subscriptions.forEach((value) => value.onIncline && value.onIncline(this))
-          }
-          // Trigger decline when more than -threshold- avgs are below the lower bound
-          if (lowerBounds.length > this.iterations * this.threshold) {
-            this.factor = Math.max(0, this.factor - this.step)
-            this.flipped++
-            this.onDecline?.(this)
-            this.subscriptions.forEach((value) => value.onDecline && value.onDecline(this))
-          }
-
-          if (this.lastFactor !== this.factor) {
-            this.lastFactor = this.factor
-            this.onChange?.(this)
-            this.subscriptions.forEach((value) => value.onChange && value.onChange(this))
-          }
-
-          if (this.flipped > this.flipflops && !this.fallback) {
-            this.fallback = true
-            this.onFallback?.(this)
-            this.subscriptions.forEach((value) => value.onFallback && value.onFallback(this))
-          }
-          this.averages = []
-
-          // Resetting the refreshrate creates more problems than it solves atm
-          // api.refreshrate = 0
-        }
-        this.frames = []
-      }
+    if (this.fallback) {
+      return
     }
+
+    if (averages.length >= this.iterations) {
+      return
+    }
+
+    frames.push(performance.now())
+    const msPassed = frames[frames.length - 1]! - frames[0]!
+
+    if (msPassed < this.ms) {
+      return 
+    }
+
+    this.fps = Math.round((frames.length / msPassed) * 1000 * decimalPlacesRatio) / decimalPlacesRatio
+    this.refreshrate = Math.max(this.refreshrate, this.fps)
+    averages[this.index++ % this.iterations] = this.fps
+
+    if (averages.length === this.iterations) {
+      const [lower, upper] = this.bounds(this.refreshrate)
+      const upperBounds = averages.filter((value) => value >= upper)
+      const lowerBounds = averages.filter((value) => value < lower)
+
+      // Trigger incline when more than -threshold- avgs exceed the upper bound
+      if (upperBounds.length > this.iterations * this.threshold) {
+        this.factor = Math.min(1, this.factor + this.step)
+        this.flipped++
+        if (this.onIncline) this.onIncline(this)
+        this.subscriptions.forEach((value) => value.onIncline && value.onIncline(this))
+      }
+
+      // Trigger decline when more than -threshold- avgs are below the lower bound
+      if (lowerBounds.length > this.iterations * this.threshold) {
+        this.factor = Math.max(0, this.factor - this.step)
+        this.flipped++
+        this.onDecline?.(this)
+        this.subscriptions.forEach((value) => value.onDecline && value.onDecline(this))
+      }
+
+      if (this.lastFactor !== this.factor) {
+        this.lastFactor = this.factor
+        this.onChange?.(this)
+        this.subscriptions.forEach((value) => value.onChange && value.onChange(this))
+      }
+
+      if (this.flipped > this.flipflops && !this.fallback) {
+        this.fallback = true
+        this.onFallback?.(this)
+        this.subscriptions.forEach((value) => value.onFallback && value.onFallback(this))
+      }
+
+      this.averages = []
+
+      // Resetting the refreshrate creates more problems than it solves atm
+      // api.refreshrate = 0
+    }
+
+    this.frames = []
   }
 }
