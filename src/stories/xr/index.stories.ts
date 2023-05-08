@@ -42,6 +42,8 @@ const render = () => {
 
   teleport.enable(floor)
 
+  update((_, delta) => teleport.update(delta))
+
   return container
 }
 

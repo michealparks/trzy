@@ -136,10 +136,14 @@ export const createXrTeleport = ({
     grips.push(controllerGrip)
   }
 
-  const update = (time: number) => {
+  let time = 0
+
+  const update = (delta: number) => {
     if (!enabled) {
       return
     }
+
+    time += delta
 
     intersection = undefined
 
