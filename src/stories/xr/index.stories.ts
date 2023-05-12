@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/html'
-import { three, xr, createXrTeleport, plane } from '../../main'
+import { three, xr, plane } from '../../main'
 import { setup } from '../lib'
 import code from './code?raw'
 
@@ -27,10 +27,9 @@ const render = () => {
 
   renderer.xr.enabled = true
 
-  const raycaster = new THREE.Raycaster()
-  const teleport = createXrTeleport({ renderer, scene, camera: camera.current, raycaster })
-
-  xr.createButton(renderer).then((button) => container.append(button))
+  const xrHandler = xr(renderer, scene, camera.current)
+  xrHandler.createButton().then((button) => container.append(button))
+  xrHandler.showControllers().enableTeleport()
 
   setup({ canvas, camera, scene, update, controls: true })
 
@@ -40,9 +39,7 @@ const render = () => {
   floor.rotation.z = Math.PI / 4
   scene.add(floor)
 
-  teleport.enable(floor)
-
-  update((_, delta) => teleport.update(delta))
+  update((_, delta) => xrHandler.update(delta))
 
   return container
 }

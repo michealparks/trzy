@@ -28,17 +28,13 @@ void main(){
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }`
 
-export const createXrTeleport = ({
-  renderer,
-  scene,
-  camera,
-  raycaster,
-}: {
-  renderer: THREE.WebGLRenderer
-  scene: THREE.Scene
-  camera: THREE.Camera
-  raycaster: THREE.Raycaster
-}) => {
+export const createTeleport = (
+  renderer: THREE.WebGLRenderer,
+  scene: THREE.Scene,
+  camera: THREE.Camera,
+  raycaster = new THREE.Raycaster()
+) => {
+  const user = new THREE.Object3D()
   const objects: THREE.Object3D[] = []
   const originalPosition = new THREE.Vector3()
 
@@ -100,12 +96,12 @@ export const createXrTeleport = ({
     renderer.xr.setReferenceSpace(teleportSpaceOffset)
   }
 
-  for (let i = 1; i < 3; i += 1) {
+  for (let index = 0; index < 2; index += 1) {
     const material = lineBasicMat({
       blending: THREE.AdditiveBlending,
       transparent: true,
       vertexColors: true,
-      name: `XR Controller ${i} Ray Line`,
+      name: `XR Controller ${index} Ray Line`,
       visible: false
     })
     const rayline = line(material)
@@ -119,20 +115,20 @@ export const createXrTeleport = ({
     )
     raylines.push(rayline)
 
-    const controller = renderer.xr.getController(i)
-    controller.name = `XR Controller ${i}`
+    const controller = renderer.xr.getController(index)
+    controller.name = `XR Controller ${index}`
   
     controller.addEventListener('selectstart', handleSelectStart)
     controller.addEventListener('selectend', handleSelectEnd)
     controller.addEventListener('connected', () => controller.add(rayline))
     controller.addEventListener('disconnected', () => controller.clear())
     
-    controller.userData.index = i
+    controller.userData.index = index
     controllers.push(controller)
 
-    const controllerGrip = renderer.xr.getControllerGrip(i)
+    const controllerGrip = renderer.xr.getControllerGrip(index)
     controllerGrip.add(controllerModelFactory.createControllerModel(controllerGrip))
-    controllerGrip.name = `XR Controller Grip ${i}`
+    controllerGrip.name = `XR Controller Grip ${index}`
     grips.push(controllerGrip)
   }
 
@@ -169,12 +165,12 @@ export const createXrTeleport = ({
     marker.visible = intersection !== undefined
   }
 
-  const enable = (navMesh: THREE.Object3D) => {
+  const enable = (...navMesh: THREE.Object3D[]) => {
     if (enabled) {
       return
     }
 
-    objects.push(navMesh)
+    objects.push(...navMesh)
     scene.add(marker)
     camera.add(controllers[0]!)
     camera.add(controllers[1]!)
