@@ -34,7 +34,7 @@ export const createTeleport = (
   camera: THREE.Camera,
   raycaster = new THREE.Raycaster()
 ) => {
-  // const user = new THREE.Object3D()
+  // congst user = new THREE.Object3D()
   const objects: THREE.Object3D[] = []
   const originalPosition = new THREE.Vector3()
 
