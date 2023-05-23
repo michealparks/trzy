@@ -1,7 +1,8 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import * as THREE from 'three'
-import { three, MouseRaycaster, bvhRaycast } from '../../main'
+import { three, MouseRaycaster } from '../../main'
+import { bvhRaycast } from '../../components/bvh'
 import code from './code?raw'
 import { setup } from '../lib'
 

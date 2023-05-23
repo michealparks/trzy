@@ -8,7 +8,6 @@ export { MeshLineGeometry, MeshLineMaterial, Trail } from './components/meshline
 export { MouseRaycaster } from './components/mouse-raycaster'
 export { PerformanceMonitor } from './components/performance-monitor'
 export { preloadAudio, playAudio } from './components/audio'
-export { bvhRaycast } from './components/bvh'
 export { fadeToAction } from './components/animation/fade'
 export { shaderMaterial } from './components/shader-material'
 export { shadows, setMapSize } from './components/lib/shadows'
