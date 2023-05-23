@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -9,7 +9,9 @@
   "keywords": [
     "three",
     "three.js",
-    "util"
+    "util",
+    "r3f",
+    "threlte"
   ],
   "main": "./dist/trzy.umd.js",
   "module": "./dist/trzy.js",
@@ -43,27 +45,25 @@
     "three": "*"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "v7.0.10",
-    "@storybook/addon-docs": "v7.0.10",
-    "@storybook/addon-essentials": "v7.0.10",
-    "@storybook/addon-interactions": "v7.0.10",
-    "@storybook/addon-links": "v7.0.10",
-    "@storybook/html": "v7.0.10",
-    "@storybook/html-vite": "v7.0.10",
+    "@storybook/addon-actions": "v7.0.14",
+    "@storybook/addon-docs": "v7.0.14",
+    "@storybook/addon-essentials": "v7.0.14",
+    "@storybook/addon-interactions": "v7.0.14",
+    "@storybook/addon-links": "v7.0.14",
+    "@storybook/html": "v7.0.14",
+    "@storybook/html-vite": "v7.0.14",
     "@types/three": "^0.152.0",
     "postprocessing": "^6.31.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simplex-noise": "^4.0.1",
-    "storybook": "v7.0.10",
+    "storybook": "v7.0.14",
     "three": "^0.152.2",
     "three-inspect": "^0.3.2",
-    "trzy": "^0.0.44",
+    "three-mesh-bvh": "^0.6.0",
+    "trzy": "^0.0.45",
     "typescript": "^5.0.4",
-    "vite": "^4.3.5",
+    "vite": "^4.3.8",
     "vite-plugin-glsl": "^1.1.2"
-  },
-  "dependencies": {
-    "three-mesh-bvh": "^0.5.23"
   }
 }

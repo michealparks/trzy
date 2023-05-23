@@ -21,6 +21,7 @@ export default defineConfig({
         'three/examples/jsm/lines/LineMaterial',
         'three/examples/jsm/lines/LineGeometry',
         'three/examples/jsm/lines/Line2',
+        'three-mesh-bvh',
       ],
       output: {
         inlineDynamicImports: true,
@@ -29,6 +30,7 @@ export default defineConfig({
         // for externalized deps
         globals: {
           three: 'THREE',
+          'three-mesh-bvh': 'THREE_MESH_BVH', 
         },
       },
     },
