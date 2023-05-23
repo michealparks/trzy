@@ -28,17 +28,17 @@ export class GridHelper extends THREE.Mesh {
   }
 
   get cellSize(): number {
-    return this.material.uniforms.cellSize!.value
+    return this.material.uniforms.uCellSize!.value
   }
   set cellSize(value: number) {
-    this.material.uniforms.cellSize!.value = value
+    this.material.uniforms.uCellSize!.value = value
   }
 
   get largeCellSize(): number {
-    return this.material.uniforms.cellSize!.value
+    return this.material.uniforms.uLargeCellSize!.value
   }
   set largeCellSize(value: number) {
-    this.material.uniforms.largeCellSize!.value = value
+    this.material.uniforms.uLargeCellSize!.value = value
   }
 
   get color(): THREE.ColorRepresentation {
