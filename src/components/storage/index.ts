@@ -3,7 +3,11 @@ export const save = (key: string, value: unknown) => {
 }
 
 export const load = <T = unknown>(key: string): T | null => {
-  return JSON.parse(localStorage.getItem(key) ?? 'null')
+  try {
+    return JSON.parse(localStorage.getItem(key) ?? 'null')
+  } catch {
+    return null
+  }
 }
 
 export const remove = (key: string) => {
