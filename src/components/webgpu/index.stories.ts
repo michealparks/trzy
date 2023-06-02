@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html'
-import { threeInstance } from '../../main'
-import { setup } from '../lib'
+// import { threeInstance } from '../../main'
+// import { setup } from '../lib'
 import code from './code?raw'
 
 const meta: Meta = {
