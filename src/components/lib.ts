@@ -52,7 +52,6 @@ export const setup = async ({
   shadows(scene)
 
   if (webGPU) {
-    console.log('here')
     // shadows(scene, 4096, 0.001)
     light.shadow.mapSize.set(4096, 4096)
     light.shadow.bias = 0.0001

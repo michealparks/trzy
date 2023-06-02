@@ -36,5 +36,5 @@
     "outDir": "dist"
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", ".storybook/**/*.ts"],
-  "exclude": ["src/stories/**/code.js"],
+  "exclude": ["src/**/code.js"],
 }

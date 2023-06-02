@@ -8,14 +8,10 @@ const color = new THREE.Color()
 export class AxesHelper extends Line2 {
   override type = 'AxesHelper'
 
-	constructor({ size = 1, width = 0.005 }: { size?: number, width?: number } = {}) {
-		const geometry = new LineGeometry()
+	#length = 1
 
-    geometry.setPositions([
-			0, 0, 0,    size, 0, 0,    0, 0, 0,
-			0, 0, 0,    0, size, 0,    0, 0, 0,
-			0, 0, 0,    0, 0, size,    0, 0, 0,
-		])
+	constructor(length = 1, width = 0.2) {
+		const geometry = new LineGeometry()
 
     geometry.setColors([
 			1, 0, 0,    1, 0, 0,    1, 0, 0,
@@ -24,14 +20,36 @@ export class AxesHelper extends Line2 {
 		])
 
     const material = new LineMaterial({
-      linewidth: width,
+      linewidth: width / 100,
       vertexColors: true,
       alphaToCoverage: true,
     })
 
 		super(geometry, material)
 
-    this.computeLineDistances()
+		this.length = length
+	}
+
+	set length (value: number) {
+		this.#length = value
+		this.geometry.setPositions([
+			0, 0, 0,    value, 0, 0,    0, 0, 0,
+			0, 0, 0,    0, value, 0,    0, 0, 0,
+			0, 0, 0,    0, 0, value,    0, 0, 0,
+		])
+		this.computeLineDistances()
+	}
+
+	get length (): number {
+		return this.#length
+	}
+
+	set width (value: number) {
+		this.material.linewidth = value / 100
+	}
+
+	get width (): number {
+		return this.material.linewidth * 100
 	}
 
 	setColors(xAxis: THREE.ColorRepresentation, yAxis: THREE.ColorRepresentation, zAxis: THREE.ColorRepresentation): this {

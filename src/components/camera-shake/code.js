@@ -1,5 +1,7 @@
-import { CameraShake, useRaf } from 'trzy'
+import * as THREE from 'three'
+import { CameraShake, useRaf } from '.'
 
+const camera = new THREE.PerspectiveCamera()
 const cameraShake = new CameraShake(camera)
 
 // Optionally pass orbitControls if they exist

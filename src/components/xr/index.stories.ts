@@ -26,9 +26,10 @@ const render = () => {
 
   renderer.xr.enabled = true
 
-  const xrHandler = xr(renderer, scene, camera.current)
-  xrHandler.createButton().then((button) => container.append(button))
-  xrHandler.showControllers().enableTeleport()
+  const vr = xr(renderer, scene, camera.current)
+  vr.createButton().then((button) => container.append(button))
+  vr.addControllers()
+  vr.enableTeleport()
 
   setup({ canvas, camera, scene, update, controls: true })
 
@@ -38,7 +39,7 @@ const render = () => {
   floor.rotation.z = Math.PI / 4
   scene.add(floor)
 
-  update((_, delta) => xrHandler.update(delta))
+  update((_, delta) => vr.update(delta))
 
   return container
 }

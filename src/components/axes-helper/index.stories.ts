@@ -23,7 +23,11 @@ const render = () => {
 
   setup({ scene, camera, canvas, update, controls: true })
 
-  scene.add(new AxesHelper({ size: 1.5, width: 0.0025 }).setColors('yellow', 'blue', 'pink'))
+  const helper = new AxesHelper()
+  helper.setColors('red', 'green', 'blue')
+  helper.length = 100
+
+  scene.add(helper)
 
   return canvas
 }

@@ -2,20 +2,11 @@ import type * as THREE from 'three'
 import { buildControllers } from './controller'
 import { createTeleport } from './teleport'
 
-const supportStates = {
-  ALLOWED: 0,
-  NOT_ALLOWED: 1,
-  NOT_SECURE: 2,
-  NOT_SUPPORTED: 3,
-} as const
-
-type SupportValues = typeof supportStates[keyof typeof supportStates]
-
 const supportStateMessages = {
-  0: 'Enter VR',
-  1: 'VR is not allowed',
-  2: 'VR requires HTTPS',
-  3: 'VR not supported',
+  'allowed': 'Enter VR',
+  'not_allowed': 'VR is not allowed',
+  'not_secure': 'VR requires HTTPS',
+  'not_supported': 'VR not supported',
 } as const
 
 export const xr = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera) => {
@@ -52,20 +43,20 @@ export const xr = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: TH
     }
   }
 
-  const requestSessionSupport = async (): Promise<SupportValues> => {
+  const requestSessionSupport = async (): Promise<'allowed' | 'not_allowed' | 'not_secure' | 'not_supported'> => {
     if (navigator.xr === undefined) {
-      return supportStates.NOT_SUPPORTED
+      return 'not_supported'
     }
 
     if (!window.isSecureContext) {
-      return supportStates.NOT_SECURE
+      return 'not_secure'
     }
 
     try {
       const supported = await navigator.xr.isSessionSupported('immersive-vr')
-      return supported ? supportStates.ALLOWED : supportStates.NOT_SUPPORTED
+      return supported ? 'allowed' : 'not_supported'
     } catch {
-      return supportStates.NOT_ALLOWED
+      return 'not_allowed'
     }
   }
 
@@ -99,13 +90,13 @@ export const xr = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: TH
     session.end()
   }
 
-  const showControllers = () => {
+  const addControllers = () => {
     buildControllers(renderer, scene)
     return self
   }
 
-  const enableTeleport = (...navmesh: THREE.Object3D[]) => {
-    teleport.enable(...navmesh)
+  const enableTeleport = (...navMeshes: THREE.Object3D[]) => {
+    teleport.enable(...navMeshes)
     return self
   }
 
@@ -118,7 +109,7 @@ export const xr = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: TH
     const button = document.createElement('button')
     button.textContent = supportStateMessages[xrSupport]
   
-    if (xrSupport === supportStates.ALLOWED) {
+    if (xrSupport === 'allowed') {
       button.addEventListener('click', requestSession)
     }
   
@@ -131,13 +122,12 @@ export const xr = (renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: TH
 
   const self = {
     state,
-    supportStates,
     supportStateMessages,
     createButton,
     requestSessionSupport,
     requestSession,
     endSession,
-    showControllers,
+    addControllers,
     enableTeleport,
     disableTeleport,
     on,
