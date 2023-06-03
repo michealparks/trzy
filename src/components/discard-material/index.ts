@@ -1,7 +1,12 @@
-import { shaderMaterial } from '../shader-material'
 
-export const MeshDiscardMaterial = shaderMaterial(
-  {},
-  'void main() { }',
-  'void main() { gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0); discard; }'
-)
+import * as THREE from 'three'
+
+export class MeshDiscardMaterial extends THREE.ShaderMaterial {
+  constructor() {
+    super({
+      vertexShader: 'void main(){}',
+      fragmentShader: 'void main(){gl_FragColor=vec4(0.0,0.0,0.0,0.0);discard;}'
+    })
+  }
+}
+

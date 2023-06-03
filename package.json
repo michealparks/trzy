@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -61,7 +61,7 @@
     "three": "^0.153.0",
     "three-inspect": "^0.3.3",
     "three-mesh-bvh": "^0.6.0",
-    "trzy": "^0.0.49",
+    "trzy": "^0.0.50",
     "typescript": "^5.1.3",
     "vite": "^4.3.9",
     "vite-plugin-glsl": "^1.1.2"
