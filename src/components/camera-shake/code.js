@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { CameraShake, useRaf } from '.'
+import { CameraShake, useRaf } from 'trzy'
 
 const camera = new THREE.PerspectiveCamera()
 const cameraShake = new CameraShake(camera)

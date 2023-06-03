@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { AxesHelper } from '.'
+import { AxesHelper } from 'trzy'
 
 const scene = new THREE.Scene()
 const helper = new AxesHelper()

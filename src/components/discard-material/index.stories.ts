@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
+import * as THREE from 'three'
 import { three, MeshDiscardMaterial } from '../../main'
-import { setup } from '../lib'
 import code from './code?raw'
 
 const meta: Meta = {
@@ -12,10 +12,11 @@ const meta: Meta = {
 }
 
 const render = () => {
-  const { scene, camera, canvas, update } = three()
+  const { scene, canvas } = three()
+  const geometry = new THREE.BoxGeometry()
   const material = new MeshDiscardMaterial()
-
-  setup({ scene, camera, canvas, update, controls: true })
+  const mesh = new THREE.Mesh(geometry, material)
+  scene.add(mesh)
 
   return canvas
 }
