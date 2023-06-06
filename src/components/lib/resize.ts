@@ -36,7 +36,7 @@ const resize = (
   }
 }
 
-export const addRendererResizer = (
+export const rendererResizer = (
   camera: THREE.Camera,
   renderer: THREE.WebGLRenderer,
   composer?: EffectComposer,

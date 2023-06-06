@@ -9,7 +9,7 @@ let session: XRSession | undefined
 let _renderer: THREE.WebGLRenderer
 let _scene: THREE.Scene
 let _camera: THREE.Camera
-let teleport: ReturnType<typeof createTeleport> 
+let teleport: undefined | ReturnType<typeof createTeleport>
 
 const supportStateMessages = {
   allowed: 'Enter VR',

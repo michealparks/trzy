@@ -44,9 +44,9 @@ playAudio('rickroll.mp3', volume, loop)
 Helpers for resizing the rendererer / effect composer
 
 ```ts
-import { addRendererResizer } from 'trzy'
+import { rendererResizer } from 'trzy'
 
-const disposeResizer = addRendererResizer(camera, renderer, composer, dpi)
+const disposeResizer = rendererResizer(camera, renderer, composer, dpi)
 
 ```
 

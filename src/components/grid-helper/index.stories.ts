@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html'
 import { GridHelper, three } from '../../main'
-import { setup } from '../lib'
+import { setup } from '../setup'
 import code from './code?raw'
 
 const meta: Meta = {
@@ -8,11 +8,11 @@ const meta: Meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Similar to `THREE.GridHelper` but is just a single plane with lines rendered on the GPU.'
+        component: 'Similar to `THREE.GridHelper` but is just a single plane with lines rendered on the GPU.',
       },
-      source: { code }
-    }
-  }
+      source: { code },
+    },
+  },
 }
 
 export default meta

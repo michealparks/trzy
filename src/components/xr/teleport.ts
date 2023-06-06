@@ -90,9 +90,9 @@ export const createTeleport = (
   for (let index = 0; index < 2; index += 1) {
     const lineMaterial = lineBasicMat({
       blending: THREE.AdditiveBlending,
+      name: `XR Controller ${index === 0 ? 'Left' : 'Right'} Ray Line`,
       transparent: true,
       vertexColors: true,
-      name: `XR Controller ${index === 0 ? 'Left' : 'Right'} Ray Line`,
       visible: false,
     })
     const rayline = line(lineMaterial)

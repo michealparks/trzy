@@ -77,7 +77,7 @@ const handleKeyUp = (event: KeyboardEvent): void => {
     event.preventDefault()
     event.stopImmediatePropagation()
   }
-  
+
   const key = event.key.toLowerCase()
   pressedKeys.delete(key)
 
@@ -90,7 +90,7 @@ const handleKeyUp = (event: KeyboardEvent): void => {
   if (pressedKeys.size === 0) {
     keyboard.controlling = false
   }
-}  
+}
 
 const handleBlur = (): void => {
   for (const pressedKey of pressedKeys) {
@@ -107,7 +107,7 @@ const disposeKeyboard = (): void => {
 }
 
 /**
- * 
+ *
  * @param options
  * @param options.preventDefault If true, prevents default on every keyup / keydown. Default is true.
  */

@@ -1,7 +1,7 @@
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { shadows } from '../main'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 const loader = new GLTFLoader()
 
@@ -11,13 +11,13 @@ export const setup = async ({
   controls,
   scene,
   update,
-  webGPU
+  webGPU,
 }: {
   controls: boolean,
   scene: THREE.Scene,
   camera: { current: THREE.Camera },
   canvas: HTMLCanvasElement,
-  update: (cb: () => void) => void
+  update: (callback: () => void) => void
   webGPU?: boolean
 }) => {
   let orbit: OrbitControls | undefined
@@ -53,15 +53,15 @@ export const setup = async ({
   shadows(scene)
 
   if (webGPU) {
-    // shadows(scene, 4096, 0.001)
+    // Shadows(scene, 4096, 0.001)
     light.shadow.mapSize.set(4096, 4096)
     light.shadow.bias = 0.0001
-    light.shadow.camera.near = 1;
-    light.shadow.camera.far = 100;
-    light.shadow.camera.right = 17;
-    light.shadow.camera.left = - 17;
-    light.shadow.camera.top	= 17;
-    light.shadow.camera.bottom = -17;
+    light.shadow.camera.near = 1
+    light.shadow.camera.far = 100
+    light.shadow.camera.right = 17
+    light.shadow.camera.left = -17
+    light.shadow.camera.top = 17
+    light.shadow.camera.bottom = -17
   } else {
     shadows(scene)
   }

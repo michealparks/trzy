@@ -2,7 +2,9 @@ export const throttle = <T extends Function>(callback: T, delay = 500) => {
   let shouldWait = false
 
   return (...args: unknown[]) => {
-    if (shouldWait) return
+    if (shouldWait) {
+      return
+    }
 
     callback(...args)
     shouldWait = true

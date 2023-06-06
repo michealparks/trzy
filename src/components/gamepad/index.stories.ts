@@ -23,10 +23,10 @@ const render = () => {
   pre.style.width = '400px'
   container.append(pre, pre2)
 
-  const { gamepad1, gamepad2, updateGamepad } = useGamepad()
+  const { gamepad1, gamepad2, updateGamepads } = useGamepad()
 
   update(() => {
-    updateGamepad()
+    updateGamepads()
     pre.innerHTML = `Gamepad 1\n\n${JSON.stringify(gamepad1, null, 2)}`
     pre2.innerHTML = `Gamepad 2\n\n${JSON.stringify(gamepad2, null, 2)}`
   })

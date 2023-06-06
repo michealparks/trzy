@@ -1,4 +1,4 @@
-let callbacks: ((time: number, delta: number) => void)[] = []
+const callbacks: ((time: number, delta: number) => void)[] = []
 let handle = 0
 let time = performance.now()
 let then = performance.now()
@@ -9,8 +9,8 @@ const tick = () => {
   delta = time - then
   then = time
 
-  for (let i = 0, l = callbacks.length; i < l; i += 1) {
-    callbacks[i]!(time, delta)
+  for (let index = 0, l = callbacks.length; index < l; index += 1) {
+    callbacks[index]!(time, delta)
   }
 
   handle = requestAnimationFrame(tick)
@@ -24,7 +24,7 @@ const destroy = (callback: (time: number, delta: number) => void) => {
   }
 }
 
-export const useRaf = (callback: (time: number, delta: number) => void): () => void => {
+export const raf = (callback: (time: number, delta: number) => void): () => void => {
   if (callbacks.length === 0) {
     handle = requestAnimationFrame(tick)
   }

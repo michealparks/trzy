@@ -1,12 +1,12 @@
 import * as THREE from 'three'
 import { EffectComposer } from 'postprocessing'
-import { addRendererResizer } from '../lib/resize'
+import { rendererResizer } from '../lib/resize'
 
 THREE.ColorManagement.enabled = true
 
-let cache: null | ReturnType<typeof threeInstance> = null
+let cache: undefined | ReturnType<typeof threeInstance>
 
-export const three = (props: {
+export const threeInstance = (properties: {
   parameters?: THREE.WebGLRendererParameters,
   autostart?: boolean,
   dpi?: number,
@@ -14,28 +14,11 @@ export const three = (props: {
   renderer?: THREE.WebGLRenderer
   composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
 } = {}) => {
-  if (cache !== null) {
-    return cache
-  }
-
-  cache = threeInstance(props)
-
-  return cache
-}
-
-export const threeInstance = (props: {
-  parameters?: THREE.WebGLRendererParameters,
-  autostart?: boolean,
-  dpi?: number,
-  shadowMap?: THREE.ShadowMapType | false,
-  renderer?: THREE.WebGLRenderer
-  composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
-} = {}) => {
-  const renderer = props.renderer ?? new THREE.WebGLRenderer({
+  const renderer = properties.renderer ?? new THREE.WebGLRenderer({
     powerPreference: 'high-performance',
-    ...props.parameters
+    ...properties.parameters,
   })
- 
+
   renderer.useLegacyLights = false
 
   if (renderer.outputColorSpace === undefined) {
@@ -44,88 +27,105 @@ export const threeInstance = (props: {
 
   renderer.toneMapping = THREE.ACESFilmicToneMapping
 
-  if (renderer.shadowMap !== undefined && props.shadowMap !== false) {
+  if (renderer.shadowMap !== undefined && properties.shadowMap !== false) {
     renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = props.shadowMap ?? THREE.PCFSoftShadowMap
+    renderer.shadowMap.type = properties.shadowMap ?? THREE.PCFSoftShadowMap
   }
 
-  let camera: { current: THREE.Camera } = { current: new THREE.PerspectiveCamera() }
+  const camera: { current: THREE.Camera } = { current: new THREE.PerspectiveCamera() }
 
   const scene = new THREE.Scene()
   scene.add(camera.current)
 
-  let composer = props.composer?.(scene, camera.current, renderer)
+  let composer = properties.composer?.(scene, camera.current, renderer)
 
   let time = performance.now()
   let then = performance.now()
   let delta = 0
 
-  const ctx = {
+  const context = {
+    camera,
     canvas: renderer.domElement,
     renderer,
     scene,
-    camera,
   }
 
-  const updates: ((context: typeof ctx, delta: number) => void)[] = []
-  const beforeRenders: ((context: typeof ctx, delta: number) => void)[] = []
+  const updates: ((context: typeof context, delta: number) => void)[] = []
+  const beforeRenders: ((context: typeof context, delta: number) => void)[] = []
 
   const frame = () => {
     time = performance.now()
     delta = time - then
     then = time
 
-    for (let i = 0, l = beforeRenders.length; i < l; i += 1) {
-      beforeRenders[i]!(ctx, delta)
+    for (let index = 0, l = beforeRenders.length; index < l; index += 1) {
+      beforeRenders[index]!(context, delta)
     }
 
-    if (composer !== undefined) {
-      composer.render(delta)
-    } else {
+    if (composer === undefined) {
       renderer.render(scene, camera.current)
+    } else {
+      composer.render(delta)
     }
 
-    for (let i = 0, l = updates.length; i < l; i += 1) {
-      updates[i]!(ctx, delta)
+    for (let index = 0, l = updates.length; index < l; index += 1) {
+      updates[index]!(context, delta)
     }
   }
 
-  let disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
+  let disposeResizer = rendererResizer(camera.current, renderer, composer, properties.dpi)
 
-  const setCamera = (newCamera: THREE.Camera): void => {
+  const setCamera = (nextCamera: THREE.Camera): void => {
     disposeResizer()
 
-    camera.current = newCamera
+    camera.current = nextCamera
     scene.add(camera.current)
 
-    composer = props.composer?.(scene, camera.current, renderer)
+    composer = properties.composer?.(scene, camera.current, renderer)
 
-    disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
+    disposeResizer = rendererResizer(camera.current, renderer, composer, properties.dpi)
   }
 
   const stop = (): void => renderer.setAnimationLoop(null)
   const start = (): void => renderer.setAnimationLoop(frame)
 
-  const beforeRender = (callback: (context: typeof ctx, delta: number) => void) => {
+  const beforeRender = (callback: (context: typeof context, delta: number) => void) => {
     beforeRenders.push(callback)
     return () => beforeRenders.splice(beforeRenders.indexOf(callback), 1)
   }
 
-  const update = (callback: (context: typeof ctx, delta: number) => void) => {
+  const update = (callback: (context: typeof context, delta: number) => void) => {
     updates.push(callback)
     return () => updates.splice(updates.indexOf(callback), 1)
   }
 
-  if (props.autostart !== false) {
+  if (properties.autostart !== false) {
     start()
   }
 
   return {
-    ...ctx,
-    setCamera,
-    stop,
-    start,
+    ...context,
     beforeRender,
+    setCamera,
+    start,
+    stop,
     update,
   }
+}
+
+export const three = (properties: {
+  parameters?: THREE.WebGLRendererParameters,
+  autostart?: boolean,
+  dpi?: number,
+  shadowMap?: THREE.ShadowMapType | false,
+  renderer?: THREE.WebGLRenderer
+  composer?: (scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) => EffectComposer,
+} = {}) => {
+  if (cache !== undefined) {
+    return cache
+  }
+
+  cache = threeInstance(properties)
+
+  return cache
 }

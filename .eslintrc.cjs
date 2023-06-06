@@ -59,6 +59,7 @@ module.exports = {
     'one-var': ['error', 'never'],
     'padded-blocks': ['error', 'never'],
     'prefer-destructuring': 'off',
+    'sort-keys': 'off',
     'quote-props': ['error', 'consistent-as-needed'],
     'quotes': ['error', 'single'],
     'semi': ['error', 'never'],

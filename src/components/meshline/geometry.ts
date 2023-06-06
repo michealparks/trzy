@@ -16,18 +16,18 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
 
   _attributes: any
 
-  widthCallback: null | ((n: number) => number) = null
+  widthCallback: ((n: number) => number) | undefined
 
   // Used to raycast
   matrixWorld = new THREE.Matrix4()
 
-  constructor (params: {
+  constructor (parameters: {
     points?: Float32Array
   } = {}) {
     super()
 
-    if (params.points) {
-      this.setPoints(params.points)
+    if (parameters.points) {
+      this.setPoints(parameters.points)
     }
   }
 
@@ -39,12 +39,17 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     this.positions.splice(0, this.positions.length)
     this.counters.splice(0, this.counters.length)
 
-    for (let j = 0, l = value.length; j < l; j += 3) {
-      const count = j / value.length
-      this.positions.push(value[j]!, value[j + 1]!, value[j + 2]!)
-      this.positions.push(value[j]!, value[j + 1]!, value[j + 2]!)
-      this.counters.push(count)
-      this.counters.push(count)
+    for (let index = 0, l = value.length; index < l; index += 3) {
+      const count = index / value.length
+      this.positions.push(
+        value[index]!,
+        value[index + 1]!,
+        value[index + 2]!,
+        value[index]!,
+        value[index + 1]!,
+        value[index + 2]!
+      )
+      this.counters.push(count, count)
     }
 
     this.process()
@@ -84,63 +89,47 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     let v
 
     // Initial previous points
-    if (this.compareV3(0, l - 1)) {
-      v = this.copyV3(l - 2)
-    } else {
-      v = this.copyV3(0)
-    }
+    v = this.compareV3(0, l - 1) ? this.copyV3(l - 2) : this.copyV3(0)
 
-    this.previous.push(v[0]!, v[1]!, v[2]!)
-    this.previous.push(v[0]!, v[1]!, v[2]!)
+    this.previous.push(v[0]!, v[1]!, v[2]!, v[0]!, v[1]!, v[2]!)
 
-    for (let j = 0; j < l; j += 1) {
+    for (let index = 0; index < l; index += 1) {
       // Sides
-      this.side.push(1)
-      this.side.push(-1)
+      this.side.push(1, -1)
 
       // Widths
-      if (this.widthCallback !== null) {
-        w = this.widthCallback(j / (l - 1))
+      if (this.widthCallback !== undefined) {
+        w = this.widthCallback(index / (l - 1))
       } else if (this.attenuation === 'squared') {
-        w = (j / (l - 1)) ** 2
+        w = (index / (l - 1)) ** 2
       } else {
         w = 1
       }
 
-      this.width.push(w)
-      this.width.push(w)
+      this.width.push(w, w)
 
       // Uvs
-      this.uvs.push(j / (l - 1), 0)
-      this.uvs.push(j / (l - 1), 1)
+      this.uvs.push(index / (l - 1), 0, index / (l - 1), 1)
 
-      if (j < l - 1) {
+      if (index < l - 1) {
         // Points previous to positions
-        v = this.copyV3(j)
-        this.previous.push(v[0]!, v[1]!, v[2]!)
-        this.previous.push(v[0]!, v[1]!, v[2]!)
+        v = this.copyV3(index)
+        this.previous.push(v[0]!, v[1]!, v[2]!, v[0]!, v[1]!, v[2]!)
 
         // Indices
-        const n = j * 2
-        this.indices_array.push(n, n + 1, n + 2)
-        this.indices_array.push(n + 2, n + 1, n + 3)
+        const n = index * 2
+        this.indices_array.push(n, n + 1, n + 2, n + 2, n + 1, n + 3)
       }
-      if (j > 0) {
+      if (index > 0) {
         // Points after positions
-        v = this.copyV3(j)
-        this.next.push(v[0]!, v[1]!, v[2]!)
-        this.next.push(v[0]!, v[1]!, v[2]!)
+        v = this.copyV3(index)
+        this.next.push(v[0]!, v[1]!, v[2]!, v[0]!, v[1]!, v[2]!)
       }
     }
 
     // Last next point
-    if (this.compareV3(l - 1, 0)) {
-      v = this.copyV3(1)
-    } else {
-      v = this.copyV3(l - 1)
-    }
-    this.next.push(v[0]!, v[1]!, v[2]!)
-    this.next.push(v[0]!, v[1]!, v[2]!)
+    v = this.compareV3(l - 1, 0) ? this.copyV3(1) : this.copyV3(l - 1)
+    this.next.push(v[0]!, v[1]!, v[2]!, v[0]!, v[1]!, v[2]!)
 
     /*
      * Redefining the attribute seems to prevent range errors
@@ -227,21 +216,21 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
   }
 }
 
-const memcpy = (src: any, srcOffset: any, dst: any, dstOffset: any, length: any) => {
-  src = src.subarray || src.slice ? src : src.buffer
+const memcpy = (source: any, sourceOffset: any, dst: any, dstOffset: any, length: any) => {
+  source = source.subarray || source.slice ? source : source.buffer
   dst = dst.subarray || dst.slice ? dst : dst.buffer
 
-  src = srcOffset
-    ? src.subarray
-      ? src.subarray(srcOffset, length && srcOffset + length)
-      : src.slice(srcOffset, length && srcOffset + length)
-    : src
+  source = sourceOffset
+    ? (source.subarray
+      ? source.subarray(sourceOffset, length && sourceOffset + length)
+      : source.slice(sourceOffset, length && sourceOffset + length))
+    : source
 
   if (dst.set) {
-    dst.set(src, dstOffset)
+    dst.set(source, dstOffset)
   } else {
-    for (let i = 0; i < src.length; i += 1) {
-      dst[i + dstOffset] = src[i]
+    for (const [index, element] of source.entries()) {
+      dst[index + dstOffset] = element
     }
   }
 

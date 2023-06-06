@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, softShadows, resetSoftShadows } from '../../main'
 import code from './code?raw'
-import { setup } from '../lib'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Soft Shadows',

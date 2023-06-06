@@ -1,7 +1,7 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, AxesHelper, ViewHelper } from '../../main'
-import { setup } from '../lib'
+import { setup } from '../setup'
 import code from './code?raw'
 
 const meta: Meta = {

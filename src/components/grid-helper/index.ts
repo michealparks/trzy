@@ -16,42 +16,42 @@ export class GridHelper extends THREE.Mesh {
         uColor: { value: new THREE.Color(color) },
         uDistance: { value: distance },
       },
-      transparent: true,
       vertexShader,
       fragmentShader,
+      transparent: true,
       extensions: {
         derivatives: true,
-      }
+      },
     })
     super(geometry, material)
     this.material = material
   }
 
-  get cellSize(): number {
+  get cellSize (): number {
     return this.material.uniforms.uCellSize!.value
   }
-  set cellSize(value: number) {
+  set cellSize (value: number) {
     this.material.uniforms.uCellSize!.value = value
   }
 
-  get largeCellSize(): number {
+  get largeCellSize (): number {
     return this.material.uniforms.uLargeCellSize!.value
   }
-  set largeCellSize(value: number) {
+  set largeCellSize (value: number) {
     this.material.uniforms.uLargeCellSize!.value = value
   }
 
-  get color(): THREE.ColorRepresentation {
+  get color (): THREE.ColorRepresentation {
     return this.material.uniforms.uColor!.value
   }
-  set color(value: THREE.ColorRepresentation) {
+  set color (value: THREE.ColorRepresentation) {
     this.material.uniforms.uColor!.value = value
   }
 
-  get distance(): number {
+  get distance (): number {
     return this.material.uniforms.uDistance!.value
   }
-  set distance(value: number) {
+  set distance (value: number) {
     this.material.uniforms.uDistance!.value = value
   }
 }

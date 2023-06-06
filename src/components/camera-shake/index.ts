@@ -1,81 +1,31 @@
-import * as THREE from 'three'
 import type { MapControls } from 'three/examples/jsm/controls/MapControls'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 
-import { createNoise2D } from 'simplex-noise'
+import { Shake } from '../shake'
 
 export type Controls =
   | PointerLockControls
   | OrbitControls
   | MapControls
 
-export class CameraShake {
-  decay = false
-  decayRate = 0.65
-  intensity = 0.5
-  maxPitch = 0.05
-  maxRoll = 0.05
-  maxYaw = 0.05
-  pitchFrequency = 0.0005
-  rollFrequency = 0.0005
-  yawFrequency = 0.0005
-  time = 0
-
-  yawNoise = createNoise2D()
-  pitchNoise = createNoise2D()
-  rollNoise = createNoise2D()
-  then = 0
+export class CameraShake extends Shake {
   activeControls: Controls | undefined
-  initialRotation = new THREE.Euler()
-  camera: THREE.Camera
 
-  constructor (camera: THREE.Camera) {
-    this.camera = camera
-  }
-
-  updateRotation = (): void => {
-    this.initialRotation.copy(this.camera.rotation)
-  }
-
-  enable (controls?: OrbitControls): void {
-    this.then = performance.now()
-    this.initialRotation.copy(this.camera.rotation)
+  override enable (controls?: OrbitControls): void {
+    super.enable()
 
     if (controls) {
       this.activeControls = controls
-      this.activeControls.addEventListener('change', this.updateRotation)
+      this.activeControls.addEventListener('change', this.saveRotation)
     }
   }
 
-  update = (delta: number): void => {
-    this.time += delta
+  override disable (): void {
+    super.disable()
 
-    const shake = this.intensity ** 2
-    const yaw = this.maxYaw * shake * this.yawNoise(this.time * this.yawFrequency, 1)
-    const pitch = this.maxPitch * shake * this.pitchNoise(this.time * this.pitchFrequency, 1)
-    const roll = this.maxRoll * shake * this.rollNoise(this.time * this.rollFrequency, 1)
-
-    this.camera.rotation.set(
-      this.initialRotation.x + pitch,
-      this.initialRotation.y + yaw,
-      this.initialRotation.z + roll
-    )
-
-    if (this.decay && this.intensity > 0) {
-      this.intensity -= this.decayRate * delta
-
-      if (this.intensity < 0) {
-        this.intensity = 0
-      } else if (this.intensity > 1) {
-        this.intensity = 1
-      }
-    }
-  }
-
-  disable (): void {
     if (this.activeControls) {
-      this.activeControls.removeEventListener('change', this.updateRotation)
+      this.activeControls.removeEventListener('change', this.saveRotation)
       this.activeControls = undefined
     }
   }

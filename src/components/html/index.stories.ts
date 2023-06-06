@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/html'
 import { three, Html } from '../../main'
 import code from './code?raw'
-import { setup } from '../lib'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'HTML',

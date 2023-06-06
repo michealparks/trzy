@@ -49,7 +49,7 @@ export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Reco
     } else if (data.handedness === 'right') {
       xrControllers.right = data
     }
-  
+
     if (
       xrControllers.left?.gamepad !== undefined ||
       xrControllers.right?.gamepad !== undefined
@@ -64,9 +64,9 @@ export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Reco
     } else if (data.handedness === 'right') {
       xrControllers.left = undefined
     }
-  
+
     const [pad1, pad2] = navigator.getGamepads()
-  
+
     if (
       (pad1 === null || pad1 === undefined) &&
       (pad2 === null || pad2 === undefined)
@@ -85,8 +85,10 @@ export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Reco
   }
 
   const controller1 = renderer.xr.getController(0)
-  // controller1.addEventListener('selectstart', handleXrSelectStart)
-  // controller1.addEventListener('selectend', handleXrSelectEnd)
+  /*
+   * Controller1.addEventListener('selectstart', handleXrSelectStart)
+   * controller1.addEventListener('selectend', handleXrSelectEnd)
+   */
 
   // @ts-expect-error this is not correctly typed
   controller1.addEventListener('connected', handleXrControllerConnected)
@@ -94,8 +96,11 @@ export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Reco
   controller1.addEventListener('disconnected', handleXrControllerDisconnected)
 
   const controller2 = renderer.xr.getController(1)
-  // controller2.addEventListener('selectstart', handleXrSelectStart)
-  // controller2.addEventListener('selectend', handleXrSelectEnd)
+  /*
+   * Controller2.addEventListener('selectstart', handleXrSelectStart)
+   * controller2.addEventListener('selectend', handleXrSelectEnd)
+   */
+
   // @ts-expect-error this is not correctly typed
   controller2.addEventListener('connected', handleXrControllerConnected)
   // @ts-expect-error this is not correctly typed

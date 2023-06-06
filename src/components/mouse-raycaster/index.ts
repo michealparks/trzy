@@ -4,7 +4,7 @@ type Events = 'click' | 'move'
 
 export class MouseRaycaster extends THREE.EventDispatcher {
   camera: THREE.Camera | undefined
-  
+
   raycaster: THREE.Raycaster
   objects: THREE.Object3D[] = []
   pointerDown = new THREE.Vector2()
@@ -15,7 +15,7 @@ export class MouseRaycaster extends THREE.EventDispatcher {
   renderer: THREE.WebGLRenderer
   #events = { click: 0, move: 0 }
 
-  constructor (props: {
+  constructor (properties: {
     scene?: THREE.Scene
     camera?: THREE.Camera
     renderer: THREE.WebGLRenderer
@@ -24,14 +24,14 @@ export class MouseRaycaster extends THREE.EventDispatcher {
     recursive?: boolean
   }) {
     super()
-    this.camera = props.camera
-    this.renderer = props.renderer
-    this.raycaster = props.raycaster ?? new THREE.Raycaster()
-    this.objects = props.objects ?? (props.scene ? [props.scene] : [])
-    this.recursive = props.recursive ?? true
+    this.camera = properties.camera
+    this.renderer = properties.renderer
+    this.raycaster = properties.raycaster ?? new THREE.Raycaster()
+    this.objects = properties.objects ?? (properties.scene ? [properties.scene] : [])
+    this.recursive = properties.recursive ?? true
   }
 
-  on(type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
+  on (type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
     super.addEventListener<Events>(type, listener)
 
     const canvas = this.renderer.domElement
@@ -46,7 +46,7 @@ export class MouseRaycaster extends THREE.EventDispatcher {
     this.#events[type] += 1
   }
 
-  off(type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
+  off (type: Events, listener: THREE.EventListener<THREE.Event, Events, this>): void {
     super.removeEventListener<Events>(type, listener)
 
     const canvas = this.renderer.domElement
@@ -78,7 +78,9 @@ export class MouseRaycaster extends THREE.EventDispatcher {
   }
 
   onPointerUp = (event: PointerEvent): void => {
-    if (this.camera === undefined) return
+    if (this.camera === undefined) {
+      return
+    }
 
     this.getNormalizedCoordinates(event, this.pointerUp)
 
@@ -95,7 +97,9 @@ export class MouseRaycaster extends THREE.EventDispatcher {
   }
 
   onPointerMove = (event: PointerEvent): void => {
-    if (this.camera === undefined) return
+    if (this.camera === undefined) {
+      return
+    }
 
     this.getNormalizedCoordinates(event, this.pointerMove)
 

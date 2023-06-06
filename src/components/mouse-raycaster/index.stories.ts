@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import { three, MouseRaycaster } from '../../main'
 import { bvhRaycast } from '../bvh'
 import code from './code?raw'
-import { setup } from '../lib'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Mouse Raycaster',

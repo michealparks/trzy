@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from '@storybook/html'
-import { three, xr, plane } from '../../main'
-import { setup } from '../lib'
+import { plane, three, xr } from '../../main'
+import { setup } from '../setup'
 import code from './code?raw'
-// import Inspector from 'three-inspect'
+// Import Inspector from 'three-inspect'
 
 const meta: Meta = {
   title: 'XR',
   parameters: {
     docs: {
       description: {
-        component: ''
+        component: '',
       },
-      source: { code }
-    }
-  }
+      source: { code },
+    },
+  },
 }
 
 export default meta
@@ -23,7 +23,7 @@ const render = () => {
   container.style.cssText = 'width:100%;height:420px;'
 
   const { canvas, camera, scene, renderer, update } = three({
-    parameters: { antialias: true }
+    parameters: { antialias: true },
   })
   container.append(canvas)
 
@@ -47,15 +47,11 @@ const render = () => {
     container.append(button)
   })
 
-  canvas.addEventListener('click', () => {
-    xr.entered ? xr.endSession() : xr.requestSession()
-  })
-
   xr.on('enter', () => xr.enableTeleport(floor))
 
   update((_, delta) => xr.update(delta))
 
-  // new Inspector({ scene, camera: camera.current, renderer })
+  // New Inspector({ scene, camera: camera.current, renderer })
 
   return container
 }

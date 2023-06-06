@@ -1,7 +1,9 @@
 import type * as THREE from 'three'
 
 export const setMapSize = (light: THREE.Light, mapSize = 1024, bias = -0.0001) => {
-  if (light.shadow === undefined) return
+  if (light.shadow === undefined) {
+    return
+  }
 
   light.shadow.bias = bias
   light.shadow.mapSize.set(mapSize, mapSize)
@@ -21,7 +23,7 @@ export const shadows = (object: THREE.Object3D, mapSize = 1024, bias = -0.0001) 
   }
 
   const children = object.children
-  for (let i = 0, l = children.length; i < l; i ++) {
-    shadows(children[i]!, mapSize, bias)
+  for (let index = 0, l = children.length; index < l; index += 1) {
+    shadows(children[index]!, mapSize, bias)
   }
 }
