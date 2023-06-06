@@ -1,5 +1,5 @@
-import { useGamepad } from './gamepad'
-import { useKeyboard } from './keyboard'
+import { useGamepad } from '../gamepad'
+import { useKeyboard } from '../keyboard'
 
 interface InputMap {
   [key: string]: {

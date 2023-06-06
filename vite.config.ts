@@ -3,10 +3,12 @@ import glsl from 'vite-plugin-glsl';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [glsl()],
+  plugins: [
+    glsl(),
+  ],
   build: {
     copyPublicDir: false,
-    minify: true,
+    minify: false,
     target: 'esnext',
     lib: {
       entry: 'src/main.ts',
@@ -21,6 +23,10 @@ export default defineConfig({
         'three/examples/jsm/lines/LineMaterial',
         'three/examples/jsm/lines/LineGeometry',
         'three/examples/jsm/lines/Line2',
+        'three/examples/jsm/capabilities/WebGPU',
+        'three/examples/jsm/renderers/webgpu/WebGPURenderer',
+        'three/examples/jsm/loaders/GLTFLoader',
+        'three/examples/jsm/webxr/XRControllerModelFactory',
       ],
       output: {
         inlineDynamicImports: true,

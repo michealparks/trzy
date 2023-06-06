@@ -1,5 +1,6 @@
 import { CameraShake, raf } from 'trzy'
 
+const camera = new THREE.PerspectiveCamera()
 const cameraShake = new CameraShake(camera)
 
 // Optionally pass orbitControls if they exist
