@@ -24,7 +24,7 @@ const destroy = (callback: (time: number, delta: number) => void) => {
   }
 }
 
-export const useRaf = (callback: (time: number, delta: number) => void): () => void => {
+export const raf = (callback: (time: number, delta: number) => void): () => void => {
   if (callbacks.length === 0) {
     handle = requestAnimationFrame(tick)
   }

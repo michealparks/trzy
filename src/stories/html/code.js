@@ -1,4 +1,4 @@
-import { Html, useRaf } from 'trzy'
+import { Html, raf } from 'trzy'
 
 const html = new Html({
   el: document.querySelector('el'),
@@ -7,7 +7,7 @@ const html = new Html({
   object3D,
 })
 
-useRaf(() => {
+raf(() => {
   // render your scene, then update.
   html.update()
 })

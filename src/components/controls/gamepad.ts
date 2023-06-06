@@ -27,6 +27,8 @@ let initialized = false
 
 const gamepad1 = createGamepad()
 const gamepad2 = createGamepad()
+const gamepad3 = createGamepad()
+const gamepad4 = createGamepad()
 
 const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
   pad.leftStickX = axes[0] ?? 0
@@ -54,8 +56,8 @@ const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
   pad.padX = -buttons[14]!.value || buttons[15]!.value
 }
 
-const updateGamepad = (): void => {
-  const [pad1, pad2] = window.navigator.getGamepads()
+const updateGamepads = (): void => {
+  const [pad1, pad2, pad3, pad4] = window.navigator.getGamepads()
 
   if (pad1 !== null && pad1 !== undefined) {
     handleGamepad(gamepad1, pad1)
@@ -63,6 +65,14 @@ const updateGamepad = (): void => {
 
   if (pad2 !== null && pad2 !== undefined) {
     handleGamepad(gamepad2, pad2)
+  }
+
+  if (pad3 !== null && pad3 !== undefined) {
+    handleGamepad(gamepad3, pad3)
+  }
+
+  if (pad4 !== null && pad4 !== undefined) {
+    handleGamepad(gamepad4, pad4)
   }
 }
 
@@ -86,7 +96,7 @@ const handleGamepadConnected = (): void => {
   gamepad2.id = pad2?.id ?? ''
 }
 
-const disposeGamepad = (): void => {
+const disposeGamepads = (): void => {
   window.removeEventListener('gamepadconnected', handleGamepadConnected)
   window.removeEventListener('gamepaddisconnected', handleGamepadDisconnected)
   initialized = false
@@ -95,8 +105,8 @@ const disposeGamepad = (): void => {
 export const useGamepad = (): {
   gamepad1: Readonly<Pad>
   gamepad2: Readonly<Pad>
-  updateGamepad: () => void
-  disposeGamepad: () => void
+  updateGamepads: () => void
+  disposeGamepads: () => void
 } => {
   if (!initialized) {
     window.addEventListener('gamepadconnected', handleGamepadConnected)
@@ -104,5 +114,5 @@ export const useGamepad = (): {
     initialized = true
   }
 
-  return { gamepad1, gamepad2, updateGamepad, disposeGamepad }
+  return { gamepad1, gamepad2, updateGamepads, disposeGamepads }
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { EffectComposer } from 'postprocessing'
-import { addRendererResizer } from '../lib/resize'
+import { rendererResizer } from '../lib/resize'
 
 THREE.ColorManagement.enabled = true
 
@@ -90,7 +90,7 @@ export const threeInstance = (props: {
     }
   }
 
-  let disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
+  let disposeResizer = rendererResizer(camera.current, renderer, composer, props.dpi)
 
   const setCamera = (newCamera: THREE.Camera): void => {
     disposeResizer()
@@ -100,7 +100,7 @@ export const threeInstance = (props: {
 
     composer = props.composer?.(scene, camera.current, renderer)
 
-    disposeResizer = addRendererResizer(camera.current, renderer, composer, props.dpi)
+    disposeResizer = rendererResizer(camera.current, renderer, composer, props.dpi)
   }
 
   const stop = (): void => renderer.setAnimationLoop(null)

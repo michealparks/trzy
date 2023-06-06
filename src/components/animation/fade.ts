@@ -1,13 +1,21 @@
 import * as THREE from 'three'
 
+/**
+ * Fades from one action to another.
+ *
+ * @param currentAction The currently playing action.
+ * @param nextAction The action to fade to.
+ * @param duration The fade duration.
+ * @param loop Whether or not to loop the next action.
+ */
 export const fadeToAction = (
-  lastAction: THREE.AnimationAction,
+  currentAction: THREE.AnimationAction,
   nextAction: THREE.AnimationAction,
   duration: number,
   loop = true
-): THREE.AnimationAction => {
-  if (lastAction !== nextAction) {
-    lastAction.fadeOut(duration)
+): void => {
+  if (currentAction !== nextAction) {
+    currentAction.fadeOut(duration)
   }
 
   if (loop) {
@@ -18,7 +26,7 @@ export const fadeToAction = (
     nextAction.clampWhenFinished = true
   }
 
-  return nextAction
+  nextAction
     .reset()
     .setEffectiveTimeScale(1)
     .setEffectiveWeight(1)

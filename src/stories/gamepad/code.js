@@ -1,10 +1,10 @@
-import { useGamepad, useRaf } from 'trzy'
+import { useGamepad, raf } from 'trzy'
 
-const { gamepad1, gamepad2, updateGamepad, disposeGamepad } = useGamepad()
+const { gamepad1, gamepad2, updateGamepads, disposeGamepads } = useGamepad()
 
-useRaf(() => {
-  updateGamepad()
+raf(() => {
+  updateGamepads()
 })
 
 // later
-disposeGamepad()
+disposeGamepads()
