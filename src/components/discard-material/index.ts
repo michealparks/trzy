@@ -9,4 +9,3 @@ export class MeshDiscardMaterial extends THREE.ShaderMaterial {
     })
   }
 }
-

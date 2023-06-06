@@ -1,13 +1,7 @@
 import * as THREE from 'three'
-import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory'
-import { lineBasicMat, shaderMat, plane, line } from '../objects'
+import { line, lineBasicMat, plane, shaderMat } from '../objects'
 
-const offsetPosition = {
-  w: 1,
-  x: 0,
-  y: 0,
-  z: 0,
-}
+const offsetPosition = { w: 1, x: 0, y: 0, z: 0 }
 
 const offsetRotation = new THREE.Quaternion()
 const m4 = new THREE.Matrix4()
@@ -32,16 +26,13 @@ export const createTeleport = (
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   camera: THREE.Camera,
+  controllers: THREE.XRTargetRaySpace[],
   raycaster = new THREE.Raycaster()
 ) => {
-  // congst user = new THREE.Object3D()
   const objects: THREE.Object3D[] = []
   const originalPosition = new THREE.Vector3()
 
   const raylines: THREE.Line[] = []
-  const controllers: THREE.XRTargetRaySpace[] = []
-  const grips: THREE.XRGripSpace[] = []
-  const controllerModelFactory = new XRControllerModelFactory()
 
   let enabled = false
   let baseReferenceSpace: XRReferenceSpace | null
@@ -56,11 +47,11 @@ export const createTeleport = (
     fragmentShader,
     vertexShader,
     uniforms: {
-      time: { value: 0.0 },
+      time: { value: 0 },
     },
     polygonOffset: true,
     polygonOffsetFactor: -1,
-    transparent: true
+    transparent: true,
   })
   const marker = plane(material, 0.5, 0.5)
   marker.geometry.rotateX(-Math.PI / 2)
@@ -74,17 +65,17 @@ export const createTeleport = (
 
   const handleSelectEnd = (event: { target: THREE.Object3D }) => {
     const { index } = event.target.userData
-  
+
     if (selecting === index) {
       selecting = -1
     }
-  
+
     raylines[index]!.visible = false
 
     if (intersection === undefined) {
       return
     }
-  
+
     offsetPosition.x = -intersection.x
     offsetPosition.y = -intersection.y
     offsetPosition.z = -intersection.z
@@ -97,14 +88,14 @@ export const createTeleport = (
   }
 
   for (let index = 0; index < 2; index += 1) {
-    const material = lineBasicMat({
+    const lineMaterial = lineBasicMat({
       blending: THREE.AdditiveBlending,
       transparent: true,
       vertexColors: true,
-      name: `XR Controller ${index} Ray Line`,
-      visible: false
+      name: `XR Controller ${index === 0 ? 'Left' : 'Right'} Ray Line`,
+      visible: false,
     })
-    const rayline = line(material)
+    const rayline = line(lineMaterial)
     rayline.geometry.setAttribute(
       'position',
       new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3)
@@ -115,21 +106,10 @@ export const createTeleport = (
     )
     raylines.push(rayline)
 
-    const controller = renderer.xr.getController(index)
-    controller.name = `XR Controller ${index}`
-  
+    const controller = controllers[index]!
+    controller.add(rayline)
     controller.addEventListener('selectstart', handleSelectStart)
     controller.addEventListener('selectend', handleSelectEnd)
-    controller.addEventListener('connected', () => controller.add(rayline))
-    controller.addEventListener('disconnected', () => controller.clear())
-    
-    controller.userData.index = index
-    controllers.push(controller)
-
-    const controllerGrip = renderer.xr.getControllerGrip(index)
-    controllerGrip.add(controllerModelFactory.createControllerModel(controllerGrip))
-    controllerGrip.name = `XR Controller Grip ${index}`
-    grips.push(controllerGrip)
   }
 
   let time = 0
@@ -145,6 +125,7 @@ export const createTeleport = (
 
     if (selecting > -1) {
       const activeController = controllers[selecting]!
+
       m4.identity().extractRotation(activeController.matrixWorld)
       raycaster.ray.origin.setFromMatrixPosition(activeController.matrixWorld)
       raycaster.ray.direction.set(0, 0, -1).applyMatrix4(m4)
@@ -166,35 +147,24 @@ export const createTeleport = (
   }
 
   const enable = (...navMesh: THREE.Object3D[]) => {
-    if (enabled) {
-      return
-    }
-
     objects.push(...navMesh)
     scene.add(marker)
-    camera.add(controllers[0]!)
-    camera.add(controllers[1]!)
-    camera.add(grips[0]!)
-    camera.add(grips[1]!)
 
-    originalPosition.copy(camera.position)
+    if (!enabled) {
+      originalPosition.copy(camera.position)
+    }
 
     enabled = true
   }
 
   const disable = () => {
-    if (!enabled) {
-      return
-    }
+    objects.splice(0, objects.length)
 
-    objects.pop()
     scene.remove(marker)
-    camera.remove(controllers[0]!)
-    camera.remove(controllers[1]!)
-    camera.remove(grips[0]!)
-    camera.remove(grips[1]!)
 
-    camera.position.copy(originalPosition)
+    if (enabled) {
+      camera.position.copy(originalPosition)
+    }
 
     enabled = false
   }

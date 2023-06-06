@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh'
+import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from 'three-mesh-bvh'
 
 export const bvhRaycast = (): void => {
   THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree

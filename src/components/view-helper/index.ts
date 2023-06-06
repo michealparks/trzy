@@ -152,7 +152,6 @@ export class ViewHelper extends THREE.Object3D {
 
 			const intersects = raycaster.intersectObjects(interactiveObjects)
       const [intersection] = intersects
-      console.log(intersection)
 
 			if (intersection) {
 				const object = intersection.object
@@ -241,8 +240,6 @@ export class ViewHelper extends THREE.Object3D {
     for (const btn of this.btns) {
       drawTexture(btn)
     }
-
-    console.log(this.btns[0].userData)
 
     {
       const x = (this.renderer.domElement.offsetWidth * window.devicePixelRatio) - size

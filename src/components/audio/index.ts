@@ -1,7 +1,7 @@
 const audios: Record<string, HTMLAudioElement> = {}
 
 export const preloadAudio = (src: string): HTMLAudioElement => {
-  let audio = new Audio()
+  const audio = new Audio()
   audio.src = src
   audio.load()
 

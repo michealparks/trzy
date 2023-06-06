@@ -9,11 +9,11 @@ const meta: Meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Similar to `THREE.AxesHelper` but uses `THREE.Line2` to render axes.'
+        component: 'Similar to `THREE.AxesHelper` but uses `THREE.Line2` to render axes.',
       },
-      source: { code }
-    }
-  }
+      source: { code },
+    },
+  },
 }
 
 export default meta
@@ -21,7 +21,7 @@ export default meta
 const render = () => {
   const { scene, camera, canvas, update } = three()
 
-  setup({ scene, camera, canvas, update, controls: true })
+  setup({ camera, scene, canvas, update, controls: true })
 
   const helper = new AxesHelper()
   helper.setColors('red', 'green', 'blue')

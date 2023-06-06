@@ -1,8 +1,10 @@
-import { three, xr } from '.'
+import { three, xr } from 'trzy'
 
-const { renderer, scene, camera } = three()
-const vr = xr(renderer, scene, camera)
+const { renderer, scene, camera, xr } = three()
 
-document.body.append(await vr.createButton())
+xr.setup(renderer, scene, camera.current)
 
-const support = await vr.requestSessionSupport()
+const button = await xr.createButton()
+container.append(button)
+
+xr.enableTeleport(floor)

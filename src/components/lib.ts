@@ -30,6 +30,7 @@ export const setup = async ({
   }
 
   scene.clear()
+  scene.add(camera.current)
 
   const light = new THREE.DirectionalLight(undefined, 4)
   light.name = 'Directional'

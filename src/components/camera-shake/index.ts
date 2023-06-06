@@ -1,8 +1,8 @@
-
-import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import type { MapControls } from 'three/examples/jsm/controls/MapControls'
-import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 import * as THREE from 'three'
+import type { MapControls } from 'three/examples/jsm/controls/MapControls'
+import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import type { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
+
 import { createNoise2D } from 'simplex-noise'
 
 export type Controls =
@@ -26,7 +26,7 @@ export class CameraShake {
   pitchNoise = createNoise2D()
   rollNoise = createNoise2D()
   then = 0
-  activeControls: Controls | null = null
+  activeControls: Controls | undefined
   initialRotation = new THREE.Euler()
   camera: THREE.Camera
 
@@ -46,7 +46,7 @@ export class CameraShake {
       this.activeControls = controls
       this.activeControls.addEventListener('change', this.updateRotation)
     }
-  } 
+  }
 
   update = (delta: number): void => {
     this.time += delta
@@ -64,7 +64,7 @@ export class CameraShake {
 
     if (this.decay && this.intensity > 0) {
       this.intensity -= this.decayRate * delta
-      
+
       if (this.intensity < 0) {
         this.intensity = 0
       } else if (this.intensity > 1) {
@@ -76,7 +76,7 @@ export class CameraShake {
   disable (): void {
     if (this.activeControls) {
       this.activeControls.removeEventListener('change', this.updateRotation)
-      this.activeControls = null
+      this.activeControls = undefined
     }
   }
 }
