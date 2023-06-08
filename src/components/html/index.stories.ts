@@ -1,15 +1,15 @@
 
 import * as THREE from 'three'
+import { Html, three } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
-import { three, Html } from '../../main'
 import code from './code?raw'
 import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'HTML',
   parameters: {
-    docs: { source: { code } }
-  }
+    docs: { source: { code } },
+  },
 }
 
 export default meta
@@ -17,7 +17,7 @@ export default meta
 const render = () => {
   const { scene, camera, canvas, update } = three()
 
-  setup({ scene, camera, canvas, update, controls: true })
+  setup()
 
   const container = document.createElement('div')
   container.style.cssText = 'position: relative; width: 100%; height: 400px;'
@@ -28,11 +28,11 @@ const render = () => {
 
   const n = 6
 
-  for (let i = 0; i < n; i += 1) {
-    const el = document.createElement('div')
-    container.append(el)
-    el.innerHTML = `Cube ${i}`
-    el.style.cssText = `
+  for (let index = 0; index < n; index += 1) {
+    const element = document.createElement('div')
+    container.append(element)
+    element.innerHTML = `Cube ${index}`
+    element.style.cssText = `
       font-family: system-ui;
       position: absolute;
       top: 0;
@@ -44,19 +44,19 @@ const render = () => {
 
     const object3D = new THREE.Mesh(
       new THREE.BoxGeometry(),
-      new THREE.MeshStandardMaterial(),
+      new THREE.MeshStandardMaterial()
     )
     object3D.position.set(THREE.MathUtils.randInt(-2, 2), -0.25, THREE.MathUtils.randInt(-2, 2))
     scene.add(object3D)
     cubes.push(object3D)
 
-    htmls.push(new Html({ camera: camera.current, canvas, el, object3D }))
+    htmls.push(new Html({ camera: camera.current, canvas, el: element, object3D }))
   }
 
   update(() => {
-    for (let i = 0; i < n; i += 1) {
-      cubes[i]!.rotation.y += 0.01
-      htmls[i]!.update()
+    for (let index = 0; index < n; index += 1) {
+      cubes[index]!.rotation.y += 0.01
+      htmls[index]!.update()
     }
   })
 

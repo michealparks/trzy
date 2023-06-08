@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import type { Meta, StoryObj } from '@storybook/html'
 import { MeshDiscardMaterial, three } from '../../main'
+import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
 
 const meta: Meta = {

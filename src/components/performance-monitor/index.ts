@@ -1,3 +1,11 @@
+
+interface PerformanceMonitorHookApi {
+  onIncline: (api: PerformanceMonitorApi) => void
+  onDecline: (api: PerformanceMonitorApi) => void
+  onChange: (api: PerformanceMonitorApi) => void
+  onFallback: (api: PerformanceMonitorApi) => void
+}
+
 export interface PerformanceMonitorApi {
   /** Current fps */
   fps: number
@@ -12,19 +20,11 @@ export interface PerformanceMonitorApi {
   index: number
   flipped: number
   fallback: boolean
-  subscriptions: Map<symbol, Partial<PerformanceMonitorHookApi>>
+  subscriptions: Map<Symbol, Partial<PerformanceMonitorHookApi>>
   subscribe: () => void
 }
 
-interface PerformanceMonitorHookApi {
-  onIncline: (api: PerformanceMonitorApi) => void
-  onDecline: (api: PerformanceMonitorApi) => void
-  onChange: (api: PerformanceMonitorApi) => void
-  onFallback: (api: PerformanceMonitorApi) => void
-}
-
-
-interface PerformanceMonitorProperties {
+interface PerformanceMonitorProps {
   /** How much time in milliseconds to collect an average fps, 250 */
   ms?: number
   /** How many interations of averages to collect, 10 */
@@ -49,17 +49,17 @@ interface PerformanceMonitorProperties {
   onFallback?: (api: PerformanceMonitorApi) => void
 }
 
-const decimalPlacesRatio = 10 ** 0
+const decimalPlacesRatio = Math.pow(10, 0)
 
 export class PerformanceMonitor {
   iterations = 10
   ms = 250
   threshold = 0.75
   step = 0.1
+  
+  flipflops = Infinity
 
-  flipflops = Number.POSITIVE_INFINITY
-
-  // Api
+  // api
   fps = 0
   index = 0
   factor = 0.5
@@ -73,7 +73,7 @@ export class PerformanceMonitor {
   subscribe = (callback: () => void) => {
     const key = Symbol()
     this.subscriptions.set(key, callback)
-    this.subscriptions.delete(key)
+    return () => void this.subscriptions.delete(key)
   }
   bounds: (n: number) => [number, number]
   onIncline: any
@@ -81,19 +81,19 @@ export class PerformanceMonitor {
   onChange: any
   onFallback: any
 
-  constructor ({
+  constructor({
     iterations = 10,
     ms = 250,
     threshold = 0.75,
     step = 0.1,
     factor = 0.5,
-    flipflops = Number.POSITIVE_INFINITY,
+    flipflops = Infinity,
     bounds = (refreshrate) => (refreshrate > 100 ? [60, 100] : [40, 60]),
     onIncline,
     onDecline,
     onChange,
     onFallback,
-  }: PerformanceMonitorProperties) {
+  }: PerformanceMonitorProps) {
     this.iterations = iterations
     this.ms = ms
     this.threshold = threshold
@@ -108,7 +108,7 @@ export class PerformanceMonitor {
   }
 
   update (): void {
-    const { frames, averages, fallback } = this
+    const { frames, averages } = this
 
     // If the fallback has been reached do not continue running samples
     if (this.fallback) {
@@ -120,10 +120,10 @@ export class PerformanceMonitor {
     }
 
     frames.push(performance.now())
-    const msPassed = frames.at(-1)! - frames[0]!
+    const msPassed = frames[frames.length - 1]! - frames[0]!
 
     if (msPassed < this.ms) {
-      return
+      return 
     }
 
     this.fps = Math.round((frames.length / msPassed) * 1000 * decimalPlacesRatio) / decimalPlacesRatio
@@ -139,12 +139,8 @@ export class PerformanceMonitor {
       if (upperBounds.length > this.iterations * this.threshold) {
         this.factor = Math.min(1, this.factor + this.step)
         this.flipped++
-        if (this.onIncline) {
-          this.onIncline(this)
-        }
-        for (const value of this.subscriptions) {
-          value.onIncline && value.onIncline(this)
-        }
+        if (this.onIncline) this.onIncline(this)
+        this.subscriptions.forEach((value) => value.onIncline && value.onIncline(this))
       }
 
       // Trigger decline when more than -threshold- avgs are below the lower bound
@@ -152,33 +148,25 @@ export class PerformanceMonitor {
         this.factor = Math.max(0, this.factor - this.step)
         this.flipped++
         this.onDecline?.(this)
-        for (const value of this.subscriptions) {
-          value.onDecline && value.onDecline(this)
-        }
+        this.subscriptions.forEach((value) => value.onDecline && value.onDecline(this))
       }
 
       if (this.lastFactor !== this.factor) {
         this.lastFactor = this.factor
         this.onChange?.(this)
-        for (const value of this.subscriptions) {
-          value.onChange && value.onChange(this)
-        }
+        this.subscriptions.forEach((value) => value.onChange && value.onChange(this))
       }
 
       if (this.flipped > this.flipflops && !this.fallback) {
         this.fallback = true
         this.onFallback?.(this)
-        for (const value of this.subscriptions) {
-          value.onFallback && value.onFallback(this)
-        }
+        this.subscriptions.forEach((value) => value.onFallback && value.onFallback(this))
       }
 
       this.averages = []
 
-      /*
-       * Resetting the refreshrate creates more problems than it solves atm
-       * api.refreshrate = 0
-       */
+      // Resetting the refreshrate creates more problems than it solves atm
+      // api.refreshrate = 0
     }
 
     this.frames = []

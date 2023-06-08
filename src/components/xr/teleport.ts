@@ -39,9 +39,13 @@ export const createTeleport = (
   let selecting = -1
   let intersection: THREE.Vector3 | undefined
 
-  renderer.xr.addEventListener('sessionstart', () => {
+  if (renderer.xr.getSession()) {
     baseReferenceSpace = renderer.xr.getReferenceSpace()
-  })
+  } else {
+    renderer.xr.addEventListener('sessionstart', () => {
+      baseReferenceSpace = renderer.xr.getReferenceSpace()
+    })
+  }
 
   const material = shaderMat({
     fragmentShader,

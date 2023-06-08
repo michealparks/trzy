@@ -1,8 +1,7 @@
-
-import type { Meta, StoryObj } from '@storybook/html'
 import { CameraShake, three } from '../../main'
-import { setup } from '../setup'
+import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Camera Shake',
@@ -12,9 +11,9 @@ const meta: Meta = {
 }
 
 const render = () => {
-  const { scene, camera, canvas, update, beforeRender } = three()
+  const { camera, canvas, beforeRender } = three()
 
-  setup({ scene, camera, canvas, update, controls: true }).then((controls) => {
+  setup().then(({ controls }) => {
     const cameraShake = new CameraShake(camera.current)
     cameraShake.enable(controls!)
 

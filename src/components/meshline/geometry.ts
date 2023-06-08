@@ -1,5 +1,32 @@
 import * as THREE from 'three'
 
+const memcpy = (
+  source: any,
+  sourceOffset: any,
+  destination: any,
+  destinationOffset: any,
+  length: any
+) => {
+  source = source.subarray || source.slice ? source : source.buffer
+  destination = destination.subarray || destination.slice ? destination : destination.buffer
+
+  source = sourceOffset
+    ? (source.subarray
+      ? source.subarray(sourceOffset, length && sourceOffset + length)
+      : source.slice(sourceOffset, length && sourceOffset + length))
+    : source
+
+  if (destination.set) {
+    destination.set(source, destinationOffset)
+  } else {
+    for (const [index, element] of source.entries()) {
+      destination[index + destinationOffset] = element
+    }
+  }
+
+  return destination
+}
+
 export class MeshLineGeometry extends THREE.BufferGeometry {
   isMeshLine = true
   override type = 'MeshLine'
@@ -214,25 +241,4 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     this.attributes.previous!.needsUpdate = true
     this.attributes.next!.needsUpdate = true
   }
-}
-
-const memcpy = (source: any, sourceOffset: any, dst: any, dstOffset: any, length: any) => {
-  source = source.subarray || source.slice ? source : source.buffer
-  dst = dst.subarray || dst.slice ? dst : dst.buffer
-
-  source = sourceOffset
-    ? (source.subarray
-      ? source.subarray(sourceOffset, length && sourceOffset + length)
-      : source.slice(sourceOffset, length && sourceOffset + length))
-    : source
-
-  if (dst.set) {
-    dst.set(source, dstOffset)
-  } else {
-    for (const [index, element] of source.entries()) {
-      dst[index + dstOffset] = element
-    }
-  }
-
-  return dst
 }

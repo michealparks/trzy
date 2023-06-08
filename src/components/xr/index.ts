@@ -1,8 +1,13 @@
+import { getControllerModels, getControllers } from './controller'
 import { createTeleport } from './teleport'
 import { dispatcher } from '../lib/events'
-import { getControllers } from './controller'
+import { getHands } from './hand'
 
 const events = dispatcher()
+
+let entered = false
+let controllersEnabled = false
+let handsEnabled = false
 
 let session: XRSession | undefined
 
@@ -65,12 +70,12 @@ const requestSession = async () => {
 
   await _renderer.xr.setSession(session)
 
-  xr.entered = true
+  entered = true
   events.fire('enter')
 }
 
 const endSession = (): void => {
-  xr.entered = false
+  entered = false
   session?.end()
 }
 
@@ -86,13 +91,38 @@ const createButton = async () => {
   return button
 }
 
+const toggleControllers = (enable: boolean) => {
+  controllersEnabled = enable
+
+  const { grip0, grip1, controller0, controller1 } = getControllers(_renderer)
+
+  if (enable) {
+    _scene.add(grip0, grip1, controller0, controller1)
+  } else {
+    _scene.remove(grip0, grip1, controller0, controller1)
+  }
+}
+
+const toggleHands = (enable: boolean) => {
+  handsEnabled = enable
+
+  const { hand0, hand1 } = getHands(_renderer)
+
+  if (enable) {
+    _scene.add(hand0, hand1)
+  } else {
+    _scene.remove(hand0, hand1)
+  }
+}
+
 const enableTeleport = (...navMeshes: THREE.Object3D[]) => {
-  const { grips, controllers } = getControllers(_renderer)
-
-  _scene.add(grips[0]!, grips[1]!, controllers[0]!, controllers[1]!)
-
   if (teleport === undefined) {
-    teleport = createTeleport(_renderer, _scene, _camera, controllers)
+    const { controller0, controller1 } = getControllers(_renderer)
+    teleport = createTeleport(_renderer, _scene, _camera, [controller0, controller1])
+  }
+
+  if (!controllersEnabled) {
+    toggleControllers(true)
   }
 
   teleport.enable(...navMeshes)
@@ -102,22 +132,14 @@ const disableTeleport = () => {
   teleport?.disable()
 }
 
-const toggleControllers = (enable: boolean) => {
-  const { grips, controllers } = getControllers(_renderer)
-
-  if (enable) {
-    _scene.add(grips[0]!, grips[1]!, controllers[0]!, controllers[1]!)
-  } else {
-    _scene.remove(grips[0]!, grips[1]!, controllers[0]!, controllers[1]!)
-  }
-}
-
 const update = (delta: number) => {
   teleport?.update(delta)
 }
 
 export const xr = {
-  entered: false,
+  get entered () {
+    return entered
+  },
   supportStateMessages,
   setup,
   createButton,
@@ -126,7 +148,11 @@ export const xr = {
   endSession,
   enableTeleport,
   disableTeleport,
+  getControllers: () => getControllers(_renderer),
+  getControllerModels: () => getControllerModels(_renderer),
+  getHands: () => getHands(_renderer),
   toggleControllers,
+  toggleHands,
   update,
   ...events,
 }

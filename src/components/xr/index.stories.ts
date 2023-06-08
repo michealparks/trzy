@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html'
-import { plane, three, xr } from '../../main'
-import { setup } from '../setup'
+import { three, xr } from '../../main'
 import code from './code?raw'
-// Import Inspector from 'three-inspect'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'XR',
@@ -27,31 +26,36 @@ const render = () => {
   })
   container.append(canvas)
 
-  setup({ canvas, camera, scene, update, controls: false })
+  setup({ controls: false }).then(({ floor }) => {
+    xr.setup(renderer, scene, camera.current)
 
-  xr.setup(renderer, scene, camera.current)
+    const { model0, model1 } = xr.getControllerModels()
+    model0.castShadow = true
+    model0.receiveShadow = true
 
-  const floor = plane(undefined, 30, 30)
-  floor.position.y = -4.5
-  floor.rotation.x = -Math.PI / 2
-  floor.rotation.z = Math.PI / 4
-  scene.add(floor)
+    model1.castShadow = true
+    model1.receiveShadow = true
 
-  xr.createButton().then((button) => {
-    button.style.cssText = `
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-      z-index: 100;
-    `
-    container.append(button)
+    scene.getObjectByName('Strawberry')?.position.set(0, 1, 0)
+
+    xr.createButton().then((button) => {
+      button.style.cssText = `
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        z-index: 100;
+      `
+      container.append(button)
+
+      xr.on('enter', () => {
+        xr.toggleControllers(true)
+        xr.toggleHands(true)
+        xr.enableTeleport(floor)
+      })
+
+      update((_, delta) => xr.update(delta))
+    })
   })
-
-  xr.on('enter', () => xr.enableTeleport(floor))
-
-  update((_, delta) => xr.update(delta))
-
-  // New Inspector({ scene, camera: camera.current, renderer })
 
   return container
 }

@@ -1,8 +1,7 @@
-
-import type { Meta, StoryObj } from '@storybook/html'
 import { AxesHelper, three } from '../../main'
-import { setup } from '../setup'
+import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Axes Helper',
@@ -19,9 +18,9 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, canvas, update } = three()
+  const { scene, canvas } = three()
 
-  setup({ camera, scene, canvas, update, controls: true })
+  setup()
 
   const helper = new AxesHelper()
   helper.setColors('red', 'green', 'blue')

@@ -6,7 +6,7 @@ import type { TrailProps } from './types'
 
 const shiftLeft = (collection: Float32Array, steps = 1): Float32Array => {
   collection.set(collection.subarray(steps))
-  collection.fill(-Infinity, -steps)
+  collection.fill(Number.NEGATIVE_INFINITY, -steps)
   return collection
 }
 
@@ -41,7 +41,7 @@ export class Trail extends THREE.Mesh<MeshLineGeometry, MeshLineMaterial> {
     this.target = target
     this.points = Float32Array.from({
       length: this.length * 10 * 3,
-    }, (_, i) => target.position.getComponent(i % 3))
+    }, (_, index) => target.position.getComponent(index % 3))
   }
 
   get attenuation () {
@@ -54,24 +54,24 @@ export class Trail extends THREE.Mesh<MeshLineGeometry, MeshLineMaterial> {
 
   update () {
     if (this.frameCount === 0) {
-      let newPosition: THREE.Vector3
+      let nextPosition: THREE.Vector3
 
       if (this.local) {
-        newPosition = this.target.position
+        nextPosition = this.target.position
       } else {
         this.target.getWorldPosition(this.#worldPosition)
-        newPosition = this.#worldPosition
+        nextPosition = this.#worldPosition
       }
 
-      for (let i = 0; i < this.decay; i += 1) {
-        if (newPosition.distanceTo(this.prevPosition) < this.stride) {
+      for (let index = 0; index < this.decay; index += 1) {
+        if (nextPosition.distanceTo(this.prevPosition) < this.stride) {
           continue
         }
 
         shiftLeft(this.points, 3)
-        this.points.set(newPosition.toArray(), this.points.length - 3)
+        this.points.set(nextPosition.toArray(), this.points.length - 3)
       }
-      this.prevPosition.copy(newPosition)
+      this.prevPosition.copy(nextPosition)
 
       this.geometry.setPoints(this.points)
     }

@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -64,7 +64,7 @@
     "simplex-noise": "^4.0.1",
     "storybook": "v7.0.18",
     "three": "^0.153.0",
-    "three-inspect": "^0.3.3",
+    "three-inspect": "^0.3.4",
     "three-mesh-bvh": "^0.6.0",
     "trzy": "^0.0.51",
     "typescript": "^5.1.3",

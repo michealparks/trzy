@@ -1,32 +1,36 @@
 import * as THREE from 'three'
+import { plane, shadows, three } from '../main'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { shadows } from '../main'
+// import Inspector from 'three-inspect'
 
 const loader = new GLTFLoader()
 
-export const setup = async ({
-  camera,
-  canvas,
-  controls,
-  scene,
-  update,
-  webGPU,
-}: {
-  controls: boolean,
-  scene: THREE.Scene,
-  camera: { current: THREE.Camera },
-  canvas: HTMLCanvasElement,
-  update: (callback: () => void) => void
+let orbitControls: OrbitControls | undefined
+
+const { canvas, camera, update, scene, renderer } = three({
+  parameters: { antialias: true },
+})
+
+update(() => orbitControls?.update())
+
+export const setup = async (options: {
+  controls?: boolean,
   webGPU?: boolean
-}) => {
+} = {}) => {
+  const { controls = true, webGPU = false } = options
+
   let orbit: OrbitControls | undefined
 
   if (controls) {
-    orbit = new OrbitControls(camera.current, canvas)
-    orbit.enableDamping = true
-    orbit.enablePan = false
-    update(() => orbit?.update())
+    if (orbitControls) {
+      orbitControls.enabled = false
+      orbitControls.dispose()
+    }
+
+    orbitControls = new OrbitControls(camera.current, canvas)
+    orbitControls.enableDamping = true
+    orbitControls.enablePan = false
   }
 
   scene.clear()
@@ -34,14 +38,12 @@ export const setup = async ({
 
   const light = new THREE.DirectionalLight(undefined, 4)
   light.name = 'Directional'
-  light.position.set(5, 3, 5)
+  light.position.set(2, 2, 2)
   scene.add(light)
 
   scene.add(new THREE.AmbientLight(undefined, 0.8))
 
   const glb = await loader.loadAsync(`${import.meta.env.BASE_URL}glb/strawberry.glb`)
-  scene.add(glb.scene.getObjectByName('Bg')!)
-
   const group = new THREE.Group()
   group.add(glb.scene.getObjectByName('Stem')!)
   group.add(glb.scene.getObjectByName('Seeds')!)
@@ -49,11 +51,14 @@ export const setup = async ({
   group.add(glb.scene.getObjectByName('Body')!)
   group.name = 'Strawberry'
   scene.add(group)
+  group.position.y = 0.2
+  group.scale.setScalar(0.1)
 
-  shadows(scene)
+  const floor = plane(undefined, 4, 4)
+  floor.rotation.x = -Math.PI / 2
+  scene.add(floor)
 
   if (webGPU) {
-    // Shadows(scene, 4096, 0.001)
     light.shadow.mapSize.set(4096, 4096)
     light.shadow.bias = 0.0001
     light.shadow.camera.near = 1
@@ -66,8 +71,10 @@ export const setup = async ({
     shadows(scene)
   }
 
-  camera.current.position.set(8, 2, 6)
+  camera.current.position.set(1, 1.8, 1)
   camera.current.lookAt(0, 0, 0)
 
-  return orbit
+  // new Inspector({ scene, camera: camera.current, renderer })
+
+  return { controls: orbit, floor }
 }

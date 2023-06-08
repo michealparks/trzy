@@ -9,8 +9,8 @@ export const resizeRendererToDisplaySize = (
   dpi = window.devicePixelRatio
 ): void => {
   const canvas = renderer.domElement
-  const width = canvas.clientWidth * dpi | 0
-  const height = canvas.clientHeight * dpi | 0
+  const width = Math.trunc(canvas.clientWidth * dpi)
+  const height = Math.trunc(canvas.clientHeight * dpi)
   const needResize = canvas.width !== width || canvas.height !== height
 
   if (needResize || force) {

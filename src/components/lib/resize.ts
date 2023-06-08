@@ -10,8 +10,8 @@ const resize = (
   renderer: THREE.WebGLRenderer,
   composer?: EffectComposer
 ) => {
-  const w = width * dpi | 0
-  const h = height * dpi | 0
+  const w = Math.trunc(width * dpi)
+  const h = Math.trunc(height * dpi)
   const aspect = w / h
 
   if ((camera as THREE.PerspectiveCamera).isPerspectiveCamera) {

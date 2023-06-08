@@ -1,14 +1,13 @@
-
+import { AxesHelper, ViewHelper, three } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
-import { three, AxesHelper, ViewHelper } from '../../main'
-import { setup } from '../setup'
 import code from './code?raw'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Orbit Controls Gizmo',
   parameters: {
-    docs: { source: { code } }
-  }
+    docs: { source: { code } },
+  },
 }
 
 export default meta
@@ -16,12 +15,12 @@ export default meta
 const render = () => {
   const { scene, camera, canvas, renderer, update } = three()
 
-  setup({ scene, camera, canvas, update, controls: true })
+  setup()
 
   const helper = new ViewHelper(camera.current, renderer)
 
   update((_, delta) => helper.render(delta))
-  
+
   scene.add(new AxesHelper())
 
   canvas.style.position = 'relative'

@@ -9,7 +9,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
     ...THREE.UniformsLib.fog,
     alphaMap: { value: null },
     alphaTest: { value: 0 },
-    color: { value: new THREE.Color(0xffffff) },
+    color: { value: new THREE.Color(0xFF_FF_FF) },
     dashArray: { value: 0 },
     dashOffset: { value: 0 },
     dashRatio: { value: 0.5 },

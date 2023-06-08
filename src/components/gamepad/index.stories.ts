@@ -1,13 +1,13 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { useGamepad, three } from '../../main'
+import { three, useGamepad } from '../../main'
 import code from './code?raw'
 
 const meta: Meta = {
   title: 'Gamepad',
   parameters: {
-    docs: { source: { code } }
-  }
+    docs: { source: { code } },
+  },
 }
 
 export default meta
@@ -27,8 +27,8 @@ const render = () => {
 
   update(() => {
     updateGamepads()
-    pre.innerHTML = `Gamepad 1\n\n${JSON.stringify(gamepad1, null, 2)}`
-    pre2.innerHTML = `Gamepad 2\n\n${JSON.stringify(gamepad2, null, 2)}`
+    pre.innerHTML = `Gamepad 1\n\n${JSON.stringify(gamepad1, undefined, 2)}`
+    pre2.innerHTML = `Gamepad 2\n\n${JSON.stringify(gamepad2, undefined, 2)}`
   })
 
   return container

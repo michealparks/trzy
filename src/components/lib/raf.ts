@@ -1,4 +1,5 @@
 const callbacks: ((time: number, delta: number) => void)[] = []
+
 let handle = 0
 let time = performance.now()
 let then = performance.now()

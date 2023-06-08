@@ -6,9 +6,9 @@ const orderedVectors = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vect
 
 const stringToAxes = (axes: string) => {
   return axes.toLowerCase().match(basesRegex)!.splice(1, 3)
-    .map((string_) => {
-      const negative = string_.startsWith('-')
-      const name = string_[1] as 'x' | 'y' | 'z'
+    .map((axis) => {
+      const negative = axis.startsWith('-')
+      const name = axis[1] as 'x' | 'y' | 'z'
       return { name, negative }
     })
 }
