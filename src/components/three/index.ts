@@ -39,37 +39,37 @@ export const threeInstance = (properties: {
 
   let composer = properties.composer?.(scene, camera.current, renderer)
 
-  let time = performance.now()
+  let t = performance.now()
+  let dt = 0
   let then = performance.now()
-  let delta = 0
 
-  const context = {
+  const references = {
     camera,
     canvas: renderer.domElement,
     renderer,
     scene,
   }
 
-  const updates: ((context: typeof context, delta: number) => void)[] = []
-  const beforeRenders: ((context: typeof context, delta: number) => void)[] = []
+  const updates: ((context: typeof references, delta: number) => void)[] = []
+  const beforeRenders: ((context: typeof references, delta: number) => void)[] = []
 
   const frame = () => {
-    time = performance.now()
-    delta = time - then
-    then = time
+    t = performance.now()
+    dt = t - then
+    then = t
 
     for (let index = 0, l = beforeRenders.length; index < l; index += 1) {
-      beforeRenders[index]!(context, delta)
+      beforeRenders[index]!(references, dt)
     }
 
     if (composer === undefined) {
       renderer.render(scene, camera.current)
     } else {
-      composer.render(delta)
+      composer.render(dt)
     }
 
     for (let index = 0, l = updates.length; index < l; index += 1) {
-      updates[index]!(context, delta)
+      updates[index]!(references, dt)
     }
   }
 
@@ -89,12 +89,12 @@ export const threeInstance = (properties: {
   const stop = (): void => renderer.setAnimationLoop(null)
   const start = (): void => renderer.setAnimationLoop(frame)
 
-  const beforeRender = (callback: (context: typeof context, delta: number) => void) => {
+  const beforeRender = (callback: (context: typeof references, delta: number) => void) => {
     beforeRenders.push(callback)
     return () => beforeRenders.splice(beforeRenders.indexOf(callback), 1)
   }
 
-  const update = (callback: (context: typeof context, delta: number) => void) => {
+  const update = (callback: (context: typeof references, delta: number) => void) => {
     updates.push(callback)
     return () => updates.splice(updates.indexOf(callback), 1)
   }
@@ -104,7 +104,7 @@ export const threeInstance = (properties: {
   }
 
   return {
-    ...context,
+    ...references,
     beforeRender,
     setCamera,
     start,

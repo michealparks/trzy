@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { plane, shadows, three } from '../main'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import Inspector from 'three-inspect'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-// import Inspector from 'three-inspect'
 
 const loader = new GLTFLoader()
 
@@ -74,7 +74,9 @@ export const setup = async (options: {
   camera.current.position.set(1, 1.8, 1)
   camera.current.lookAt(0, 0, 0)
 
-  // new Inspector({ scene, camera: camera.current, renderer })
+  if (localStorage.getItem('debug')) {
+    new Inspector({ scene, camera: camera.current as THREE.PerspectiveCamera, renderer })
+  }
 
   return { controls: orbit, floor }
 }

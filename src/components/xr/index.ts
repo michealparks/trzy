@@ -140,6 +140,12 @@ export const xr = {
   get entered () {
     return entered
   },
+  get handsEnabled () {
+    return handsEnabled
+  },
+  get controllersEnabled () {
+    return controllersEnabled
+  },
   supportStateMessages,
   setup,
   createButton,
