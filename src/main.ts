@@ -22,3 +22,4 @@ export { loadAudio, loadFile, loadGLTF, loadTexture, setPath } from './component
 export { save, load, remove } from './components/storage'
 export { xr } from './components/xr'
 export * from './components/objects'
+export * from './components/math'
