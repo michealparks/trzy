@@ -1,5 +1,7 @@
-import { AxesHelper, three } from '../../main'
+
 import type { Meta, StoryObj } from '@storybook/html'
+import { useTrzy } from '../../core'
+import { AxesHelper } from '../../main'
 import code from './code?raw'
 import { setup } from '../setup'
 
@@ -15,20 +17,18 @@ const meta: Meta = {
   },
 }
 
-export default meta
-
 const render = () => {
-  const { scene, canvas } = three()
-
   setup()
 
+  const { scene, renderer } = useTrzy()
   const helper = new AxesHelper()
   helper.setColors('red', 'green', 'blue')
   helper.length = 100
 
   scene.add(helper)
-
-  return canvas
+  return renderer.domElement
 }
+
+export default meta
 
 export const Primary: StoryObj = { render }

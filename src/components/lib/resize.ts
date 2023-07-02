@@ -27,28 +27,36 @@ const resize = (
     cam.updateProjectionMatrix()
   }
 
+  console.log(w, h)
+
   if (composer !== undefined) {
     composer.setSize(w, h, false)
   }
 
-  if (!renderer.xr?.isPresenting) {
+  if (!renderer.xr.isPresenting) {
     renderer.setSize(w, h, false)
   }
 }
 
-export const rendererResizer = (
-  camera: THREE.Camera,
-  renderer: THREE.WebGLRenderer,
-  composer?: EffectComposer,
-  dpi = window.devicePixelRatio
-) => {
+export const rendererResizer = ({
+  camera,
+  renderer,
+  composer,
+  dpr,
+}: {
+  camera: { current: THREE.Camera }
+  renderer: THREE.WebGLRenderer
+  composer?: EffectComposer
+  dpr: { current: number }
+}) => {
   const observer = new ResizeObserver(debounce<ResizeObserverCallback>(([entry]) => {
     // https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserverEntry/devicePixelContentBoxSize
     const { width, height } = entry!.contentRect
-    resize(width, height, dpi, camera, renderer, composer)
+    resize(width, height, dpr.current, camera.current, renderer, composer)
   }, 30))
 
   observer.observe(renderer.domElement)
+  resize(renderer.domElement.clientWidth, renderer.domElement.clientHeight, dpr.current, camera.current, renderer, composer)
 
   return () => observer.disconnect()
 }

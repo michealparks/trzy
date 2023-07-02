@@ -1,7 +1,9 @@
 import * as THREE from 'three'
-import { MeshDiscardMaterial, three } from '../../main'
+import { MeshDiscardMaterial } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
+import { useTrzy } from '../../core'
+import { setup } from '../setup'
 
 const meta: Meta = {
   title: 'Discard Material',
@@ -11,13 +13,14 @@ const meta: Meta = {
 }
 
 const render = () => {
-  const { scene, canvas } = three()
+  setup()
+  const { scene, renderer } = useTrzy()
   const geometry = new THREE.BoxGeometry()
   const material = new MeshDiscardMaterial()
   const mesh = new THREE.Mesh(geometry, material)
   scene.add(mesh)
 
-  return canvas
+  return renderer.domElement
 }
 
 export default meta

@@ -9,7 +9,6 @@ export default defineConfig({
   build: {
     copyPublicDir: false,
     minify: false,
-    target: 'esnext',
     lib: {
       entry: 'src/main.ts',
       name: 'trzy',

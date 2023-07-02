@@ -1,7 +1,9 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { three, useKeyboard } from '../../main'
+import { useKeyboard } from '../../main'
 import code from './code?raw'
+import { setup } from '../setup'
+import { useFrame } from '../../core'
 
 const meta: Meta = {
   title: 'Keyboard',
@@ -13,15 +15,16 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
+  setup()
+
   const container = document.createElement('container')
 
   const pre = document.createElement('pre')
   container.append(pre)
 
   const { keyboard } = useKeyboard()
-  const { update } = three()
 
-  update(() => {
+  useFrame(() => {
     pre.innerHTML = JSON.stringify(keyboard, undefined, '  ')
   })
 

@@ -1,8 +1,9 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { resetSoftShadows, softShadows, three } from '../../main'
+import { resetSoftShadows, softShadows } from '../../main'
 import code from './code?raw'
 import { setup } from '../setup'
+import { useFrame, useTrzy } from '../../core'
 
 const meta: Meta = {
   title: 'Soft Shadows',
@@ -16,13 +17,13 @@ export default meta
 const render = () => {
   softShadows()
 
-  const { scene, camera, renderer, update } = three()
+  const { scene, camera, renderer } = useTrzy()
 
   resetSoftShadows(renderer, scene, camera.current)
 
   setup().then(() => {
     const object = scene.getObjectByName('Strawberry')!
-    update(() => {
+    useFrame(() => {
       object.rotation.y += 0.05
     })
   })

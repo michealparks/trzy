@@ -1,7 +1,8 @@
-import { CameraShake, three } from '../../main'
+import { CameraShake } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
-import { setup } from '../setup'
+import { orbitControls, setup } from '../setup'
+import { useFrame, useTrzy } from '../../core'
 
 const meta: Meta = {
   title: 'Camera Shake',
@@ -11,18 +12,18 @@ const meta: Meta = {
 }
 
 const render = () => {
-  const { camera, canvas, beforeRender } = three()
+  setup()
 
-  setup().then(({ controls }) => {
-    const cameraShake = new CameraShake(camera.current)
-    cameraShake.enable(controls!)
+  const { camera, renderer } = useTrzy()
+  const cameraShake = new CameraShake(camera.current)
 
-    beforeRender((_, delta) => {
-      cameraShake.update(delta)
-    })
+  useFrame((_, delta) => {
+    cameraShake.update(delta)
   })
 
-  return canvas
+  cameraShake.enable(orbitControls)
+
+  return renderer.domElement
 }
 
 export default meta

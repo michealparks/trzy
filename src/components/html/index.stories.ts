@@ -1,9 +1,10 @@
 
 import * as THREE from 'three'
-import { Html, three } from '../../main'
+import { Html } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
 import { setup } from '../setup'
+import { useFrame, useTrzy } from '../../core'
 
 const meta: Meta = {
   title: 'HTML',
@@ -15,13 +16,13 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, canvas, update } = three()
+  const { scene, camera, renderer } = useTrzy()
 
   setup()
 
   const container = document.createElement('div')
   container.style.cssText = 'position: relative; width: 100%; height: 400px;'
-  container.append(canvas)
+  container.append(renderer.domElement)
 
   const cubes: THREE.Mesh[] = []
   const htmls: Html[] = []
@@ -50,10 +51,10 @@ const render = () => {
     scene.add(object3D)
     cubes.push(object3D)
 
-    htmls.push(new Html({ camera: camera.current, canvas, el: element, object3D }))
+    htmls.push(new Html({ camera: camera.current, canvas: renderer.domElement, el: element, object3D }))
   }
 
-  update(() => {
+  useFrame(() => {
     for (let index = 0; index < n; index += 1) {
       cubes[index]!.rotation.y += 0.01
       htmls[index]!.update()

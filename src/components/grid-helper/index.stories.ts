@@ -1,4 +1,5 @@
-import { GridHelper, three } from '../../main'
+import { GridHelper } from '../../main'
+import { useTrzy } from '../../core'
 import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
 import { setup } from '../setup'
@@ -18,13 +19,13 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, canvas } = three()
-
   setup()
+
+  const { scene, renderer } = useTrzy()
 
   scene.add(new GridHelper(1, 10, 'white'))
 
-  return canvas
+  return renderer.domElement
 }
 
 export const Primary: StoryObj = { render }

@@ -1,10 +1,9 @@
-import { useGamepad, raf } from 'trzy'
+import { useGamepad } from 'trzy'
 
 const { gamepad1, gamepad2, updateGamepads, disposeGamepads } = useGamepad()
 
-raf(() => {
-  updateGamepads()
-})
+// In your game loop
+updateGamepads()
 
 // later
 disposeGamepads()

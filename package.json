@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.0.54",
+  "version": "0.1.0",
   "description": "A utility library for Three.js",
   "type": "module",
   "files": [
@@ -56,9 +56,9 @@
     "@types/three": "^0.152.1",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
-    "eslint": "^8.43.0",
+    "eslint": "^8.44.0",
     "eslint-plugin-unicorn": "^47.0.0",
-    "postprocessing": "^6.32.1",
+    "postprocessing": "^6.32.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "simplex-noise": "^4.0.1",

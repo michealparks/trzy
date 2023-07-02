@@ -1,4 +1,4 @@
-import { Html, raf } from 'trzy'
+import { Html } from 'trzy'
 
 const html = new Html({
   el: document.querySelector('el'),
@@ -7,7 +7,5 @@ const html = new Html({
   object3D,
 })
 
-raf(() => {
-  // render your scene, then update.
-  html.update()
-})
+ // In your frame loop, render your scene, then update html.
+ html.update()

@@ -3,7 +3,7 @@ module.exports = {
     'eslint:all',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/strict',
-    'plugin:unicorn/all',
+    'plugin:unicorn/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -21,6 +21,7 @@ module.exports = {
     'array-bracket-newline': ['error', 'consistent'],
     'array-element-newline': 'off',
     'arrow-body-style': 'off',
+    'brace-style': 'off',
     'camelcase': ['error', { properties: 'never' }],
     'comma-dangle': ['error', {
       arrays: 'always-multiline',
@@ -60,10 +61,14 @@ module.exports = {
     'padded-blocks': ['error', 'never'],
     'prefer-destructuring': 'off',
     'sort-keys': 'off',
+    'sort-imports': 'off',
     'quote-props': ['error', 'consistent-as-needed'],
     'quotes': ['error', 'single'],
     'semi': ['error', 'never'],
 
     '@typescript-eslint/prefer-for-of': 'off',
+
+    'unicorn/prevent-abbreviations': 'off',
+    'unicorn/no-array-for-each': 'off',
   },
 }

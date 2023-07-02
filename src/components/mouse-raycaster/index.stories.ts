@@ -1,9 +1,10 @@
 import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/html'
-import { MouseRaycaster, three } from '../../main'
+import { MouseRaycaster } from '../../main'
 import { bvhRaycast } from '../bvh'
 import code from './code?raw'
 import { setup } from '../setup'
+import { useFrame, useTrzy } from '../../core'
 
 const meta: Meta = {
   title: 'Mouse Raycaster',
@@ -17,7 +18,7 @@ export default meta
 const render = () => {
   bvhRaycast()
 
-  const { scene, camera, canvas, renderer, update } = three()
+  const { scene, camera, renderer } = useTrzy()
 
   setup().then(() => {
     const scale = new THREE.Vector3(1, 1, 1)
@@ -55,10 +56,10 @@ const render = () => {
       scale.setScalar(scale.x === 0.17 ? (hovered ? 0.12 : 0.1) : 0.17)
     })
 
-    update(() => object.scale.lerp(scale, lerpSpeed))
+    useFrame(() => object.scale.lerp(scale, lerpSpeed))
   })
 
-  return canvas
+  return renderer.domElement
 }
 
 export const Primary: StoryObj = { render }
