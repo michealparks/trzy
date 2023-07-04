@@ -6,6 +6,7 @@ export const load = <T = unknown>(key: string): T | null => {
   try {
     return JSON.parse(localStorage.getItem(key) ?? 'null')
   } catch {
+    // eslint-disable-next-line unicorn/no-null
     return null
   }
 }

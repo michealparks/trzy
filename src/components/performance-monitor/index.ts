@@ -20,7 +20,7 @@ export interface PerformanceMonitorApi {
   index: number
   flipped: number
   fallback: boolean
-  subscriptions: Map<Symbol, Partial<PerformanceMonitorHookApi>>
+  subscriptions: Map<symbol, Partial<PerformanceMonitorHookApi>>
   subscribe: () => void
 }
 
@@ -31,7 +31,10 @@ interface PerformanceMonitorProps {
   iterations?: number
   /** The percentage of iterations that are matched against the lower and upper bounds, 0.75 */
   threshold?: number
-  /** A function that receive the max device refreshrate to determine lower and upper bounds which create a margin where neither incline nor decline should happen, (refreshrate) => (refreshrate > 90 ? [50, 90] : [50, 60]) */
+  /**
+   * A function that receive the max device refreshrate to determine lower and upper bounds which
+   * create a margin where neither incline nor decline should happen, (refreshrate) => (refreshrate > 90 ? [50, 90] : [50, 60])
+   */
   bounds?: (refreshrate: number) => [lower: number, upper: number]
   /** How many times it can inline or decline before onFallback is called, Infinity */
   flipflops?: number
@@ -49,17 +52,17 @@ interface PerformanceMonitorProps {
   onFallback?: (api: PerformanceMonitorApi) => void
 }
 
-const decimalPlacesRatio = Math.pow(10, 0)
+const decimalPlacesRatio = 10 ** 0
 
 export class PerformanceMonitor {
   iterations = 10
   ms = 250
   threshold = 0.75
   step = 0.1
-  
-  flipflops = Infinity
 
-  // api
+  flipflops = Number.POSITIVE_INFINITY
+
+  // Api
   fps = 0
   index = 0
   factor = 0.5
@@ -73,7 +76,9 @@ export class PerformanceMonitor {
   subscribe = (callback: () => void) => {
     const key = Symbol()
     this.subscriptions.set(key, callback)
-    return () => void this.subscriptions.delete(key)
+    return () => {
+      this.subscriptions.delete(key)
+    }
   }
   bounds: (n: number) => [number, number]
   onIncline: any
@@ -81,13 +86,13 @@ export class PerformanceMonitor {
   onChange: any
   onFallback: any
 
-  constructor({
+  constructor ({
     iterations = 10,
     ms = 250,
     threshold = 0.75,
     step = 0.1,
     factor = 0.5,
-    flipflops = Infinity,
+    flipflops = Number.POSITIVE_INFINITY,
     bounds = (refreshrate) => (refreshrate > 100 ? [60, 100] : [40, 60]),
     onIncline,
     onDecline,
@@ -108,10 +113,10 @@ export class PerformanceMonitor {
   }
 
   update (): void {
-    const { frames, averages } = this
+    const { frames, averages, fallback } = this
 
     // If the fallback has been reached do not continue running samples
-    if (this.fallback) {
+    if (fallback) {
       return
     }
 
@@ -120,10 +125,10 @@ export class PerformanceMonitor {
     }
 
     frames.push(performance.now())
-    const msPassed = frames[frames.length - 1]! - frames[0]!
+    const msPassed = frames.at(-1)! - frames[0]!
 
     if (msPassed < this.ms) {
-      return 
+      return
     }
 
     this.fps = Math.round((frames.length / msPassed) * 1000 * decimalPlacesRatio) / decimalPlacesRatio
@@ -139,7 +144,7 @@ export class PerformanceMonitor {
       if (upperBounds.length > this.iterations * this.threshold) {
         this.factor = Math.min(1, this.factor + this.step)
         this.flipped++
-        if (this.onIncline) this.onIncline(this)
+        if (this.onIncline) { this.onIncline(this) }
         this.subscriptions.forEach((value) => value.onIncline && value.onIncline(this))
       }
 
@@ -165,8 +170,10 @@ export class PerformanceMonitor {
 
       this.averages = []
 
-      // Resetting the refreshrate creates more problems than it solves atm
-      // api.refreshrate = 0
+      /*
+       * Resetting the refreshrate creates more problems than it solves atm
+       * api.refreshrate = 0
+       */
     }
 
     this.frames = []

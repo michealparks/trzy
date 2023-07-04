@@ -1,11 +1,14 @@
 import type { Context } from './context'
 
-export const renderFns: ((ctx: Context, delta: number) => void)[] = []
+export type UseRenderCallback = (ctx: Context, delta: number) => void
+
+export const renderHandlers: { fn: UseRenderCallback; order: number }[] = []
 
 export interface UseRenderOptions {
-  sort?: number
+  order?: number
 }
 
 export const useRender = (fn: (ctx: Context, delta: number) => void, options?: UseRenderOptions | undefined) => {
-  renderFns.push(fn)
+  renderHandlers.push({ fn, order: options?.order ?? 0 })
+  renderHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
 }

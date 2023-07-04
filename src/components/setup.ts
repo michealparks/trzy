@@ -62,7 +62,8 @@ export const setup = async (options: {
   camera.current.lookAt(0, 0, 0)
 
   if (localStorage.getItem('debug')) {
-    const inspect = new Inspector({ scene, camera: camera.current, renderer })
+    // eslint-disable-next-line no-new
+    new Inspector({ scene, camera: camera.current, renderer })
   }
 
   return { floor }

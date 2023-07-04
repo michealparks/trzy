@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { context } from './context'
-import { fns } from './frame'
+import { frameHandlers } from './frame'
+import { renderHandlers } from './render'
 import { rendererResizer } from '../main'
 
 export interface TrzyOptions {
@@ -20,8 +21,14 @@ const loop = (time: number, frame: XRFrame) => {
   const now = performance.now()
   const delta = now - then
   then = time
-  context.renderer.render(context.scene, context.camera.current)
-  fns.forEach((fn) => fn(context, delta, frame))
+
+  if (renderHandlers.length > 0) {
+    renderHandlers.forEach((item) => item.fn(context, delta))
+  } else {
+    context.renderer.render(context.scene, context.camera.current)
+  }
+
+  frameHandlers.forEach((item) => item.fn(context, delta, frame))
 }
 
 /**

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as THREE from 'three'
 
 type C<T extends abstract new (...args: any) => any> = ConstructorParameters<T>

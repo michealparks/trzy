@@ -1,22 +1,31 @@
 import type { Context } from './context'
 
-export const fns: ((ctx: Context, delta: number, frame?: XRFrame) => void)[] = []
+export type UseFrameCallback = (ctx: Context, delta: number, frame?: XRFrame) => void
+
+export const frameHandlers: { fn: UseFrameCallback; order: number }[] = []
 
 export interface UseFrameOptions {
   autostart: boolean
+  order?: number
 }
 
 export const useFrame = (fn: (ctx: Context, delta: number, frame?: XRFrame) => void, options?: UseFrameOptions | undefined) => {
-  const start = () => fns.push(fn)
-  const stop = () => fns.splice(fns.indexOf(fn), 1)
-
-  if (options?.autostart ?? true) {
-    start()
-  }
-
-  return {
-    start,
-    stop,
+  const config = {
+    start () {
+      config.started.current = true
+      frameHandlers.push({ fn, order: options?.order ?? 0 })
+      frameHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
+    },
+    stop () {
+      config.started.current = false
+      frameHandlers.splice(frameHandlers.findIndex((item) => item.fn === fn), 1)
+    },
     started: { current: options?.autostart ?? true },
   }
+
+  if (options?.autostart ?? true) {
+    config.start()
+  }
+
+  return config
 }
