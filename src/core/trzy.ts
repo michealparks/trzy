@@ -38,6 +38,10 @@ const loop = (time: number, frame: XRFrame) => {
  * @returns
  */
 export const trzy = (options: TrzyOptions = {}) => {
+  if (initialized) {
+    console.warn('trzy() was called more than once! This will often produce undesirable results.')
+  }
+
   initialized = true
 
   const renderer = new THREE.WebGLRenderer({

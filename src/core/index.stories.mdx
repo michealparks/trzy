@@ -1,0 +1,61 @@
+
+import { Canvas, Meta, Story } from '@storybook/blocks';
+
+<Meta title='Core' />
+
+The Trzy library mainly consists of extras, utils, and helpers, but also contains 
+a very thin framework meant to resemble React Three Fiber or Threlte.
+
+### trzy
+
+The `trzy` function will instantiate everything you need to get a THREE.js project started.
+It should be only called once per project.
+
+```ts
+import { trzy } from 'trzy'
+
+trzy()
+```
+
+### useTrzy
+
+The `useTrzy` function will provide all instantiated objects.
+
+```ts
+import { useTrzy, ambientLight, box } from 'trzy'
+
+const { scene, camera, renderer } = useTrzy()
+```
+
+Trzy will automatically create a render loop, and callbacks can be added to it.
+
+```ts
+import { useFrame } from 'trzy'
+
+useFrame((ctx, delta) => {
+  ctx.camera.current.position.z += 0.1
+})
+```
+
+Frame callbacks can be manually started and stopped, and render order can be specified.
+
+```ts
+import { useFrame } from 'trzy'
+
+const { start, stop, started } = useFrame((ctx) => {
+  if (started.current && ctx.camera.current.position > 10) {
+    stop()
+  }
+}, { autostart: false, order: 1 })
+
+```
+
+Cameras can be changed by reassigning the default camera.
+
+```ts
+import { useTrzy } from 'trzy'
+
+const { camera } = useTrzy()
+
+camera.current = new THREE.OrthographicCamera()
+```
