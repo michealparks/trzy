@@ -1,4 +1,4 @@
-import type { Context } from './context'
+import { internalContext, type Context } from './context'
 
 export type UseRenderCallback = (ctx: Context, delta: number) => void
 
@@ -10,5 +10,5 @@ export interface UseRenderOptions {
 
 export const useRender = (fn: (ctx: Context, delta: number) => void, options?: UseRenderOptions | undefined) => {
   renderHandlers.push({ fn, order: options?.order ?? 0 })
-  renderHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
+  internalContext.renderHandlersNeedSortCheck = true
 }

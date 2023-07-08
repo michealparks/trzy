@@ -1,5 +1,10 @@
 let camera: THREE.PerspectiveCamera | THREE.OrthographicCamera
 
+export const internalContext = {
+  renderHandlersNeedSortCheck: false,
+  frameHandlersNeedSortCheck: false,
+}
+
 export const context = {
   renderer: undefined! as THREE.WebGLRenderer,
   scene: undefined! as THREE.Scene,

@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { context } from './context'
-import { frameHandlers } from './frame'
-import { renderHandlers } from './render'
+import { frameloop } from './frameloop'
 import { rendererResizer } from '../main'
 
 export interface TrzyOptions {
@@ -15,21 +14,6 @@ export interface TrzyOptions {
 }
 
 let initialized = false
-let then = 0
-
-const loop = (time: number, frame: XRFrame) => {
-  const now = performance.now()
-  const delta = now - then
-  then = time
-
-  if (renderHandlers.length > 0) {
-    renderHandlers.forEach((item) => item.fn(context, delta))
-  } else {
-    context.renderer.render(context.scene, context.camera.current)
-  }
-
-  frameHandlers.forEach((item) => item.fn(context, delta, frame))
-}
 
 /**
  *
@@ -68,7 +52,7 @@ export const trzy = (options: TrzyOptions = {}) => {
     renderer.shadowMap.type = options.shadows
   }
 
-  renderer.setAnimationLoop(loop)
+  renderer.setAnimationLoop(frameloop)
 
   const disposeResizer = rendererResizer(context)
 

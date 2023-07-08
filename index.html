@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <script type="module" src="/src/main.ts"></script>
+  <style>body { margin: 0 }</style>
+  <body>
+    <t-scene>
+      <t-default-camera position="0,0,5" lookat="0,0,0"></t-default-camera>
+      <t-ambient-light></t-ambient-light>
+      <t-mesh>
+        <t-box-geometry></t-box-geometry>
+        <t-mesh-basic-material color="red"></t-mesh-basic-material>
+      </t-mesh>
+    </t-scene>
+  </body>
+</html>

@@ -27,8 +27,6 @@ const resize = (
     cam.updateProjectionMatrix()
   }
 
-  console.log(w, h)
-
   if (composer !== undefined) {
     composer.setSize(w, h, false)
   }
