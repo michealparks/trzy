@@ -1,211 +1,174 @@
 import * as THREE from 'three'
-import { darkenColor } from '../lib/color'
 
-const color1 = '#ff3653'
-const color2 = '#8adb00'
-const color3 = '#2c8fff'
-
-const darkColor1 = darkenColor(color1, 50)
-const darkColor2 = darkenColor(color2, 50)
-const darkColor3 = darkenColor(color3, 50)
-
-const size = 128 * window.devicePixelRatio
-
-// Turn rate in angles per second
-const turnRate = 3 * Math.PI
-
-const euler = new THREE.Euler()
-
-const q1 = new THREE.Quaternion()
-const q2 = new THREE.Quaternion()
-
-const geometry = new THREE.BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0)
-
-const buttonSize = 64
-
-const drawTexture = (sprite: THREE.Sprite) => {
-  const { context, text } = sprite.userData as {
-    context: CanvasRenderingContext2D
-    text: string
-  }
-
-  context.beginPath()
-  context.arc(buttonSize / 2, buttonSize / 2, buttonSize / 4, 0, 2 * Math.PI)
-  context.closePath()
-  context.fillStyle = sprite.userData.color
-  context.fill()
-
-  if (text !== '') {
-    context.font = 'bold 23px system-ui'
-    context.textAlign = 'center'
-    context.fillStyle = '#000000'
-    context.fillText(text, 32, 41)
-  }
-
-  sprite.material.needsUpdate = true
-  sprite.material.map!.needsUpdate = true
+const getAxisMaterial = (color: THREE.Color) => {
+  return new THREE.MeshBasicMaterial({ color, toneMapped: false })
 }
 
-const createAxis = (color: string) => {
-  const material = new THREE.MeshBasicMaterial({ color, toneMapped: false })
-  const mesh = new THREE.Mesh(geometry, material)
-  return mesh
-}
-
-const createSprite = (color: string, text = '') => {
+const getSpriteMaterial = (color?: THREE.Color, text?: string | undefined) => {
   const canvas = document.createElement('canvas')
-  canvas.width = buttonSize
-  canvas.height = buttonSize
+  const context = canvas.getContext('2d')
 
-  const context = canvas.getContext('2d')!
+  canvas.width = 64
+  canvas.height = 64
+
+  if (context !== null) {
+    context.beginPath()
+    context.arc(32, 32, 16, 0, 2 * Math.PI)
+    context.closePath()
+    context.fillStyle = color?.getStyle() ?? ''
+    context.fill()
+
+    if (text !== undefined) {
+      context.font = '24px system-ui'
+      context.textAlign = 'center'
+      context.fillStyle = '#000000'
+      context.fillText(text.toUpperCase(), 32, 41)
+    }
+  }
+
   const map = new THREE.CanvasTexture(canvas)
-  const material = new THREE.SpriteMaterial({ map, toneMapped: false })
-  const sprite = new THREE.Sprite(material)
 
-  sprite.userData.color = color
-  sprite.userData.text = text
-  sprite.userData.context = context
+  return new THREE.SpriteMaterial({ map, toneMapped: false })
+}
 
-  drawTexture(sprite)
-
-  return sprite
+interface Options {
+  colors?: [x: string, y: string, z: string]
 }
 
 export class ViewHelper extends THREE.Object3D {
   isViewHelper = true
-
   animating = false
   center = new THREE.Vector3()
-  point = new THREE.Vector3()
-  viewport = new THREE.Vector4()
-  targetQuaternion = new THREE.Quaternion()
 
-  radius = 0
+  /**
+   * Turn rate in angles per second. Default is `2 * Math.PI`
+   */
+  turnRate = 2 * Math.PI
 
-  orthoCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, -4, 4)
+  dispose: () => void
 
-  axes: readonly [THREE.Mesh, THREE.Mesh, THREE.Mesh]
-  btns: readonly [THREE.Sprite, THREE.Sprite, THREE.Sprite, THREE.Sprite, THREE.Sprite, THREE.Sprite]
-
-  camera: THREE.Camera
-  renderer: THREE.WebGLRenderer
-
-  constructor (camera: THREE.Camera, renderer: THREE.WebGLRenderer) {
+  constructor (camera: THREE.Camera, renderer: THREE.WebGLRenderer, options: Options = {}) {
     super()
 
-    this.camera = camera
-    this.renderer = renderer
+    const axisLetters = ['x', 'y', 'z', 'x', 'y', 'z'] as const
 
-    const mouse = new THREE.Vector2()
+    const canvas = renderer.domElement
+    const colorHexes = options.colors ?? ['#ff3653', '#8adb00', '#2c8fff']
+    const targetPosition = new THREE.Vector3()
+    const targetQuaternion = new THREE.Quaternion()
+
+    const clock = new THREE.Clock()
+    const q1 = new THREE.Quaternion()
+    const q2 = new THREE.Quaternion()
+    const euler = new THREE.Euler()
+    const viewport = new THREE.Vector4()
+    let radius = 0
+
+    const geometry = new THREE.BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0)
+    const colors = colorHexes.map((hex) => new THREE.Color(hex))
+    const axes = colors.map((color) => new THREE.Mesh(geometry, getAxisMaterial(color)))
+
+    const raycaster = new THREE.Raycaster()
+    const pointer = new THREE.Vector2()
     const dummy = new THREE.Object3D()
 
-    this.orthoCamera.position.set(0, 0, 2)
+    const orthoCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0, 4)
+    orthoCamera.position.set(0, 0, 2)
 
-    this.axes = [
-      createAxis(color1),
-      createAxis(color2),
-      createAxis(color3),
-    ] as const
+    axes[1]?.rotation.set(0, 0, Math.PI / 2)
+    axes[2]?.rotation.set(0, -Math.PI / 2, 0)
 
-    this.btns = [
-      createSprite(color1, 'X'),
-      createSprite(color2, 'Y'),
-      createSprite(color3, 'Z'),
-      createSprite(color1),
-      createSprite(color2),
-      createSprite(color3),
-    ] as const
+    axes.forEach((axis) => this.add(axis))
 
-    this.axes[1].rotation.z = Math.PI / 2
-    this.axes[2].rotation.y = -Math.PI / 2
+    const helpers = axisLetters.map((name, index) => {
+      const sign = index > 2 ? -1 : 1
+      const material = getSpriteMaterial(colors[index % 3], sign === 1 ? name : undefined)
+      const sprite = new THREE.Sprite(material)
+      sprite.position[name] = sign
+      sprite.scale.setScalar(sign === 1 ? 1 : 0.8)
+      sprite.userData = { name, sign }
+      return sprite
+    })
 
-    this.btns[0].position.x = 1
-    this.btns[1].position.y = 1
-    this.btns[2].position.z = 1
-    this.btns[3].position.x = -1
-    this.btns[4].position.y = -1
-    this.btns[5].position.z = -1
+    helpers.forEach((helper) => this.add(helper))
 
-    this.btns[3].scale.setScalar(0.8)
-    this.btns[4].scale.setScalar(0.8)
-    this.btns[5].scale.setScalar(0.8)
+    const point = new THREE.Vector3()
+    const dim = 220
 
-    this.add(
-      ...this.axes,
-      ...this.btns
-    )
+    let oldClear = false
 
-    const interactiveObjects: THREE.Object3D[] = [...this.btns]
-    const targetPosition = new THREE.Vector3()
-    const raycaster = new THREE.Raycaster()
+    const oldRender = renderer.render
 
-    const handleClick = (event: MouseEvent) => {
-      if (this.animating) {
-        return false
+    // eslint-disable-next-line consistent-return
+    const animationAngle = (axis: 'x' | 'y' | 'z' | '-x' | '-y' | '-z') => {
+      switch (axis) {
+      case 'x': { return euler.set(0, Math.PI * 0.5, 0) }
+      case 'y': { return euler.set(-Math.PI * 0.5, 0, 0) }
+      case 'z': { return euler.set(0, 0, 0) }
+      case '-x': { return euler.set(0, -Math.PI * 0.5, 0) }
+      case '-y': { return euler.set(Math.PI * 0.5, 0, 0) }
+      case '-z': { return euler.set(0, Math.PI, 0) }
       }
-
-      const { domElement } = renderer
-      const rect = domElement.getBoundingClientRect()
-      mouse.x = (event.clientX - rect.left - rect.width + 128)
-      mouse.y = (event.clientY - rect.top)
-
-      mouse.x = ((mouse.x / 128) * 2) - 1
-      mouse.y = ((mouse.y / 128) * 2) - 1
-
-      raycaster.setFromCamera(mouse, this.orthoCamera)
-
-      const intersects = raycaster.intersectObjects(interactiveObjects)
-      const [intersection] = intersects
-
-      if (intersection) {
-        const object = intersection.object
-
-        prepareAnimationData(object, this.center)
-
-        this.animating = true
-
-        return true
-      }
-      return false
     }
 
-    renderer.domElement.addEventListener('click', handleClick)
+    const render = () => {
+      this.quaternion.copy(camera.quaternion).invert()
+
+      point.set(0, 0, 1).applyQuaternion(camera.quaternion)
+
+      axisLetters.forEach((letter, index) => {
+        const helper = helpers[index]
+
+        if (helper === undefined) {
+          return
+        }
+
+        if (index < 3) {
+          helper.material.opacity = point[letter] >= 0 ? 1 : 0.5
+        } else {
+          helper.material.opacity = point[letter] < 0 ? 1 : 0.5
+        }
+      })
+
+      oldClear = renderer.autoClear
+      renderer.autoClear = false
+
+      renderer.clearDepth()
+      renderer.getViewport(viewport)
+      renderer.setViewport((canvas.offsetWidth * window.devicePixelRatio) - dim, 0, dim, dim)
+      oldRender.call(renderer, this, orthoCamera)
+      renderer.setViewport(viewport)
+
+      // Restore default
+      renderer.autoClear = oldClear
+    }
+
+    const update = (delta: number) => {
+      const step = delta * this.turnRate
+
+      // Animate position by doing a slerp and then scaling the position on the unit sphere
+
+      q1.rotateTowards(q2, step)
+      camera.position.set(0, 0, 1)
+        .applyQuaternion(q1)
+        .multiplyScalar(radius)
+        .add(this.center)
+
+      // Animate orientation
+      camera.quaternion.rotateTowards(targetQuaternion, step)
+
+      if (q1.angleTo(q2) === 0) {
+        this.animating = false
+      }
+    }
 
     const prepareAnimationData = (object: THREE.Object3D, focusPoint: THREE.Vector3) => {
-      switch (1) {
-      case object.position.x: {
-        targetPosition.set(1, 0, 0)
-        this.targetQuaternion.setFromEuler(euler.set(0, Math.PI * 0.5, 0))
+      targetPosition.set(0, 0, 0)
+      targetPosition[object.userData.name as 'x' | 'y' | 'z'] = object.userData.sign as 1 | -1
+      targetQuaternion.setFromEuler(animationAngle(object.userData.name))
 
-        break
-      }
-      case object.position.y: {
-        targetPosition.set(0, 1, 0)
-        this.targetQuaternion.setFromEuler(euler.set(-Math.PI * 0.5, 0, 0))
-
-        break
-      }
-      case object.position.z: {
-        targetPosition.set(0, 0, 1)
-        this.targetQuaternion.setFromEuler(euler.set(0, 0, 0))
-
-        break
-      }
-      default: { if (object.position.x === -1) {
-        targetPosition.set(-1, 0, 0)
-        this.targetQuaternion.setFromEuler(euler.set(0, -Math.PI * 0.5, 0))
-      } else if (object.position.y === -1) {
-        targetPosition.set(0, -1, 0)
-        this.targetQuaternion.setFromEuler(euler.set(Math.PI * 0.5, 0, 0))
-      } else if (object.position.z === -1) {
-        targetPosition.set(0, 0, -1)
-        this.targetQuaternion.setFromEuler(euler.set(0, Math.PI, 0))
-      }
-      }
-      }
-
-      this.radius = camera.position.distanceTo(focusPoint)
-      targetPosition.multiplyScalar(this.radius).add(focusPoint)
+      radius = camera.position.distanceTo(focusPoint)
+      targetPosition.multiplyScalar(radius).add(focusPoint)
 
       dummy.position.copy(focusPoint)
 
@@ -215,70 +178,55 @@ export class ViewHelper extends THREE.Object3D {
       dummy.lookAt(targetPosition)
       q2.copy(dummy.quaternion)
     }
-  }
 
-  render = (delta: number) => {
-    if (this.animating) {
-      const step = delta * turnRate / 1000
+    const handleClick = (event: MouseEvent) => {
+      if (this.animating) {
+        return
+      }
 
-      // Animate position by doing a slerp and then scaling the position on the unit sphere
-      q1.rotateTowards(q2, step)
+      const rect = canvas.getBoundingClientRect()
+      const offsetX = rect.left + ((canvas.offsetWidth) - dim)
+      const offsetY = rect.top + ((canvas.offsetHeight) - dim)
 
-      this.camera.position
-        .set(0, 0, 1)
-        .applyQuaternion(q1)
-        .multiplyScalar(this.radius)
-        .add(this.center)
+      pointer.x = (((event.clientX - offsetX) / (rect.right - offsetX)) * 2) - 1
+      pointer.y = -(((event.clientY - offsetY) / (rect.bottom - offsetY)) * 2) + 1
 
-      // Animate orientation
-      this.camera.quaternion.rotateTowards(this.targetQuaternion, step)
+      raycaster.setFromCamera(pointer, orthoCamera)
 
-      if (q1.angleTo(q2) === 0) {
-        this.animating = false
+      const intersects = raycaster.intersectObjects(helpers)
+
+      const [intersection] = intersects
+
+      if (intersection === undefined) {
+        return
+      }
+
+      prepareAnimationData(intersection.object, this.center)
+
+      this.animating = true
+    }
+
+    renderer.render = (...args) => {
+      oldRender.call(renderer, ...args)
+      render()
+      if (this.animating) {
+        update(clock.getDelta())
       }
     }
 
-    this.quaternion.copy(this.camera.quaternion).invert()
-    this.updateMatrixWorld()
+    canvas.addEventListener('click', handleClick)
+    canvas.addEventListener('mousemove', handleClick)
 
-    const { x, y, z } = this.point.set(0, 0, 1).applyQuaternion(this.camera.quaternion)
+    this.dispose = () => {
+      canvas.removeEventListener('click', handleClick)
+      renderer.render = oldRender
+      geometry.dispose()
 
-    this.btns[0].userData.color = x >= 0 ? color1 : darkColor1
-    this.btns[1].userData.color = y >= 0 ? color2 : darkColor2
-    this.btns[2].userData.color = z >= 0 ? color3 : darkColor3
-    this.btns[3].userData.color = x < 0 ? color1 : darkColor1
-    this.btns[4].userData.color = y < 0 ? color2 : darkColor2
-    this.btns[5].userData.color = z < 0 ? color3 : darkColor3
-
-    for (const button of this.btns) {
-      drawTexture(button)
-    }
-
-    {
-      const viewportX = (this.renderer.domElement.offsetWidth * window.devicePixelRatio) - size
-      const viewportY = (this.renderer.domElement.offsetHeight * window.devicePixelRatio) - size
-
-      const { autoClear, outputColorSpace } = this.renderer
-      this.renderer.autoClear = false
-      this.renderer.outputColorSpace = 'srgb-linear'
-      this.renderer.getViewport(this.viewport)
-      this.renderer.setViewport(viewportX, viewportY, size, size)
-      this.renderer.render(this, this.orthoCamera)
-      this.renderer.setViewport(this.viewport)
-      this.renderer.autoClear = autoClear
-      this.renderer.outputColorSpace = outputColorSpace
-    }
-  }
-
-  dispose = () => {
-    for (const item of [...this.axes, ...this.btns]) {
-      if (item instanceof THREE.Sprite) {
-        item.material.map?.dispose()
-      }
-
-      if (item.material instanceof THREE.Material) {
-        item.material.dispose()
-      }
+      axes.forEach((axis) => axis.material.dispose())
+      helpers.forEach((helper) => {
+        helper.material.map?.dispose()
+        helper.material.dispose()
+      })
     }
   }
 }

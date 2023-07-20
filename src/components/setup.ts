@@ -14,12 +14,7 @@ orbitControls.enableDamping = true
 orbitControls.enablePan = false
 useFrame(() => orbitControls.update())
 
-export const setup = async (options: {
-  controls?: boolean,
-  webGPU?: boolean
-} = {}) => {
-  const { webGPU = false } = options
-
+export const setup = async () => {
   scene.clear()
   scene.add(camera.current)
 
@@ -41,20 +36,9 @@ export const setup = async (options: {
   group.position.y = 0.2
   group.scale.setScalar(0.1)
 
-  const floor = plane(undefined, 4, 4)
+  const floor = plane(new THREE.MeshStandardMaterial(), 4, 4)
   floor.rotation.x = -Math.PI / 2
   scene.add(floor)
-
-  if (webGPU) {
-    light.shadow.mapSize.set(4096, 4096)
-    light.shadow.bias = 0.0001
-    light.shadow.camera.near = 1
-    light.shadow.camera.far = 100
-    light.shadow.camera.right = 17
-    light.shadow.camera.left = -17
-    light.shadow.camera.top = 17
-    light.shadow.camera.bottom = -17
-  }
 
   shadows(scene)
 

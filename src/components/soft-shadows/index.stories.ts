@@ -1,6 +1,6 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { resetSoftShadows, softShadows } from '../../main'
+import { softShadows } from '../../main'
 import code from './code?raw'
 import { setup } from '../setup'
 import { useFrame, useTrzy } from '../../core'
@@ -17,9 +17,7 @@ export default meta
 const render = () => {
   softShadows()
 
-  const { scene, camera, renderer } = useTrzy()
-
-  resetSoftShadows(renderer, scene, camera.current)
+  const { scene, renderer } = useTrzy()
 
   setup().then(() => {
     const object = scene.getObjectByName('Strawberry')!

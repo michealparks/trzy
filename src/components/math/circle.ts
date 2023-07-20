@@ -1,19 +1,10 @@
-export const randomPointOnCircle = (radius: number): [number, number] => {
+export const randomPointOnCircle = (radius: number): [x: number, y: number] => {
   const theta = 2 * Math.PI * Math.random()
-
-  const x = radius * Math.cos(theta)
-  const y = radius * Math.sin(theta)
-
-  return [x, y]
+  return [radius * Math.cos(theta), radius * Math.sin(theta)]
 }
 
-export const randomPointWithinCircle = (radius: number): [number, number] => {
+export const randomPointWithinCircle = (radius: number): [x: number, y: number] => {
   const r = radius * Math.sqrt(Math.random())
-
   const theta = 2 * Math.PI * Math.random()
-
-  const x = r * Math.cos(theta)
-  const y = r * Math.sin(theta)
-
-  return [x, y]
+  return [r * Math.cos(theta), r * Math.sin(theta)]
 }

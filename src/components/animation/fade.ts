@@ -18,13 +18,8 @@ export const fadeToAction = (
     currentAction.fadeOut(duration)
   }
 
-  if (loop) {
-    nextAction.loop = THREE.LoopRepeat
-    nextAction.clampWhenFinished = false
-  } else {
-    nextAction.loop = THREE.LoopOnce
-    nextAction.clampWhenFinished = true
-  }
+  nextAction.loop = loop ? THREE.LoopRepeat : THREE.LoopOnce
+  nextAction.clampWhenFinished = !loop
 
   nextAction
     .reset()

@@ -67,8 +67,10 @@ module.exports = {
     'semi': ['error', 'never'],
 
     '@typescript-eslint/prefer-for-of': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
 
     'unicorn/prevent-abbreviations': 'off',
     'unicorn/no-array-for-each': 'off',
+    'unicorn/no-null': 'off',
   },
 }

@@ -11,32 +11,23 @@ export class AxesHelper extends Line2 {
   #length = 1
 
   constructor (length = 1, width = 0.2) {
-    const geometry = new LineGeometry()
-
-    geometry.setColors([
-      1, 0, 0, 1, 0, 0, 1, 0, 0,
-      0, 1, 0, 0, 1, 0, 0, 1, 0,
-      0, 0, 1, 0, 0, 1, 0, 0, 1,
-    ])
-
-    const material = new LineMaterial({
+    super(new LineGeometry(), new LineMaterial({
       alphaToCoverage: true,
       linewidth: width / 100,
       vertexColors: true,
-    })
-
-    super(geometry, material)
+    }))
 
     this.length = length
+    this.setColors('red', 'green', 'blue')
   }
 
   set length (value: number) {
+    const positions = new Float32Array(27)
     this.#length = value
-    this.geometry.setPositions([
-      0, 0, 0, value, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, value, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, value, 0, 0, 0,
-    ])
+    positions[3] = value
+    positions[13] = value
+    positions[23] = value
+    this.geometry.setPositions(positions)
     this.computeLineDistances()
   }
 
@@ -53,15 +44,19 @@ export class AxesHelper extends Line2 {
   }
 
   setColors (xAxis: THREE.ColorRepresentation, yAxis: THREE.ColorRepresentation, zAxis: THREE.ColorRepresentation): this {
-    const color1 = color.set(xAxis).toArray()
-    const color2 = color.set(yAxis).toArray()
-    const color3 = color.set(zAxis).toArray()
+    const colors = new Float32Array(27)
+    const axes = [xAxis, yAxis, zAxis]
 
-    this.geometry.setColors([
-      ...color1, ...color1, ...color1,
-      ...color2, ...color2, ...color2,
-      ...color3, ...color3, ...color3,
-    ])
+    axes.forEach((axis, i) => {
+      color.set(axis)
+      for (let j = i * 9; j < (i * 9) + 9; j += 3) {
+        colors[j + 0] = color.r
+        colors[j + 1] = color.g
+        colors[j + 2] = color.b
+      }
+    })
+
+    this.geometry.setColors(colors)
 
     return this
   }

@@ -18,35 +18,44 @@ const handleKey = (key: string, pressed: number): void => {
 
   switch (lowerkey) {
   case 's':
-  case 'arrowdown':
+  case 'arrowdown': {
     keyboard.y = -1 * pressed
     break
+  }
   case 'w':
-  case 'arrowup':
+  case 'arrowup': {
     keyboard.y = +1 * pressed
     break
+  }
   case 'a':
-  case 'arrowleft':
+  case 'arrowleft': {
     keyboard.x = -1 * pressed
     break
+  }
   case 'd':
-  case 'arrowright':
+  case 'arrowright': {
     keyboard.x = +1 * pressed
     break
-  case ' ':
+  }
+  case ' ': {
     keyboard.space = +1 * pressed
     break
-  case 'q':
+  }
+  case 'q': {
     keyboard.r = +1 * pressed
     break
-  case 'e':
+  }
+  case 'e': {
     keyboard.r = -1 * pressed
     break
-  case 'shift':
+  }
+  case 'shift': {
     keyboard.shift = +1 * pressed
     break
-  default:
+  }
+  default: {
     break
+  }
   }
 
   if (pressed === 1) {
@@ -66,10 +75,7 @@ const handleKeyDown = (event: KeyboardEvent): void => {
   keyboard.controlling = true
 
   pressedKeys.add(key)
-
-  for (const pressedKey of pressedKeys) {
-    handleKey(pressedKey, 1)
-  }
+  pressedKeys.forEach((pressed) => handleKey(pressed, 1))
 }
 
 const handleKeyUp = (event: KeyboardEvent): void => {
@@ -82,10 +88,7 @@ const handleKeyUp = (event: KeyboardEvent): void => {
   pressedKeys.delete(key)
 
   handleKey(key, 0)
-
-  for (const pressedKey of pressedKeys) {
-    handleKey(pressedKey, 1)
-  }
+  pressedKeys.forEach((pressed) => handleKey(pressed, 1))
 
   if (pressedKeys.size === 0) {
     keyboard.controlling = false
@@ -93,9 +96,7 @@ const handleKeyUp = (event: KeyboardEvent): void => {
 }
 
 const handleBlur = (): void => {
-  for (const pressedKey of pressedKeys) {
-    handleKey(pressedKey, 0)
-  }
+  pressedKeys.forEach((key) => handleKey(key, 0))
   pressedKeys.clear()
 }
 

@@ -1,4 +1,5 @@
-const createGamepad = () => ({
+const createGamepad = (player: number) => ({
+  player,
   id: '',
   A: 0,
   B: 0,
@@ -25,10 +26,7 @@ type Pad = ReturnType<typeof createGamepad>
 
 let initialized = false
 
-const gamepad1 = createGamepad()
-const gamepad2 = createGamepad()
-const gamepad3 = createGamepad()
-const gamepad4 = createGamepad()
+const gamepads = [1, 2, 3, 4].map((player) => createGamepad(player))
 
 const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
   pad.leftStickX = axes[0] ?? 0
@@ -57,43 +55,30 @@ const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
 }
 
 const updateGamepads = (): void => {
-  const [pad1, pad2, pad3, pad4] = window.navigator.getGamepads()
+  navigator.getGamepads().forEach((pad, index) => {
+    if (pad === null) {
+      return
+    }
 
-  if (pad1 !== null && pad1 !== undefined) {
-    handleGamepad(gamepad1, pad1)
-  }
-
-  if (pad2 !== null && pad2 !== undefined) {
-    handleGamepad(gamepad2, pad2)
-  }
-
-  if (pad3 !== null && pad3 !== undefined) {
-    handleGamepad(gamepad3, pad3)
-  }
-
-  if (pad4 !== null && pad4 !== undefined) {
-    handleGamepad(gamepad4, pad4)
-  }
+    handleGamepad(gamepads[index]!, pad)
+  })
 }
 
 const handleGamepadDisconnected = (event: GamepadEvent): void => {
   const { id } = event.gamepad
 
-  if (id === gamepad1.id) {
-    gamepad1.connected = false
-  } else if (id === gamepad2.id) {
-    gamepad2.connected = false
-  }
+  gamepads.forEach((gamepad) => {
+    if (id === gamepad.id) {
+      gamepad.connected = false
+    }
+  })
 }
 
 const handleGamepadConnected = (): void => {
-  const [pad1, pad2] = window.navigator.getGamepads()
-
-  gamepad1.connected = (pad1 !== null && pad1 !== undefined)
-  gamepad1.id = pad1?.id ?? ''
-
-  gamepad2.connected = (pad2 !== null && pad2 !== undefined)
-  gamepad2.id = pad2?.id ?? ''
+  navigator.getGamepads().forEach((pad, index) => {
+    gamepads[index]!.connected = pad !== null
+    gamepads[index]!.id = pad?.id ?? ''
+  })
 }
 
 const disposeGamepads = (): void => {
@@ -103,8 +88,8 @@ const disposeGamepads = (): void => {
 }
 
 export const useGamepad = (): {
-  gamepad1: Readonly<Pad>
-  gamepad2: Readonly<Pad>
+  gamepad: Readonly<Pad>
+  gamepads: Readonly<Pad>[]
   updateGamepads: () => void
   disposeGamepads: () => void
 } => {
@@ -114,5 +99,5 @@ export const useGamepad = (): {
     initialized = true
   }
 
-  return { gamepad1, gamepad2, updateGamepads, disposeGamepads }
+  return { gamepad: gamepads[0]!, gamepads, updateGamepads, disposeGamepads }
 }

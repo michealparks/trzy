@@ -5,15 +5,20 @@ import { renderHandlers } from './render'
 let then = 0
 
 const runRenderHandlers = (delta: number) => {
-  renderHandlers.forEach((item) => item.fn(context, delta))
-
   if (internalContext.renderHandlersNeedSortCheck) {
     renderHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
     internalContext.renderHandlersNeedSortCheck = false
   }
+
+  renderHandlers.forEach((item) => item.fn(context, delta))
 }
 
 const runFrameHandlers = (delta: number, frame?: XRFrame) => {
+  if (internalContext.frameHandlersNeedSortCheck) {
+    frameHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
+    internalContext.frameHandlersNeedSortCheck = false
+  }
+
   frameHandlers.forEach((item) => item.fn(context, delta, frame))
 }
 

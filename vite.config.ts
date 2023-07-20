@@ -7,12 +7,14 @@ export default defineConfig({
     glsl(),
   ],
   build: {
+    target: 'esnext',
     copyPublicDir: false,
     minify: false,
     lib: {
       entry: 'src/main.ts',
       name: 'trzy',
       fileName: 'trzy',
+      formats: ['es'],
     },
     rollupOptions: {
       // make sure to externalize deps that shouldn't be bundled
@@ -26,15 +28,11 @@ export default defineConfig({
         'three/examples/jsm/renderers/webgpu/WebGPURenderer',
         'three/examples/jsm/loaders/GLTFLoader',
         'three/examples/jsm/webxr/XRControllerModelFactory',
+        'three/examples/jsm/webxr/XRHandModelFactory',
       ],
       output: {
         inlineDynamicImports: true,
         manualChunks: undefined,
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          three: 'THREE',
-        },
       },
     },
   },

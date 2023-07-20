@@ -1,4 +1,4 @@
-import type { Context } from './context'
+import { internalContext, type Context } from './context'
 
 export type UseFrameCallback = (ctx: Context, delta: number, frame?: XRFrame) => void
 
@@ -14,7 +14,7 @@ export const useFrame = (fn: (ctx: Context, delta: number, frame?: XRFrame) => v
     start () {
       config.started.current = true
       frameHandlers.push({ fn, order: options?.order ?? 0 })
-      frameHandlers.sort((a, b) => (a.order > b.order ? 1 : -1))
+      internalContext.frameHandlersNeedSortCheck = true
     },
     stop () {
       config.started.current = false

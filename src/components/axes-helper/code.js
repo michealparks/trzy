@@ -3,11 +3,12 @@ import { AxesHelper } from 'trzy'
 
 const scene = new THREE.Scene()
 const helper = new AxesHelper()
+scene.add(helper)
+
+// Defaults
 helper.length = 10
 helper.width = 0.1
-helper.setColors('yellow', 'blue', 'pink')
-
-scene.add(helper)
+helper.setColors('red', 'blue', 'green')
 
 // later
 helper.dispose()

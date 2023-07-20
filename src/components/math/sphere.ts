@@ -1,4 +1,4 @@
-export const randomPointOnSphere = (radius: number): [number, number, number] => {
+export const randomPointOnSphere = (radius: number): [x: number, y: number, z: number] => {
   const u = Math.random()
   const v = Math.random()
 
@@ -8,14 +8,14 @@ export const randomPointOnSphere = (radius: number): [number, number, number] =>
   // Polar angle
   const phi = Math.acos((2 * v) - 1)
 
-  const x = radius * Math.sin(phi) * Math.cos(theta)
-  const y = radius * Math.sin(phi) * Math.sin(theta)
-  const z = radius * Math.cos(phi)
-
-  return [x, y, z]
+  return [
+    radius * Math.sin(phi) * Math.cos(theta),
+    radius * Math.sin(phi) * Math.sin(theta),
+    radius * Math.cos(phi),
+  ]
 }
 
-export const randomPointWithinSphere = (radius: number): [number, number, number] => {
+export const randomPointWithinSphere = (radius: number): [x: number, y: number, z: number] => {
   const u = Math.random()
   const v = Math.random()
   const w = Math.random()
@@ -29,9 +29,9 @@ export const randomPointWithinSphere = (radius: number): [number, number, number
   // Radius within the sphere
   const r = radius * Math.cbrt(w)
 
-  const x = r * Math.sin(phi) * Math.cos(theta)
-  const y = r * Math.sin(phi) * Math.sin(theta)
-  const z = r * Math.cos(phi)
-
-  return [x, y, z]
+  return [
+    r * Math.sin(phi) * Math.cos(theta),
+    r * Math.sin(phi) * Math.sin(theta),
+    r * Math.cos(phi),
+  ]
 }

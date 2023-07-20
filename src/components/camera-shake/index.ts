@@ -14,19 +14,13 @@ export class CameraShake extends Shake {
 
   override enable (controls?: OrbitControls): void {
     super.enable()
-
-    if (controls) {
-      this.activeControls = controls
-      this.activeControls.addEventListener('change', this.saveRotation)
-    }
+    this.activeControls = controls
+    this.activeControls?.addEventListener('change', this.saveRotation)
   }
 
   override disable (): void {
     super.disable()
-
-    if (this.activeControls) {
-      this.activeControls.removeEventListener('change', this.saveRotation)
-      this.activeControls = undefined
-    }
+    this.activeControls?.removeEventListener('change', this.saveRotation)
+    this.activeControls = undefined
   }
 }

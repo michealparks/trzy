@@ -2,10 +2,10 @@ import { AxesHelper, ViewHelper } from '../../main'
 import type { Meta, StoryObj } from '@storybook/html'
 import code from './code?raw'
 import { setup } from '../setup'
-import { useTrzy, useFrame } from '../../core'
+import { useTrzy } from '../../core'
 
 const meta: Meta = {
-  title: 'Orbit Controls Gizmo',
+  title: 'ViewHelper',
   parameters: {
     docs: { source: { code } },
   },
@@ -15,17 +15,15 @@ export default meta
 
 const render = () => {
   const { scene, camera, renderer } = useTrzy()
-
+  const container = document.createElement('div')
+  container.append(renderer.domElement)
   setup()
 
-  const helper = new ViewHelper(camera.current, renderer)
-
-  useFrame((_, delta) => helper.render(delta))
+  // eslint-disable-next-line no-new
+  new ViewHelper(camera.current, renderer)
 
   scene.add(new AxesHelper())
-
-  renderer.domElement.style.position = 'relative'
-  return renderer.domElement
+  return container
 }
 
 export const Primary: StoryObj = { render }

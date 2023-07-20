@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-underscore-dangle */
 import * as THREE from 'three'
 
 const memcpy = (
@@ -209,9 +212,9 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
    * @param position
    */
   advance (position: THREE.Vector3) {
-    const positions = (this.attributes.position as THREE.BufferAttribute).array as number[]
+    const positions = (this.attributes.position as THREE.BufferAttribute).array
     const previous = (this.attributes.previous as THREE.BufferAttribute).array
-    const next = (this.attributes.next as THREE.BufferAttribute).array as number[]
+    const next = (this.attributes.next as THREE.BufferAttribute).array
     const l = positions.length
 
     // PREVIOUS

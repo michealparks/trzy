@@ -39,9 +39,10 @@ export const playAudio = (file: string, volume = 0.5, loop = false) => {
     throw new Error(`Audio file ${file} has not been loaded!`)
   }
 
-  audio.setLoop(loop)
-  audio.setVolume(volume)
-  audio.play()
+  audio
+    .setLoop(loop)
+    .setVolume(volume)
+    .play()
 }
 
 export const loadFile = (file: string) => fileLoader.loadAsync(file)

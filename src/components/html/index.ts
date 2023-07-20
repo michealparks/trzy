@@ -26,16 +26,12 @@ export class Html {
   }
 
   update = (): void => {
-    if (this.el === undefined) {
-      return
-    }
-    if (this.camera === undefined) {
-      return
-    }
-    if (this.canvas === undefined) {
-      return
-    }
-    if (this.object3D === undefined) {
+    if (
+      this.el === undefined ||
+      this.camera === undefined ||
+      this.canvas === undefined ||
+      this.object3D === undefined
+    ) {
       return
     }
 
@@ -55,7 +51,7 @@ export class Html {
     this.el.style.transform = `translate3d(-50%,-50%,0) translate3d(${x}px,${y}px,0)`
 
     // Set the zIndex for sorting
-    this.el.style.zIndex = String(Math.trunc(((-vec.z * 0.5) + 0.5) * 100_000))
+    this.el.style.zIndex = `${Math.trunc(((-vec.z * 0.5) + 0.5) * 100_000)}`
   }
 
   dispose (): void {
