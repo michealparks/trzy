@@ -4,7 +4,6 @@ const vec = new THREE.Vector3()
 const size = new THREE.Vector2()
 
 let observers = 0
-let observing = false
 
 const resizeObserver = new ResizeObserver(([entry]) => {
   size.x = entry?.contentRect.width ?? 0
