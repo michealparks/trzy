@@ -14,7 +14,10 @@ orbitControls.enableDamping = true
 orbitControls.enablePan = false
 useFrame(() => orbitControls.update())
 
-export const setup = async () => {
+export const setup = async (opts: {
+  floor?: boolean
+  strawberry?: boolean
+} = {}) => {
   scene.clear()
   scene.add(camera.current)
 
@@ -32,13 +35,19 @@ export const setup = async () => {
   group.add(glb.scene.getObjectByName('Leaves')!)
   group.add(glb.scene.getObjectByName('Body')!)
   group.name = 'Strawberry'
-  scene.add(group)
-  group.position.y = 0.2
-  group.scale.setScalar(0.1)
+
+  if (opts.strawberry !== false) {
+    scene.add(group)
+    group.position.y = 0.2
+    group.scale.setScalar(0.1)
+  }
 
   const floor = plane(new THREE.MeshStandardMaterial(), 4, 4)
   floor.rotation.x = -Math.PI / 2
-  scene.add(floor)
+
+  if (opts.floor !== false) {
+    scene.add(floor)
+  }
 
   shadows(scene)
 

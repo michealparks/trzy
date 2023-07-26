@@ -18,6 +18,7 @@ export { resizeRendererToDisplaySize } from './components/lib/render-to-display-
 export { rendererResizer } from './components/lib/resize'
 export { loadAudio, loadFile, loadGLTF, loadTexture, setPath } from './components/assets'
 export { save, load, remove } from './components/storage'
+export { interactivity } from './components/interactivity'
 export { xr } from './components/xr'
 export * from './components/objects'
 export * from './components/math'
