@@ -1,8 +1,8 @@
-import { AxesHelper, ViewHelper } from '../../main'
+import { AxesHelper, ViewHelper } from '../main'
 import type { Meta, StoryObj } from '@storybook/html'
-import code from './code?raw'
-import { setup } from '../setup'
-import { useTrzy } from '../../core'
+import code from './code/view-helper?raw'
+import { setup } from './lib/setup'
+import { useTrzy } from '../core'
 
 const meta: Meta = {
   title: 'ViewHelper',

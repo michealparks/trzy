@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { CameraShake } from 'trzy'
 
 const camera = new THREE.PerspectiveCamera()

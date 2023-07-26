@@ -1,10 +1,10 @@
 
 import * as THREE from 'three'
-import { Html } from '../../main'
+import { Html } from '../main'
 import type { Meta, StoryObj } from '@storybook/html'
-import code from './code?raw'
-import { setup } from '../setup'
-import { useFrame, useTrzy } from '../../core'
+import code from './code/html?raw'
+import { setup } from './lib/setup'
+import { useFrame, useTrzy } from '../core'
 
 const meta: Meta = {
   title: 'HTML',

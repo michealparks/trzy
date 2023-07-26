@@ -1,9 +1,9 @@
 import { useGamepad } from 'trzy'
 
-const { gamepad1, gamepad2, updateGamepads, disposeGamepads } = useGamepad()
+const { gamepad, gamepads, updateGamepads, disposeGamepads } = useGamepad()
 
 // In your game loop
 updateGamepads()
 
-// later
+// Later
 disposeGamepads()

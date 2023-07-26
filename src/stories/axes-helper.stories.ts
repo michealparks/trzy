@@ -1,9 +1,9 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { useTrzy } from '../../core'
-import { AxesHelper } from '../../main'
-import code from './code?raw'
-import { setup } from '../setup'
+import { useTrzy } from '../core'
+import { AxesHelper } from '../main'
+import code from './code/axes-helper?raw'
+import { setup } from './lib/setup'
 
 const meta: Meta = {
   title: 'Axes Helper',
@@ -21,6 +21,7 @@ const render = () => {
   setup()
 
   const { scene, renderer } = useTrzy()
+
   const helper = new AxesHelper()
   helper.setColors('red', 'green', 'blue')
   helper.length = 100

@@ -1,6 +1,6 @@
 import { trzy, xr } from 'trzy'
 
-const { renderer, scene, camera, xr } = trzy()
+const { renderer, scene, camera } = trzy()
 
 xr.setup(renderer, scene, camera.current)
 

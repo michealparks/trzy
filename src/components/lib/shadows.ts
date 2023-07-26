@@ -13,10 +13,10 @@ export const setMapSize = (light: THREE.Light, mapSize = 1024, bias = -0.0001) =
 }
 
 export const shadows = (object: THREE.Object3D) => {
-  const isMesh = 'isMesh' in object
-  const isShadowCastingLight = 'isLight' in object && !('isAmbientLight' in object) && !('isRectAreaLight' in object)
-
-  object.castShadow = isMesh || isShadowCastingLight
-  object.receiveShadow = isMesh
-  object.children.forEach((child) => shadows(child))
+  object.traverse((child) => {
+    const isMesh = 'isMesh' in child
+    const isShadowCastingLight = 'isLight' in child && !('isAmbientLight' in child) && !('isRectAreaLight' in child)
+    child.castShadow = isMesh || isShadowCastingLight
+    child.receiveShadow = isMesh
+  })
 }

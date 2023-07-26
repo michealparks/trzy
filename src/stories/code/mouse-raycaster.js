@@ -1,7 +1,7 @@
 import { MouseRaycaster } from 'trzy'
 
 const raycaster = new MouseRaycaster({
-  scene, // alternatively, pass objects: THREE.Object3D[]
+  scene, // Alternatively, pass objects: THREE.Object3D[]
   camera,
   renderer,
   recursive: true,
@@ -10,5 +10,5 @@ const raycaster = new MouseRaycaster({
 raycaster.on('move', (event) => console.log(event.intersections))
 raycaster.on('click', (event) => console.log(event.intersections))
 
-// later
+// Later
 raycaster.dispose()

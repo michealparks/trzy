@@ -10,8 +10,8 @@
     "three",
     "three.js",
     "util",
-    "r3f",
-    "threlte"
+    "3d",
+    "webgl"
   ],
   "main": "./dist/trzy.umd.js",
   "module": "./dist/trzy.js",

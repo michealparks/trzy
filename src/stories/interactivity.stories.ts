@@ -1,10 +1,10 @@
 
 import * as THREE from 'three'
-import { interactivity } from '../../main'
+import { interactivity, shadows } from '../main'
 import type { Meta, StoryObj } from '@storybook/html'
-import { setup } from '../setup'
-import { useFrame, useTrzy } from '../../core'
-import code from './code?raw'
+import { setup } from './lib/setup'
+import { useFrame, useTrzy } from '../core'
+import code from './code/interactivity?raw'
 
 const meta: Meta = {
   title: 'Interactivity',
@@ -19,7 +19,7 @@ const render = () => {
   const { scene, camera, renderer } = useTrzy()
 
   interactivity({ target: renderer.domElement, camera: camera.current })
-  setup({ floor: false, strawberry: false })
+  setup()
 
   const cubes: THREE.Mesh[] = []
 
@@ -44,6 +44,8 @@ const render = () => {
     mesh.addEventListener('pointerleave', () => mesh.material.color.set('yellow'))
     mesh.addEventListener('click', () => (mesh.material.color.set('blue')))
   }
+
+  shadows(scene)
 
   useFrame(() => {
     cubes.forEach((cube) => {

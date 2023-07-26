@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { ViewHelper } from '.'
+import { ViewHelper } from 'trzy'
 
 const camera = new THREE.PerspectiveCamera()
 const renderer = new THREE.WebGLRenderer()

@@ -1,9 +1,9 @@
 
 import type { Meta, StoryObj } from '@storybook/html'
-import { useGamepad } from '../../main'
-import code from './code?raw'
-import { setup } from '../setup'
-import { useFrame } from '../../core'
+import { useGamepad } from '../main'
+import code from './code/gamepad?raw'
+import { setup } from './lib/setup'
+import { useFrame } from '../core'
 
 const meta: Meta = {
   title: 'Gamepad',

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html'
-import { plane, xr } from '../../main'
-import code from './code?raw'
-import { setup } from '../setup'
-import { useTrzy, useFrame } from '../../core'
+import { plane, xr } from '../main'
+import code from './code/xr?raw'
+import { setup } from './lib/setup'
+import { useTrzy, useFrame } from '../core'
 
 const meta: Meta = {
   title: 'XR',

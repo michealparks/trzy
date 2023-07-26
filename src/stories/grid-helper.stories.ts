@@ -1,8 +1,8 @@
-import { GridHelper } from '../../main'
-import { useTrzy } from '../../core'
+import { GridHelper } from '../main'
+import { useTrzy } from '../core'
 import type { Meta, StoryObj } from '@storybook/html'
-import code from './code?raw'
-import { setup } from '../setup'
+import code from './code/grid-helper?raw'
+import { setup } from './lib/setup'
 
 const meta: Meta = {
   title: 'Grid Helper',

@@ -10,5 +10,5 @@ helper.length = 10
 helper.width = 0.1
 helper.setColors('red', 'blue', 'green')
 
-// later
+// Later
 helper.dispose()

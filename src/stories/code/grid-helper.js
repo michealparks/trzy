@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { GridHelper } from '.'
+import { GridHelper } from 'trzy'
 
 const scene = new THREE.Scene()
 const cellSize = 1
