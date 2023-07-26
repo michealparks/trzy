@@ -1,0 +1,1 @@
+{"version":3,"file":"index.stories-0e076fbe.js","sources":["../../src/components/html/code.js?raw"],"sourcesContent":["export default \"import { Html } from 'trzy'\\n\\nconst html = new Html({\\n  el: document.querySelector('el'),\\n  object3D,\\n})\\n\""],"names":["code"],"mappings":"yFAAA,MAAeA,EAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;;;;;;;;;"}
