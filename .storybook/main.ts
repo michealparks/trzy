@@ -4,7 +4,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/core/index.stories.mdx',
     '../src/**/*.stories.mdx',
-    '../src/**/*.stories.@(js|jsx|ts|tsx)'
+    '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',
@@ -13,16 +13,16 @@ const config: StorybookConfig = {
   ],
   framework: {
     name: '@storybook/html-vite',
-    options: {}
+    options: {},
   },
   features: {
-    storyStoreV7: true
+    storyStoreV7: true,
   },
   core: {
     disableTelemetry: true,
   },
   docs: {
-    autodocs: true
+    autodocs: true,
   },
 }
 

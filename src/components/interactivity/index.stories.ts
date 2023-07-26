@@ -36,6 +36,7 @@ const render = () => {
 
     scene.add(mesh)
     cubes.push(mesh)
+
     mesh.addEventListener('pointerenter', (event) => {
       event.stopPropagation()
       mesh.material.color.set('hotpink')

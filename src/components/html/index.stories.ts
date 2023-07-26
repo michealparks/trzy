@@ -16,7 +16,7 @@ const meta: Meta = {
 export default meta
 
 const render = () => {
-  const { scene, camera, renderer } = useTrzy()
+  const { scene, renderer } = useTrzy()
 
   setup()
 
@@ -38,8 +38,7 @@ const render = () => {
       position: absolute;
       top: 0;
       left: 0;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: white;
       padding: 0.25rem 0.5rem;
     `
 
@@ -51,14 +50,11 @@ const render = () => {
     scene.add(object3D)
     cubes.push(object3D)
 
-    htmls.push(new Html({ camera: camera.current, canvas: renderer.domElement, el: element, object3D }))
+    htmls.push(new Html({ el: element, object3D }))
   }
 
   useFrame(() => {
-    for (let index = 0; index < n; index += 1) {
-      cubes[index]!.rotation.y += 0.01
-      htmls[index]!.update()
-    }
+    cubes.forEach((cube) => (cube.rotation.y += 0.01))
   })
 
   return container

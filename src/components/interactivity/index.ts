@@ -27,10 +27,15 @@ const interactivity = (options: {
   context.filter = options.filter
   context.compute = options.compute ?? getDefaultComputeFunction()
 
-  injectInteractivityPlugin()
-  setupInteractivity()
+  const disposePlugin = injectInteractivityPlugin()
+  const disposeSetup = setupInteractivity()
 
-  return context
+  const dispose = () => {
+    disposePlugin()
+    disposeSetup()
+  }
+
+  return { context, dispose }
 }
 
 export type { DomEvent, Intersection, IntersectionEvent } from './types'

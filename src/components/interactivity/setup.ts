@@ -217,12 +217,12 @@ const getEventHandler = (name: DomEventName): ((event: DomEvent) => void) => {
 
 export const setupInteractivity = () => {
   domEvents.forEach(([eventName, passive]) => {
-    context.target?.addEventListener(eventName, getEventHandler(eventName), { passive })
+    context.target.addEventListener(eventName, getEventHandler(eventName), { passive })
   })
 
   return () => {
     domEvents.forEach(([eventName]) => {
-      context.target?.removeEventListener(eventName, getEventHandler(eventName))
+      context.target.removeEventListener(eventName, getEventHandler(eventName))
     })
   }
 }

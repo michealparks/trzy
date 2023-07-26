@@ -16,9 +16,14 @@ export const interactivityEventNames = [
   'pointermissed',
 ]
 
-export const injectInteractivityPlugin = (): void => {
-  useOnAdd((object) => addInteractiveObject(object))
-  useOnRemove((object) => removeInteractiveObject(object))
+export const injectInteractivityPlugin = () => {
+  const disposeAdd = useOnAdd((object) => addInteractiveObject(object))
+  const disposeRemove = useOnRemove((object) => removeInteractiveObject(object))
+
+  return () => {
+    disposeAdd()
+    disposeRemove()
+  }
 }
 
 export { addInteractiveObject, removeInteractiveObject } from './hook'
