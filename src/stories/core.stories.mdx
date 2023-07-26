@@ -26,7 +26,11 @@ The `useTrzy` function will provide all instantiated objects.
 import { useTrzy, ambientLight, box } from 'trzy'
 
 const { scene, camera, renderer } = useTrzy()
+
+document.append(renderer.domElement)
 ```
+
+The renderer will automatically resize to the size of its parent.
 
 Trzy will automatically create a render loop, and callbacks can be added to it.
 
