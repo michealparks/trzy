@@ -1,8 +1,12 @@
 {
+  "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+
     "target": "ESNext",
     "module": "ESNext",
-    "resolveJsonModule": true,
     "moduleResolution": "node",
 
     /**

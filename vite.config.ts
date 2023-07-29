@@ -1,15 +1,20 @@
+import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
 import glsl from 'vite-plugin-glsl';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    sveltekit(),
     glsl(),
   ],
+  server: {
+    fs: {
+      // Allow serving files from one level up to the project root
+      allow: ['.'],
+    },
+  },
   build: {
     target: 'esnext',
-    copyPublicDir: false,
-    minify: false,
     lib: {
       entry: 'src/main.ts',
       name: 'trzy',
@@ -30,10 +35,6 @@ export default defineConfig({
         'three/examples/jsm/webxr/XRControllerModelFactory',
         'three/examples/jsm/webxr/XRHandModelFactory',
       ],
-      output: {
-        inlineDynamicImports: true,
-        manualChunks: undefined,
-      },
     },
   },
 })

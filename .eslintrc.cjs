@@ -60,6 +60,7 @@ module.exports = {
     'one-var': ['error', 'never'],
     'padded-blocks': ['error', 'never'],
     'prefer-destructuring': 'off',
+    'require-atomic-updates': 'off',
     'sort-keys': 'off',
     'sort-imports': 'off',
     'quote-props': ['error', 'consistent-as-needed'],
