@@ -9,7 +9,8 @@ import code from './snippet?raw'
 import { setup } from '../lib/setup'
 
 onMount(() => {
-  setup()
+  const controls = setup()
+  controls.autoRotate = false
 
   const { scene, camera, renderer } = useTrzy()
 
@@ -17,15 +18,18 @@ onMount(() => {
   
   scene.add(new GridHelper(0.1, 1, '#ccc'))
   scene.add(new AxesHelper())
-  scene.add(box(standardMat(), 0.5, 0.4, 0.3))
+  scene.add(box(standardMat({ color: 'turquoise'}), 0.5, 0.4, 0.3))
 
-  return () => helper.dispose()
+  return () => {
+    controls.autoRotate = true
+    helper.dispose()
+  }
 })
 
 </script>
 
 <Docs title='ViewHelper'>
-  <p>Creates a screen space view helper.</p>
+  <p>Creates a HUD view helper.</p>
 
   <Canvas />
 

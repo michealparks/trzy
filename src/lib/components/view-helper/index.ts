@@ -1,4 +1,6 @@
 import * as THREE from 'three'
+import { resizeObserver } from '../lib/observers'
+import { Html } from '$lib'
 
 const getAxisMaterial = (color: THREE.Color) => {
   return new THREE.MeshBasicMaterial({ color, toneMapped: false })
@@ -33,10 +35,12 @@ const getSpriteMaterial = (color?: THREE.Color, text?: string | undefined) => {
 
 interface Options {
   colors?: [x: string, y: string, z: string]
+  position?: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left'
 }
 
 export class ViewHelper extends THREE.Object3D {
   isViewHelper = true
+
   animating = false
   center = new THREE.Vector3()
 
@@ -51,8 +55,11 @@ export class ViewHelper extends THREE.Object3D {
     super()
 
     const axisLetters = ['x', 'y', 'z', 'x', 'y', 'z'] as const
+    const { position = 'top-right' } = options
 
     const canvas = renderer.domElement
+    const size = new THREE.Vector2()
+    const dpr = window.devicePixelRatio
     const colorHexes = options.colors ?? ['#ff3653', '#8adb00', '#2c8fff']
     const targetPosition = new THREE.Vector3()
     const targetQuaternion = new THREE.Quaternion()
@@ -67,13 +74,16 @@ export class ViewHelper extends THREE.Object3D {
     const geometry = new THREE.BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0)
     const colors = colorHexes.map((hex) => new THREE.Color(hex))
     const axes = colors.map((color) => new THREE.Mesh(geometry, getAxisMaterial(color)))
-
-    const raycaster = new THREE.Raycaster()
-    const pointer = new THREE.Vector2()
     const dummy = new THREE.Object3D()
 
     const orthoCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0, 4)
     orthoCamera.position.set(0, 0, 2)
+
+    const point = new THREE.Vector3()
+    const dim = 220
+
+    const target = document.createElement('div')
+    canvas.before(target)
 
     axes[1]?.rotation.set(0, 0, Math.PI / 2)
     axes[2]?.rotation.set(0, -Math.PI / 2, 0)
@@ -92,8 +102,32 @@ export class ViewHelper extends THREE.Object3D {
 
     helpers.forEach((helper) => this.add(helper))
 
-    const point = new THREE.Vector3()
-    const dim = 220
+    const htmls = helpers.map((object3D) => {
+      const element = document.createElement('div')
+      element.dataset.axis = object3D.userData.name
+      element.dataset.sign = object3D.userData.sign === 1 ? '' : '-'
+      element.style.cssText = `
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        cursor: pointer;
+      `
+      return new Html({ element, object3D, target })
+    })
+
+    const observer = resizeObserver(canvas, (rect) => {
+      size.x = rect.width
+      size.y = rect.height
+
+      target.style.cssText = `
+        position: absolute;
+        top: ${canvas.offsetTop}px;
+        left: ${canvas.offsetLeft + (rect.width - (dim / 2))}px;
+        width: ${dim / 2}px;
+        height: ${dim / 2}px;
+      `
+    })
 
     let oldClear = false
 
@@ -135,7 +169,29 @@ export class ViewHelper extends THREE.Object3D {
 
       renderer.clearDepth()
       renderer.getViewport(viewport)
-      renderer.setViewport((canvas.offsetWidth * window.devicePixelRatio) - dim, 0, dim, dim)
+
+      const width = size.x * dpr
+      const height = size.y * dpr
+
+      switch (position) {
+      case 'top-right': {
+        renderer.setViewport(width - dim, height - dim, dim, dim)
+        break
+      }
+      case 'bottom-right': {
+        renderer.setViewport(width - dim, 0, dim, dim)
+        break
+      }
+      case 'bottom-left': {
+        renderer.setViewport(0, 0, dim, dim)
+        break
+      }
+      case 'top-left': {
+        renderer.setViewport(0, height - dim, dim, dim)
+        break
+      }
+      }
+
       oldRender.call(renderer, this, orthoCamera)
       renderer.setViewport(viewport)
 
@@ -148,7 +204,6 @@ export class ViewHelper extends THREE.Object3D {
       const step = delta * this.turnRate
 
       // Animate position by doing a slerp and then scaling the position on the unit sphere
-
       q1.rotateTowards(q2, step)
       camera.position.set(0, 0, 1)
         .applyQuaternion(q1)
@@ -160,13 +215,14 @@ export class ViewHelper extends THREE.Object3D {
 
       if (q1.angleTo(q2) === 0) {
         this.animating = false
+        clock.stop()
       }
     }
 
-    const prepareAnimationData = (object: THREE.Object3D, focusPoint: THREE.Vector3) => {
+    const prepareAnimationData = (axis: 'x' | 'y' | 'z', sign: '' | '-', focusPoint: THREE.Vector3) => {
       targetPosition.set(0, 0, 0)
-      targetPosition[object.userData.name as 'x' | 'y' | 'z'] = object.userData.sign as 1 | -1
-      targetQuaternion.setFromEuler(animationAngle(object.userData.name))
+      targetPosition[axis] = sign === '-' ? -1 : 1
+      targetQuaternion.setFromEuler(animationAngle(`${sign}${axis}`))
 
       radius = camera.position.distanceTo(focusPoint)
       targetPosition.multiplyScalar(radius).add(focusPoint)
@@ -185,27 +241,15 @@ export class ViewHelper extends THREE.Object3D {
         return
       }
 
-      const rect = canvas.getBoundingClientRect()
-      const offsetX = rect.left + ((canvas.offsetWidth) - dim)
-      const offsetY = rect.top + ((canvas.offsetHeight) - dim)
+      const { axis, sign } = (event.currentTarget as HTMLElement).dataset
 
-      pointer.x = (((event.clientX - offsetX) / (rect.right - offsetX)) * 2) - 1
-      pointer.y = -(((event.clientY - offsetY) / (rect.bottom - offsetY)) * 2) + 1
+      prepareAnimationData(axis as 'x' | 'y' | 'z', sign as '' | '-', this.center)
 
-      raycaster.setFromCamera(pointer, orthoCamera)
-
-      const intersects = raycaster.intersectObjects(helpers)
-
-      const [intersection] = intersects
-
-      if (intersection === undefined) {
-        return
-      }
-
-      prepareAnimationData(intersection.object, this.center)
-
+      clock.start()
       this.animating = true
     }
+
+    htmls.forEach((html) => html.element?.addEventListener('click', handleClick))
 
     renderer.render = (...args) => {
       oldRender.call(renderer, ...args)
@@ -215,14 +259,23 @@ export class ViewHelper extends THREE.Object3D {
       }
     }
 
-    canvas.addEventListener('click', handleClick)
-
     this.dispose = () => {
-      canvas.removeEventListener('click', handleClick)
       renderer.render = oldRender
+
+      htmls.forEach((html) => {
+        html.element?.remove()
+        html.dispose()
+      })
+
+      target.removeEventListener('click', handleClick)
+      target.remove()
+
+      observer.disconnect()
+
       geometry.dispose()
 
       axes.forEach((axis) => axis.material.dispose())
+
       helpers.forEach((helper) => {
         helper.material.map?.dispose()
         helper.material.dispose()

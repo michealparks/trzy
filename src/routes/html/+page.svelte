@@ -43,6 +43,7 @@ onMount(() => {
   })
 
   return () => {
+    htmls.forEach((html) => html.dispose())
     stop()
   }
 })
@@ -50,7 +51,7 @@ onMount(() => {
 </script>
 
 <Docs title='HTML'>
-  <p>HTML elements that are positioned relatively to Object3Ds.</p>
+  <p>HTML elements that are positioned relatively to objects.</p>
 
   <Canvas />
 

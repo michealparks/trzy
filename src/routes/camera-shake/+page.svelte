@@ -10,7 +10,7 @@ import { setup } from '../lib/setup'
 import { strawberry } from '../lib/strawberry'
 
 onMount(() => {
-  const controls = setup();
+  const controls = setup()
 
   const { scene, camera } = useTrzy()
   const cameraShake = new CameraShake(camera.current)

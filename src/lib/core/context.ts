@@ -34,4 +34,4 @@ export const context = {
   },
 }
 
-export type Context = typeof context
+export type TrzyContext = typeof context

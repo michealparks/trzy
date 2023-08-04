@@ -15,7 +15,9 @@ onMount(() => {
   const controls = setup()
   controls.enabled = controls.autoRotate = false
 
-  const { scene } = useTrzy()
+  const { scene, camera } = useTrzy()
+  const { gamepad, updateGamepads, disposeGamepads } = useGamepad()
+
   const player = box(new THREE.MeshStandardMaterial({ color: 'hotpink' }), 0.25, 0.25, 0.25)
   const grid = new GridHelper()
   grid.color = '#ccc'
@@ -25,11 +27,18 @@ onMount(() => {
 
   controls.target = player.position
 
-  const { gamepad, disposeGamepads } = useGamepad()
-
   const { stop } = useFrame(() => {
-    player.position.x += gamepad.leftStickX / 50
-    player.position.z += -(gamepad.leftStickY / 50)
+    updateGamepads()
+
+    const dx = gamepad.leftStickX / 50
+    const dz = gamepad.leftStickY / 50
+
+    player.position.x += dx
+    player.position.z += dz
+
+    camera.current.position.x += dx
+    camera.current.position.z += dz
+
     output = JSON.stringify(gamepad, undefined, '  ')
   })
 

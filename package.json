@@ -1,6 +1,6 @@
 {
 	"name": "trzy",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"description": "A utility library for Three.js",
 	"type": "module",
 	"author": "Micheal Parks",
@@ -42,10 +42,10 @@
 		"three": "*"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.1.0",
 		"@sveltejs/adapter-static": "^2.0.3",
 		"@sveltejs/kit": "^1.22.3",
 		"@sveltejs/package": "^2.2.0",
+		"@types/prismjs": "^1.26.0",
 		"@types/three": "^0.154.0",
 		"@typescript-eslint/eslint-plugin": "^6.2.0",
 		"@typescript-eslint/parser": "^6.2.0",

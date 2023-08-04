@@ -30,7 +30,7 @@ const script = (src: string) =>
   })
 
 const highlight = async () => {
-  const { Prism } = window as { Prism: undefined | typeof import('prismjs') }
+  const { Prism } = window
 
   if (!Prism) {
     await script(cdn('prism.min.js'))

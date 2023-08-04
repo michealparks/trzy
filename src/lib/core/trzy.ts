@@ -1,8 +1,7 @@
 import * as THREE from 'three'
-import { context } from './context'
+import { context, type TrzyContext } from './context'
 import { frameloop } from './frameloop'
 import { rendererResizer } from '..'
-
 export interface TrzyOptions {
   canvas?: HTMLCanvasElement
   dpr?: number
@@ -15,13 +14,7 @@ export interface TrzyOptions {
 
 let initialized = false
 
-/**
- *
- * @param options An optional set of rendering and canvas options.
- * @param options.dpr Pixel density. Default is window.devicePixelRatio.
- * @returns
- */
-export const trzy = (options: TrzyOptions = {}) => {
+const trzy = (options: TrzyOptions = {}) => {
   if (initialized) {
     console.warn('trzy() was called more than once! This will often produce undesirable results.')
   }
@@ -65,9 +58,20 @@ export const trzy = (options: TrzyOptions = {}) => {
   }
 }
 
-export const useTrzy = () => {
+/**
+ *
+ * @param options An optional set of rendering and canvas options. Options can only be passed during the first `useTrzy` call.
+ * @param options.dpr Pixel density. Default is window.devicePixelRatio.
+ * @param options.canvas An optional HTMLCanvasElement to render to.
+ * @param options.toneMapping Optional THREE.ToneMapping.
+ * @param options.colorSpace Optional THREE.ColorSpace.
+ * @param options.shadows Optional shadows. Default is THREE.ShadowMapType.
+ * @param rendererParameters An optional set of THREE.WebGLRendererParameters.
+ * @returns a TrzyContext.
+ */
+export const useTrzy = (options: TrzyOptions = {}): TrzyContext => {
   if (!initialized) {
-    return trzy()
+    return trzy(options)
   }
 
   return context

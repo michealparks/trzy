@@ -8,12 +8,12 @@
     a very thin framework meant to act as a vanilla replacement for some features provided
     by React Three Fiber or Threlte.</p>
 
-  <p>The <code>trzy()</code> function will instantiate everything you need to get a THREE.js project started. It should be only called once per project.</p>
+  <p>The first call to the <code>useTrzy()</code> function will instantiate everything you need to get a THREE.js project started.</p>
 
   <Code code={`
-import { trzy } from 'trzy'
+import { useTrzy } from 'trzy'
 
-trzy()
+useTrzy()
 `} />
 
   <h3>useTrzy</h3>

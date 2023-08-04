@@ -18,7 +18,7 @@ onMount(() => {
 </script>
 
 <Docs title='AxesHelper'>
-  <p>Similar to <code>THREE.AxesHelper</code> but uses <code>THREE.Line2</code> to render axes.</p>
+  <p>Creates axes with thick lines.</p>
 
   <Canvas />
 

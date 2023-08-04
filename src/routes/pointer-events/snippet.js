@@ -2,7 +2,7 @@
 import * as THREE from 'three'
 import { pointerEvents } from 'trzy'
 
-pointerEvents()
+pointerEvents({ target: canvas, camera })
 
 const mesh = new THREE.Mesh(
   new THREE.BoxGeometry(),

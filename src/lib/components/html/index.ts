@@ -1,20 +1,25 @@
 import * as THREE from 'three'
+import { resizeObserver } from '../lib/observers'
 
 const vec = new THREE.Vector3()
 const size = new THREE.Vector2()
 
 let observers = 0
+let initialized = false
 
-let resizeObserver: ResizeObserver
+let observer: ResizeObserver
+let targetElement: HTMLElement
 
 const root = document.createElement('div')
 
-const initialize = (target: HTMLElement) => {
-  target.parentElement?.append(root)
-  resizeObserver = new ResizeObserver(([entry]) => {
-    const rect = entry?.contentRect
-    size.x = entry?.contentRect.width ?? 0
-    size.y = entry?.contentRect.height ?? 0
+const mount = (target: HTMLElement) => {
+  initialized = true
+  targetElement = target
+  target.before(root)
+
+  observer = resizeObserver(target, (rect) => {
+    size.x = rect.width
+    size.y = rect.height
     root.style.cssText = `
       position: absolute;
       top: ${target.offsetTop}px;
@@ -25,7 +30,13 @@ const initialize = (target: HTMLElement) => {
       pointer-events: none;
     `
   })
-  resizeObserver.observe(target)
+}
+
+const destroy = () => {
+  targetElement.remove()
+  root.remove()
+  observer.disconnect()
+  initialized = false
 }
 
 export class Html {
@@ -34,9 +45,10 @@ export class Html {
 
   dispose: () => void
 
-  constructor ({ element, object3D }: {
+  constructor ({ element, object3D, target }: {
     element: HTMLElement
     object3D: THREE.Object3D
+    target?: HTMLElement
   }) {
     this.element = element
     this.object3D = object3D
@@ -46,16 +58,16 @@ export class Html {
     container.append(element)
     root.append(container)
 
+    observers += 1
+
     const update = (renderer: THREE.WebGLRenderer, camera: THREE.Camera): void => {
       if (this.element === undefined || this.object3D === undefined) {
         return
       }
 
-      if (observers === 0) {
-        initialize(renderer.domElement)
+      if (!initialized) {
+        mount(target ?? renderer.domElement)
       }
-
-      observers += 1
 
       /*
        * Get the normalized screen coordinate of that position
@@ -85,11 +97,16 @@ export class Html {
 
     this.dispose = () => {
       object3D.onAfterRender = afterRender
+
+      container.remove()
+      element.remove()
+
       this.element = undefined
       this.object3D = undefined
+
       observers -= 1
       if (observers === 0) {
-        resizeObserver.disconnect()
+        destroy()
       }
     }
   }

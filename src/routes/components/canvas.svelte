@@ -1,9 +1,9 @@
 <script lang='ts' context='module'>
 
 import { onMount } from 'svelte'
-import { trzy } from '$lib'
+import { useTrzy } from '$lib'
 
-const { renderer } = trzy({ rendererParameters: { alpha: true } })
+const { renderer } = useTrzy({ rendererParameters: { alpha: true } })
 
 </script>
 

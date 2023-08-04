@@ -56,11 +56,13 @@ const handleGamepad = (pad: Pad, { axes, buttons }: Gamepad): void => {
 
 const updateGamepads = (): void => {
   navigator.getGamepads().forEach((pad, index) => {
-    if (pad === null) {
+    const gamepad = gamepads[index]
+
+    if (pad === null || gamepad === undefined) {
       return
     }
 
-    handleGamepad(gamepads[index]!, pad)
+    handleGamepad(gamepad, pad)
   })
 }
 
