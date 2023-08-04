@@ -42,9 +42,9 @@ export const resetSoftShadows = (renderer: THREE.WebGLRenderer, scene: THREE.Sce
 export const softShadows = ({ focus = 0, size = 25, samples = 10 }: SoftShadowsProps = {}) => {
   const original = THREE.ShaderChunk.shadowmap_pars_fragment
   const finalShader = shader
-    .replaceAll('$FOCUS', focus)
-    .replaceAll('$SIZE', size)
-    .replaceAll('$SAMPLES', samples)
+    .replaceAll('$FOCUS', focus.toString())
+    .replaceAll('$SIZE', size.toString())
+    .replaceAll('$SAMPLES', samples.toString())
 
   THREE.ShaderChunk.shadowmap_pars_fragment = THREE.ShaderChunk.shadowmap_pars_fragment
     .replace('#ifdef USE_SHADOWMAP', finalShader)

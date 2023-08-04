@@ -1,67 +1,46 @@
-import type { Meta, StoryObj } from '@storybook/html'
-import { plane, xr } from '..'
-import code from './code/xr?raw'
-import { setup } from './lib/setup'
-import { useTrzy, useFrame } from '../core'
 
-const meta: Meta = {
-  title: 'XR',
-  parameters: {
-    docs: {
-      description: {
-        component: '',
-      },
-      source: { code },
-    },
-  },
-}
+import { setup } from '../lib/setup'
+import { useTrzy, useFrame, plane, xr } from '$lib'
 
-export default meta
+const container = document.createElement('div')
+container.style.cssText = 'width:100%;height:420px;'
 
-const render = () => {
-  const container = document.createElement('div')
-  container.style.cssText = 'width:100%;height:420px;'
+const { scene, camera, renderer } = useTrzy()
 
-  const { scene, camera, renderer } = useTrzy()
+container.append(renderer.domElement)
 
-  container.append(renderer.domElement)
+const floor = plane(undefined, 4, 4)
+floor.rotation.x = -Math.PI / 2
+scene.add(floor)
 
-  const floor = plane(undefined, 4, 4)
-  floor.rotation.x = -Math.PI / 2
-  scene.add(floor)
+setup()
 
-  setup()
+xr.setup(renderer, scene, camera.current)
 
-  xr.setup(renderer, scene, camera.current)
+const { model0, model1 } = xr.getControllerModels()
+model0.castShadow = true
+model0.receiveShadow = true
 
-  const { model0, model1 } = xr.getControllerModels()
-  model0.castShadow = true
-  model0.receiveShadow = true
+model1.castShadow = true
+model1.receiveShadow = true
 
-  model1.castShadow = true
-  model1.receiveShadow = true
+scene.getObjectByName('Strawberry')?.position.set(0, 1, 0)
 
-  scene.getObjectByName('Strawberry')?.position.set(0, 1, 0)
+// eslint-disable-next-line unicorn/prefer-top-level-await
+xr.createButton().then((button) => {
+  button.style.cssText = `
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    z-index: 100;
+  `
+  container.append(button)
 
-  xr.createButton().then((button) => {
-    button.style.cssText = `
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-      z-index: 100;
-    `
-    container.append(button)
-
-    xr.on('enter', () => {
-      xr.toggleControllers(true)
-      xr.toggleHands(true)
-      xr.enableTeleport(floor)
-    })
-
-    useFrame((_, delta) => xr.update(delta))
+  xr.on('enter', () => {
+    xr.toggleControllers(true)
+    xr.toggleHands(true)
+    xr.enableTeleport(floor)
   })
 
-  return container
-}
-
-export const Primary: StoryObj = { render }
+  useFrame((_, delta) => xr.update(delta))
+})

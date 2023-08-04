@@ -1,6 +1,6 @@
-import { internalContext, type Context } from './context'
+import { internalContext, type TrzyContext } from './context'
 
-export type UseFrameCallback = (ctx: Context, delta: number, frame?: XRFrame) => void
+export type UseFrameCallback = (ctx: TrzyContext, delta: number, frame?: XRFrame) => void
 
 export const frameHandlers: { fn: UseFrameCallback; order: number }[] = []
 
@@ -9,7 +9,7 @@ export interface UseFrameOptions {
   order?: number
 }
 
-export const useFrame = (fn: (ctx: Context, delta: number, frame?: XRFrame) => void, options?: UseFrameOptions | undefined) => {
+export const useFrame = (fn: (ctx: TrzyContext, delta: number, frame?: XRFrame) => void, options?: UseFrameOptions | undefined) => {
   const config = {
     start () {
       config.started.current = true

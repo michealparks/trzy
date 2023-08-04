@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import type * as THREE from 'three'
 
 export const xrControllerManager = (renderer: THREE.WebGLRenderer, gamepad: Record<string, number | boolean>) => {
   const xrControllers: {

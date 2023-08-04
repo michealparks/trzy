@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import * as THREE from 'three'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type C<T extends abstract new (...args: any) => any> = ConstructorParameters<T>
 
 export const lineBasicMat = (...args: C<typeof THREE.LineBasicMaterial>) => new THREE.LineBasicMaterial(...args)

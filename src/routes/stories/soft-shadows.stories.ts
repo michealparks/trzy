@@ -1,38 +1,22 @@
 
-import type { Meta, StoryObj } from '@storybook/html'
-import { shadows, softShadows } from '..'
-import { setup } from './lib/setup'
-import { useFrame, useTrzy } from '../core'
-import code from './code/soft-shadows?raw'
-import { strawberry } from './lib/strawberry'
-import { floor } from './lib/floor'
 
-const meta: Meta = {
-  title: 'Soft Shadows',
-  parameters: {
-    docs: { source: { code } },
-  },
-}
-
-export default meta
+import { shadows, softShadows, useFrame, useTrzy } from '$lib'
+import { setup } from '../lib/setup'
+import { strawberry } from '../lib/strawberry'
+import { floor } from '../lib/floor'
 
 softShadows()
 
-const render = () => {
-  const { scene, renderer } = useTrzy()
+const { scene } = useTrzy()
 
-  setup()
+setup()
 
-  strawberry().then((group) => {
-    scene.add(group)
-    useFrame(() => (group.rotation.y += 0.05))
-  })
+// eslint-disable-next-line unicorn/prefer-top-level-await
+strawberry().then((group) => {
+  scene.add(group)
+  useFrame(() => (group.rotation.y += 0.05))
+})
 
-  scene.add(floor())
+scene.add(floor())
 
-  shadows(scene)
-
-  return renderer.domElement
-}
-
-export const Primary: StoryObj = { render }
+shadows(scene)

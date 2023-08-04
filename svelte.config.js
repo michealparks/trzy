@@ -8,8 +8,13 @@ const config = {
 	 * for more information about preprocessors
 	 */
   preprocess: vitePreprocess(),
-
   kit: {
+    paths: {
+			base: '/trzy',
+		},
+    prerender: {
+			handleHttpError: 'warn',
+		},
     adapter: adapter(),
 	}
 }
