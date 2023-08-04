@@ -1,6 +1,7 @@
 <script lang='ts'>
 
 import { page } from '$app/stores'
+import { base } from '$app/paths'
 
 export let routes: [name: string, link?: string][]
 
@@ -10,7 +11,7 @@ export let routes: [name: string, link?: string][]
   {#each routes as [name, link] (name)}
     {#if link !== undefined}
       <a
-        href='/{link}'
+        href='{base}/{link}'
         class='block py-1 px-6 text-sm no-underline text-white text-opacity-70'
         class:active={`/${link}` === $page.route.id}
       >
