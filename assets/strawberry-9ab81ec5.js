@@ -1,2 +1,0 @@
-import{G as t,a as s}from"./setup-bf23c97c.js";const r=new t,n=async()=>{const a=await r.loadAsync("./glb/strawberry.glb"),e=new s;return e.add(a.scene.getObjectByName("Stem")),e.add(a.scene.getObjectByName("Seeds")),e.add(a.scene.getObjectByName("Leaves")),e.add(a.scene.getObjectByName("Body")),e.name="Strawberry",e.position.y=.2,e.scale.setScalar(.1),e};export{n as s};
-//# sourceMappingURL=strawberry-9ab81ec5.js.map
