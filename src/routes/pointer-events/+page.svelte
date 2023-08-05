@@ -2,7 +2,7 @@
 
 import { onMount } from 'svelte'
 import * as THREE from 'three'
-import { useTrzy, useFrame, useBvhRaycast, pointerEvents, shadows, box, randomPointOnCircle } from '$lib'
+import { useTrzy, useFrame, pointerEvents, shadows, box, randomPointOnCircle } from '$lib'
 import code from './snippet?raw'
 import { setup } from '../lib/setup'
 import Canvas from '../components/canvas.svelte'
@@ -12,7 +12,6 @@ import Code from '../components/code.svelte'
 onMount(() => {
   const { scene, camera, renderer } = useTrzy()
 
-  const disposeBvh = useBvhRaycast()
   const { dispose } = pointerEvents({ target: renderer.domElement, camera: camera.current })
 
   setup()
