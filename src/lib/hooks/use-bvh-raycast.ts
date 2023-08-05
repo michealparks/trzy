@@ -19,8 +19,8 @@ type BvhOptions = {
 }
 
 export const useBvhRaycast = (options: BvhOptions = {}) => {
-  let { computeBoundsTree, disposeBoundsTree } = THREE.BufferGeometry.prototype
-  let { raycast } = THREE.Mesh.prototype
+  const { computeBoundsTree, disposeBoundsTree } = THREE.BufferGeometry.prototype
+  const { raycast } = THREE.Mesh.prototype
 
   THREE.BufferGeometry.prototype.computeBoundsTree = BVH.computeBoundsTree
   THREE.BufferGeometry.prototype.disposeBoundsTree = BVH.disposeBoundsTree
@@ -29,12 +29,16 @@ export const useBvhRaycast = (options: BvhOptions = {}) => {
 
   const disposeAdd = useAdd((object) => {
     const mesh = object as THREE.Mesh
-    if (mesh.isMesh) mesh.geometry.computeBoundsTree(options)
+    if (mesh.isMesh) {
+      mesh.geometry.computeBoundsTree(options)
+    }
   })
 
   const disposeRemove = useRemove((object) => {
     const mesh = object as THREE.Mesh
-    if (mesh.isMesh) mesh.geometry.disposeBoundsTree()
+    if (mesh.isMesh) {
+      mesh.geometry.disposeBoundsTree()
+    }
   })
 
   return () => {

@@ -1,6 +1,6 @@
 {
 	"name": "trzy",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "A utility library for Three.js",
 	"type": "module",
 	"author": "Micheal Parks",
@@ -39,7 +39,13 @@
 		}
 	},
 	"peerDependencies": {
-		"three": "*"
+		"three": "*",
+		"three-mesh-bvh": "*"
+	},
+	"peerDependenciesMeta": {
+		"three-mesh-bvh": {
+			"optional": true
+		}
 	},
 	"dependencies": {
 		"simplex-noise": "^4.0.1"
@@ -59,7 +65,6 @@
 		"postprocessing": "^6.32.2",
 		"prismjs": "^1.29.0",
 		"publint": "^0.2.0",
-		"simplex-noise": "^4.0.1",
 		"svelte": "^4.1.2",
 		"svelte-check": "^3.4.6",
 		"tailwindcss": "^3.3.3",

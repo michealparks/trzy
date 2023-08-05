@@ -4,7 +4,7 @@ type Callback = (object: THREE.Object3D) => void
 
 const add = THREE.Object3D.prototype.add
 
-const addFns = new Set<Callback>()
+const addFns: Callback[] = []
 
 let patchedAdd = false
 
@@ -26,10 +26,12 @@ export const useAdd = (callback: Callback) => {
   if (!patchedAdd) {
     patchAdd()
   }
-  addFns.add(callback)
+
+  addFns.push(callback)
+
   return () => {
-    addFns.delete(callback)
-    if (addFns.size === 0 && patchedAdd) {
+    addFns.splice(addFns.indexOf(callback), 1)
+    if (addFns.length === 0 && patchedAdd) {
       unpatchAdd()
     }
   }
