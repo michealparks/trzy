@@ -26,7 +26,6 @@ export class ButtonMaterial extends THREE.SpriteMaterial {
     const map = new THREE.Texture(image)
     map.needsUpdate = true
     map.colorSpace = THREE.SRGBColorSpace
-    document.body.append(image)
     super({ map, toneMapped: false })
   }
 }

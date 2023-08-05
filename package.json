@@ -8,7 +8,7 @@
 	"bugs": {
 		"url": "https://github.com/michealparks/trzy/issues"
 	},
-	"homepage": "https://github.com/michealparks/trzy#readme",
+	"homepage": "https://michealparks.github.io/trzy",
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
