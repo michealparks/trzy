@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { context, type TrzyContext } from './context'
 import { frameloop } from './frameloop'
-import { rendererResizer } from '..'
+import { rendererResizer } from '$lib'
 export interface TrzyOptions {
   canvas?: HTMLCanvasElement
   dpr?: number
@@ -9,7 +9,6 @@ export interface TrzyOptions {
   colorSpace?: THREE.ColorSpace
   shadows?: boolean | THREE.ShadowMapType
   rendererParameters?: THREE.WebGLRendererParameters
-  size?: { width: number; height: number }
 }
 
 let initialized = false
@@ -29,9 +28,6 @@ const trzy = (options: TrzyOptions = {}) => {
   context.scene = new THREE.Scene()
   context.camera.current = new THREE.PerspectiveCamera()
   context.renderer = renderer
-  if (options.size !== undefined) {
-    renderer.setSize(options.size.width, options.size.height)
-  }
   renderer.setPixelRatio(options.dpr ?? window.devicePixelRatio)
   renderer.toneMapping = options.toneMapping ?? THREE.ACESFilmicToneMapping
   renderer.outputColorSpace = options.colorSpace ?? 'srgb'

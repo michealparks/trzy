@@ -1,36 +1,10 @@
 import * as THREE from 'three'
-import { resizeObserver } from '../lib/observers'
+import { resizeObserver } from '$lib/lib/observers'
 import { Html } from '$lib'
+import { ButtonMaterial } from './sprite'
 
 const getAxisMaterial = (color: THREE.Color) => {
   return new THREE.MeshBasicMaterial({ color, toneMapped: false })
-}
-
-const getSpriteMaterial = (color?: THREE.Color, text?: string | undefined) => {
-  const canvas = document.createElement('canvas')
-  const context = canvas.getContext('2d')
-
-  canvas.width = 64
-  canvas.height = 64
-
-  if (context !== null) {
-    context.beginPath()
-    context.arc(32, 32, 16, 0, 2 * Math.PI)
-    context.closePath()
-    context.fillStyle = color?.getStyle() ?? ''
-    context.fill()
-
-    if (text !== undefined) {
-      context.font = '24px system-ui'
-      context.textAlign = 'center'
-      context.fillStyle = '#000000'
-      context.fillText(text.toUpperCase(), 32, 41)
-    }
-  }
-
-  const map = new THREE.CanvasTexture(canvas)
-
-  return new THREE.SpriteMaterial({ map, toneMapped: false })
 }
 
 interface Options {
@@ -92,7 +66,7 @@ export class ViewHelper extends THREE.Object3D {
 
     const helpers = axisLetters.map((name, index) => {
       const sign = index > 2 ? -1 : 1
-      const material = getSpriteMaterial(colors[index % 3], sign === 1 ? name : undefined)
+      const material = new ButtonMaterial(colors[index % 3], sign === 1 ? name : undefined)
       const sprite = new THREE.Sprite(material)
       sprite.position[name] = sign
       sprite.scale.setScalar(sign === 1 ? 1 : 0.8)

@@ -7,28 +7,33 @@ import { Shake } from '../shake'
 export class CameraShake extends Shake {
   controls: PointerLockControls | OrbitControls | MapControls | undefined
 
-  constructor (camera: THREE.PerspectiveCamera | THREE.OrthographicCamera) {
+  constructor (
+    camera: THREE.PerspectiveCamera | THREE.OrthographicCamera,
+    controls?: PointerLockControls | OrbitControls | MapControls | undefined
+  ) {
     super(camera)
 
-    let controls: PointerLockControls | OrbitControls | MapControls | undefined
+    let cameraControls: PointerLockControls | OrbitControls | MapControls | undefined
 
     Object.defineProperty(this, 'controls', {
       get () {
-        return controls
+        return cameraControls
       },
       set (value: PointerLockControls | OrbitControls | MapControls | undefined) {
-        if (controls !== undefined) {
-          controls.removeEventListener('change', this.saveRotation)
+        if (cameraControls !== undefined) {
+          cameraControls.removeEventListener('change', this.saveRotation)
         }
 
-        controls = value
+        cameraControls = value
 
-        if (controls !== undefined) {
-          controls.addEventListener('change', this.saveRotation)
+        if (cameraControls !== undefined) {
+          cameraControls.addEventListener('change', this.saveRotation)
         }
       },
       enumerable: true,
       configurable: true,
     })
+
+    this.controls = controls
   }
 }

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { resizeObserver } from '../lib/observers'
+import { resizeObserver } from '../../lib/observers'
 
 const vec = new THREE.Vector3()
 const size = new THREE.Vector2()

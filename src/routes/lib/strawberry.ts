@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { base } from '$app/paths'
 
 const loader = new GLTFLoader()
 
@@ -10,7 +11,7 @@ export const strawberry = async () => {
     return group
   }
 
-  const glb = await loader.loadAsync(`${import.meta.env.BASE_URL}glb/strawberry.glb`)
+  const glb = await loader.loadAsync(`${base}/glb/strawberry.glb`)
   group = new THREE.Group()
   group.add(
     glb.scene.getObjectByName('Stem')!,

@@ -1,6 +1,6 @@
 import type * as THREE from 'three'
 
-export const setMapSize = (light: THREE.Light, mapSize = 1024, bias = -0.0001) => {
+export const setShadowMapSize = (light: THREE.Light, mapSize = 1024, bias = -0.0001) => {
   if (light.shadow === undefined) {
     return
   }

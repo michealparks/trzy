@@ -11,11 +11,9 @@ import { strawberry } from '../lib/strawberry'
 
 onMount(() => {
   const controls = setup()
-
   const { scene, camera } = useTrzy()
-  const cameraShake = new CameraShake(camera.current)
-  cameraShake.controls = controls
-  cameraShake.enabled = true
+  const cameraShake = new CameraShake(camera.current, controls)
+  cameraShake.intensity = 1
 
   const { stop } = useFrame(() => cameraShake.update())
 

@@ -1,4 +1,4 @@
-import { useOnAdd, useOnRemove } from '../lib/add-remove'
+import { useAdd, useRemove } from '$lib/hooks'
 import { addInteractiveObject, removeInteractiveObject } from './hook'
 
 export const interactivityEventNames = [
@@ -17,8 +17,8 @@ export const interactivityEventNames = [
 ]
 
 export const injectInteractivityPlugin = () => {
-  const disposeAdd = useOnAdd((object) => addInteractiveObject(object))
-  const disposeRemove = useOnRemove((object) => removeInteractiveObject(object))
+  const disposeAdd = useAdd((object) => addInteractiveObject(object))
+  const disposeRemove = useRemove((object) => removeInteractiveObject(object))
 
   return () => {
     disposeAdd()

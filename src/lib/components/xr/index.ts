@@ -1,6 +1,6 @@
 import { getControllerModels, getControllers } from './controller'
 import { createTeleport } from './teleport'
-import { dispatcher } from '../lib/events'
+import { dispatcher } from '../../lib/events'
 import { getHands } from './hand'
 
 const events = dispatcher()

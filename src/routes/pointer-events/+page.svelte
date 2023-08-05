@@ -2,7 +2,7 @@
 
 import { onMount } from 'svelte'
 import * as THREE from 'three'
-import { useTrzy, useFrame, pointerEvents, shadows, box, randomPointOnCircle } from '$lib'
+import { useTrzy, useFrame, useBvhRaycast, pointerEvents, shadows, box, randomPointOnCircle } from '$lib'
 import code from './snippet?raw'
 import { setup } from '../lib/setup'
 import Canvas from '../components/canvas.svelte'
@@ -12,13 +12,15 @@ import Code from '../components/code.svelte'
 onMount(() => {
   const { scene, camera, renderer } = useTrzy()
 
+  const disposeBvh = useBvhRaycast()
   const { dispose } = pointerEvents({ target: renderer.domElement, camera: camera.current })
 
   setup()
 
-  const cubes = Array.from({ length: 20 }).map(() => {
+  const cubes = Array.from({ length: 100 }).map(() => {
     const material = new THREE.MeshStandardMaterial({ color: 'yellow' })
-    const mesh = box(material, 0.5, 0.5, 0.5)
+    const size = 0.1
+    const mesh = box(material, size, size, size)
     const [x, z] = randomPointOnCircle(1.5)
     mesh.position.set(x, -0.25, z)
 
@@ -49,6 +51,7 @@ onMount(() => {
   })
 
   return () => {
+    disposeBvh()
     stop()
     dispose()
   }

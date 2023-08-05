@@ -5,7 +5,7 @@ export type UseFrameCallback = (ctx: TrzyContext, delta: number, frame?: XRFrame
 export const frameHandlers: { fn: UseFrameCallback; order: number }[] = []
 
 export interface UseFrameOptions {
-  autostart: boolean
+  autostart?: boolean
   order?: number
 }
 

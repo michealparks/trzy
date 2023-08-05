@@ -40,8 +40,8 @@ export class Shake {
       then = now
 
       const shake = this.intensity ** 2
-      const yaw = this.maxYaw * shake * yawNoise(time * this.yawFrequency, 1)
       const pitch = this.maxPitch * shake * pitchNoise(time * this.pitchFrequency, 1)
+      const yaw = this.maxYaw * shake * yawNoise(time * this.yawFrequency, 1)
       const roll = this.maxRoll * shake * rollNoise(time * this.rollFrequency, 1)
 
       this.object.rotation.set(
@@ -81,5 +81,7 @@ export class Shake {
     this.object = object
     this.saveRotation = saveRotation
     this.update = update
+
+    saveRotation()
   }
 }

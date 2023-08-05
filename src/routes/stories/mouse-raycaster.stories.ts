@@ -1,10 +1,10 @@
 import * as THREE from 'three'
 import { MouseRaycaster, useFrame, useTrzy } from '$lib'
-import { bvhRaycast } from '../../lib/components/bvh'
+import { useBvhRaycast } from '$lib'
 import { setup } from '../lib/setup'
 import { strawberry } from '../lib/strawberry'
 
-bvhRaycast()
+useBvhRaycast()
 setup()
 
 const { scene, camera, renderer } = useTrzy()

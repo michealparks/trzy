@@ -14,7 +14,7 @@ export const controls = () => {
   ctrl.enablePan = false
   ctrl.enableZoom = false
   ctrl.autoRotate = true
-  useFrame(() => ctrl.update())
+  useFrame(() => ctrl.update(), { order: -Infinity })
 
   return ctrl
 }
