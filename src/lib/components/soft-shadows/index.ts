@@ -15,7 +15,7 @@
  */
 
 import * as THREE from 'three'
-import shader from './index.glsl'
+import shader from './index.glsl?raw'
 
 type SoftShadowsProps = {
   /** Size of the light source (the larger the softer the light), default: 25 */

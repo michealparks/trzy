@@ -71,7 +71,7 @@ export class ViewHelper extends THREE.Object3D {
     const viewport = new THREE.Vector4()
     let radius = 0
 
-    const geometry = new THREE.BoxGeometry(0.8, 0.05, 0.05).translate(0.4, 0, 0)
+    const geometry = new THREE.BoxGeometry(0.5, 0.05, 0.05).translate(0.4, 0, 0)
     const colors = colorHexes.map((hex) => new THREE.Color(hex))
     const axes = colors.map((color) => new THREE.Mesh(geometry, getAxisMaterial(color)))
     const dummy = new THREE.Object3D()
@@ -120,12 +120,14 @@ export class ViewHelper extends THREE.Object3D {
       size.x = rect.width
       size.y = rect.height
 
+      const dpr = window.devicePixelRatio
+
       target.style.cssText = `
         position: absolute;
         top: ${canvas.offsetTop}px;
-        left: ${canvas.offsetLeft + (rect.width - (dim / 2))}px;
-        width: ${dim / 2}px;
-        height: ${dim / 2}px;
+        left: ${canvas.offsetLeft + (rect.width - (dim / dpr))}px;
+        width: ${dim / dpr}px;
+        height: ${dim / dpr}px;
       `
     })
 

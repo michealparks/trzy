@@ -50,7 +50,7 @@ float findBlocker(sampler2D shadowMap, vec2 uv, float compare, float angle) {
   float depth = 0.;
 
   #pragma unroll_loop_start
-  for(int i = 0; i < $SAMPLES; i ++) {
+  for(int i = 0; i < $SAMPLES; i++) {
     offset = (vogelDiskSample(j, $SAMPLES, angle) * texelSize) * 2.0 * PENUMBRA_FILTER_SIZE;
     depth = unpackRGBAToDepth( texture2D( shadowMap, uv + offset));
     if (depth < compare) {

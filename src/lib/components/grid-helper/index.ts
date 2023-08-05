@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import vertexShader from './vertex.glsl'
-import fragmentShader from './fragment.glsl'
+import vertexShader from './vertex.glsl?raw'
+import fragmentShader from './fragment.glsl?raw'
 
 export class GridHelper extends THREE.Mesh {
   override frustumCulled = false
