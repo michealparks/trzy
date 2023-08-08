@@ -50,7 +50,6 @@ onMount(() => {
   })
 
   return () => {
-    disposeBvh()
     stop()
     dispose()
   }
