@@ -32,11 +32,10 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
 	},
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": "./dist/index.js",
-			"types": "./dist/index.d.ts",
-			"svelte": "./dist/index.js"
+			"import": "./dist/index.js"
 		}
 	},
 	"peerDependencies": {
@@ -76,7 +75,5 @@
 		"typescript": "^5.1.6",
 		"vite": "^4.4.9",
 		"vite-plugin-glsl": "^1.1.2"
-	},
-	"svelte": "./dist/index.js",
-	"types": "./dist/index.d.ts"
+	}
 }
