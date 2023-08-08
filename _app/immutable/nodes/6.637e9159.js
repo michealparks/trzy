@@ -1,4 +1,4 @@
-import{s as v,o as C,n as M}from"../chunks/scheduler.b0c1c2c3.js";import{S as b,i as y,r as f,u as p,v as $,d,t as _,w as g,g as H,s as h,h as T,z as j,c as w,a as l,f as u}from"../chunks/index.f44ac6f0.js";import{u as D,s as E,M as L,B as z,c as S,d as x,H as k,b as B,C as I}from"../chunks/setup.31a16d21.js";import{D as P,C as q}from"../chunks/code.5b2e6c9d.js";const F=`
+import{s as v,o as C,n as M}from"../chunks/scheduler.b0c1c2c3.js";import{S as b,i as y,r as f,u as p,v as $,d,t as _,w as g,g as H,s as h,h as T,z as j,c as w,a as l,f as u}from"../chunks/index.f44ac6f0.js";import{u as D,s as E,M as L,B as z,c as S,d as x,H as k,b as B,C as I}from"../chunks/setup.31a16d21.js";import{D as P,C as q}from"../chunks/code.2d5abe60.js";const F=`
 import { Html } from 'trzy'
 
 const element = document.createElement('div')
