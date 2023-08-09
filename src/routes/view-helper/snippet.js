@@ -4,4 +4,4 @@ import { ViewHelper } from 'trzy'
 
 const camera = new THREE.PerspectiveCamera()
 const renderer = new THREE.WebGLRenderer()
-const helper = new ViewHelper(camera, renderer)
+const helper = new ViewHelper(camera, renderer, { axes: 'yzx' /* default xyz */ })

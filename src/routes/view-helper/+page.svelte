@@ -14,7 +14,7 @@ onMount(() => {
 
   const { scene, camera, renderer } = useTrzy()
 
-  const helper = new ViewHelper(camera.current, renderer)
+  const helper = new ViewHelper(camera.current, renderer, { axes: 'yzx' })
   
   scene.add(new GridHelper(0.1, 1, '#ccc'))
   scene.add(new AxesHelper())

@@ -3,14 +3,19 @@ import { resizeObserver } from '$lib/lib/observers'
 import { Html } from '$lib'
 import { ButtonMaterial } from './sprite'
 
-const getAxisMaterial = (color: THREE.Color) => {
-  return new THREE.MeshBasicMaterial({ color, toneMapped: false })
+const getAxisMaterial = (color: THREE.ColorRepresentation) => {
+  return new THREE.MeshBasicMaterial({
+    color: new THREE.Color(color),
+    toneMapped: false,
+  })
 }
 
 interface Options {
-  colors?: [x: string, y: string, z: string]
+  axes?: 'xyz' | 'xzy' | 'yxz' | 'yzx' | 'zxy' | 'zyx'
   position?: 'top-right' | 'bottom-right' | 'bottom-left' | 'top-left'
 }
+
+const colors = { x: '#ff3653', y: '#8adb00', z: '#2c8fff' }
 
 export class ViewHelper extends THREE.Object3D {
   isViewHelper = true
@@ -28,13 +33,14 @@ export class ViewHelper extends THREE.Object3D {
   constructor (camera: THREE.PerspectiveCamera | THREE.OrthographicCamera, renderer: THREE.WebGLRenderer, options: Options = {}) {
     super()
 
+    // eslint-disable-next-line unicorn/prefer-spread
+    const axesList = (options.axes ?? 'xyz').split('') as [string, string, string]
     const axisLetters = ['x', 'y', 'z', 'x', 'y', 'z'] as const
     const { position = 'top-right' } = options
 
     const canvas = renderer.domElement
     const size = new THREE.Vector2()
     const dpr = window.devicePixelRatio
-    const colorHexes = options.colors ?? ['#ff3653', '#8adb00', '#2c8fff']
     const targetPosition = new THREE.Vector3()
     const targetQuaternion = new THREE.Quaternion()
 
@@ -46,8 +52,7 @@ export class ViewHelper extends THREE.Object3D {
     let radius = 0
 
     const geometry = new THREE.BoxGeometry(0.5, 0.05, 0.05).translate(0.4, 0, 0)
-    const colors = colorHexes.map((hex) => new THREE.Color(hex))
-    const axes = colors.map((color) => new THREE.Mesh(geometry, getAxisMaterial(color)))
+    const axes = axesList.map((axis) => new THREE.Mesh(geometry, getAxisMaterial(colors[axis as 'x' | 'y' | 'z'])))
     const dummy = new THREE.Object3D()
 
     const orthoCamera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0, 4)
@@ -64,13 +69,13 @@ export class ViewHelper extends THREE.Object3D {
 
     axes.forEach((axis) => this.add(axis))
 
-    const helpers = axisLetters.map((name, index) => {
+    const helpers = axisLetters.map((axis, index) => {
       const sign = index > 2 ? -1 : 1
-      const material = new ButtonMaterial(colors[index % 3], sign === 1 ? name : undefined)
+      const material = new ButtonMaterial(colors[axesList[index % 3]! as 'x' | 'y' | 'z'], sign === 1 ? axesList[index] : undefined)
       const sprite = new THREE.Sprite(material)
-      sprite.position[name] = sign
+      sprite.position[axis] = sign
       sprite.scale.setScalar(sign === 1 ? 1 : 0.8)
-      sprite.userData = { name, sign }
+      sprite.userData = { name: axis, sign }
       return sprite
     })
 
@@ -78,8 +83,12 @@ export class ViewHelper extends THREE.Object3D {
 
     const htmls = helpers.map((object3D) => {
       const element = document.createElement('div')
-      element.dataset.axis = object3D.userData.name
-      element.dataset.sign = object3D.userData.sign === 1 ? '' : '-'
+      const axis = object3D.userData.name
+      const sign = object3D.userData.sign === 1 ? '' : '-'
+      element.role = 'button'
+      element.ariaLabel = `${sign}${axis}`
+      element.dataset.axis = axis
+      element.dataset.sign = sign
       element.style.cssText = `
         position: absolute;
         width: 15px;

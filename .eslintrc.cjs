@@ -71,6 +71,7 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
 
     'unicorn/prevent-abbreviations': 'off',
+    'unicorn/consistent-destructuring': 'off',
     'unicorn/no-array-for-each': 'off',
     'unicorn/no-null': 'off',
   },
