@@ -1,4 +1,4 @@
-var u=Object.defineProperty;var m=(r,i,e)=>i in r?u(r,i,{enumerable:!0,configurable:!0,writable:!0,value:e}):r[i]=e;var a=(r,i,e)=>(m(r,typeof i!="symbol"?i+"":i,e),e);import{M as g,P as c,q as d,D as f,k as v}from"./setup.f6d951a4.js";const C=`
+var u=Object.defineProperty;var m=(r,i,e)=>i in r?u(r,i,{enumerable:!0,configurable:!0,writable:!0,value:e}):r[i]=e;var a=(r,i,e)=>(m(r,typeof i!="symbol"?i+"":i,e),e);import{M as g,P as c,q as d,D as f,n as v}from"./setup.4649169d.js";const C=`
 varying vec3 worldPosition;
 
 uniform float uDistance;
