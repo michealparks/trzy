@@ -30,6 +30,7 @@ const mount = (target: HTMLElement) => {
       pointer-events: none;
     `
   })
+  observer.observe(target)
 }
 
 const destroy = () => {
