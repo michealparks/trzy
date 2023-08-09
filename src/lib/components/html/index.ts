@@ -39,28 +39,46 @@ const destroy = () => {
   initialized = false
 }
 
+type Cameras = THREE.PerspectiveCamera | THREE.OrthographicCamera
+
 export class Html {
   element?: HTMLElement | undefined
   object3D?: THREE.Object3D | undefined
 
+  update: (camera: Cameras, renderer: THREE.WebGLRenderer) => void
   dispose: () => void
 
-  constructor ({ element, object3D, target }: {
-    element: HTMLElement
-    object3D: THREE.Object3D
+  constructor (props: {
+    element?: HTMLElement
+    object3D?: THREE.Object3D
     target?: HTMLElement
   }) {
-    this.element = element
-    this.object3D = object3D
+    const { object3D, target } = props
+    let { element } = props
 
     const container = document.createElement('div')
     container.style.cssText = 'position: absolute; top: 0; left: 0; pointer-events: auto'
-    container.append(element)
-    root.append(container)
 
     observers += 1
 
-    const update = (renderer: THREE.WebGLRenderer, camera: THREE.Camera): void => {
+    Object.defineProperty(this, 'element', {
+      get () {
+        return element
+      },
+      set (value: HTMLElement | undefined) {
+        if (value) {
+          container.append(value)
+          root.append(container)
+        } else {
+          element?.remove()
+        }
+        element = value
+      },
+      enumerable: true,
+      configurable: true,
+    })
+
+    this.update = (camera: Cameras, renderer: THREE.WebGLRenderer): void => {
       if (this.element === undefined || this.object3D === undefined) {
         return
       }
@@ -73,7 +91,6 @@ export class Html {
        * Get the normalized screen coordinate of that position
        * x and y will be in the -1 to +1 range with x = -1 being
        * on the left and y = -1 being on the bottom
-       * this.object3D.getWorldPosition(vec).project(this.camera)
        */
       vec.setFromMatrixPosition(this.object3D.matrixWorld).project(camera)
 
@@ -88,18 +105,12 @@ export class Html {
       this.element.style.zIndex = `${Math.trunc(((-vec.z * 0.5) + 0.5) * 100_000)}`
     }
 
-    const afterRender = object3D.onAfterRender
-
-    object3D.onAfterRender = (renderer, scene, camera, geometry, material, group) => {
-      update(renderer, camera)
-      afterRender?.(renderer, scene, camera, geometry, material, group)
-    }
+    this.element = element
+    this.object3D = object3D
 
     this.dispose = () => {
-      object3D.onAfterRender = afterRender
-
+      element?.remove()
       container.remove()
-      element.remove()
 
       this.element = undefined
       this.object3D = undefined

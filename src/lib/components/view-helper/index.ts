@@ -25,7 +25,7 @@ export class ViewHelper extends THREE.Object3D {
 
   dispose: () => void
 
-  constructor (camera: THREE.Camera, renderer: THREE.WebGLRenderer, options: Options = {}) {
+  constructor (camera: THREE.PerspectiveCamera | THREE.OrthographicCamera, renderer: THREE.WebGLRenderer, options: Options = {}) {
     super()
 
     const axisLetters = ['x', 'y', 'z', 'x', 'y', 'z'] as const
@@ -93,8 +93,6 @@ export class ViewHelper extends THREE.Object3D {
     const observer = resizeObserver(canvas, (rect) => {
       size.x = rect.width
       size.y = rect.height
-
-      const dpr = window.devicePixelRatio
 
       target.style.cssText = `
         position: absolute;
@@ -173,6 +171,8 @@ export class ViewHelper extends THREE.Object3D {
 
       // Restore default
       renderer.autoClear = oldClear
+
+      htmls.forEach((html) => html.update(orthoCamera, renderer))
     }
 
     const update = () => {

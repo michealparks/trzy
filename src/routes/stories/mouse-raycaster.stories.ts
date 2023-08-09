@@ -1,10 +1,8 @@
 import * as THREE from 'three'
 import { MouseRaycaster, useFrame, useTrzy } from '$lib'
-import { useBvhRaycast } from '$lib'
 import { setup } from '../lib/setup'
 import { strawberry } from '../lib/strawberry'
 
-useBvhRaycast()
 setup()
 
 const { scene, camera, renderer } = useTrzy()
@@ -15,7 +13,7 @@ raycaster.recursive = true
 raycaster.camera = camera.current
 
 let hovered = false
-let clicked = false
+const clicked = false
 let lerpSpeed = 0.1
 
 // eslint-disable-next-line unicorn/prefer-top-level-await

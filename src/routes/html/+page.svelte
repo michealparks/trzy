@@ -42,9 +42,14 @@ onMount(() => {
     cubes.forEach((cube) => (cube.rotation.y += 0.01))
   })
 
+  const { stop: stopAfter } = useFrame((ctx) => {
+    htmls.forEach((html) => html.update(ctx.camera.current, ctx.renderer))
+  }, { stage: 'after' })
+
   return () => {
     htmls.forEach((html) => html.dispose())
     stop()
+    stopAfter()
   }
 })
 
