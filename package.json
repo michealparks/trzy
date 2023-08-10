@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "A utility library for Three.js",
   "type": "module",
   "author": "Micheal Parks",
@@ -39,7 +39,7 @@
     }
   },
   "peerDependencies": {
-    "three": ">=130"
+    "three": "*"
   },
   "dependencies": {
     "simplex-noise": "^4.0.1"
