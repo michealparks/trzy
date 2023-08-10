@@ -1,7 +1,5 @@
 import * as THREE from 'three'
 import * as BVH from 'three-mesh-bvh'
-import { useAdd } from './use-add'
-import { useRemove } from './use-remove'
 
 type BvhOptions = {
   /** Use .raycastFirst to retrieve hits which is generally faster, default: false */
@@ -15,38 +13,30 @@ type BvhOptions = {
   /** The maximum depth to allow the tree to build to, default: 40 */
   maxDepth?: number
   /** The number of triangles to aim for in a leaf node, default: 10 */
-  maxLeafTris?: number
+  maxLeafTris?: number,
 }
 
 export const useBvhRaycast = (options: BvhOptions = {}) => {
-  const { computeBoundsTree, disposeBoundsTree } = THREE.BufferGeometry.prototype
-  const { raycast } = THREE.Mesh.prototype
+  const { computeBoundsTree: computeOriginal, disposeBoundsTree: disposeOriginal } = THREE.BufferGeometry.prototype
+  const { raycast: raycastPoints } = THREE.Points.prototype
+  const { raycast: raycastMesh } = THREE.Mesh.prototype
 
-  THREE.BufferGeometry.prototype.computeBoundsTree = BVH.computeBoundsTree
-  THREE.BufferGeometry.prototype.disposeBoundsTree = BVH.disposeBoundsTree
+  THREE.Points.prototype.raycast = BVH.acceleratedRaycast
   THREE.Mesh.prototype.raycast = BVH.acceleratedRaycast
   THREE.Raycaster.prototype.firstHitOnly = options.firstHitOnly ?? true
 
-  const disposeAdd = useAdd((object) => {
-    const mesh = object as THREE.Mesh
-    if (mesh.isMesh) {
-      mesh.geometry.computeBoundsTree(options)
-    }
-  })
+  THREE.BufferGeometry.prototype.computeBoundsTree = function computeBoundsTree (opts?: BVH.MeshBVHOptions) {
+    return BVH.computeBoundsTree.call(this, opts ?? options)
+  }
+  THREE.BufferGeometry.prototype.disposeBoundsTree = BVH.disposeBoundsTree
 
-  const disposeRemove = useRemove((object) => {
-    const mesh = object as THREE.Mesh
-    if (mesh.isMesh) {
-      mesh.geometry.disposeBoundsTree()
-    }
-  })
-
-  return () => {
-    disposeAdd()
-    disposeRemove()
-    THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree
-    THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree
-    THREE.Mesh.prototype.raycast = raycast
+  const dispose = () => {
+    THREE.BufferGeometry.prototype.computeBoundsTree = computeOriginal
+    THREE.BufferGeometry.prototype.disposeBoundsTree = disposeOriginal
+    THREE.Points.prototype.raycast = raycastPoints
+    THREE.Mesh.prototype.raycast = raycastMesh
     delete THREE.Raycaster.prototype.firstHitOnly
   }
+
+  return dispose
 }

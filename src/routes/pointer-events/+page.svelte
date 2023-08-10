@@ -2,16 +2,18 @@
 
 import { onMount } from 'svelte'
 import * as THREE from 'three'
-import { useTrzy, useFrame, pointerEvents, shadows, box, randomPointOnCircle } from '$lib'
+import { useTrzy, useFrame, pointerEvents, shadows, box, randomPointOnCircle, useBvhRaycast } from '$lib'
 import code from './snippet?raw'
 import { setup } from '../lib/setup'
 import Canvas from '../components/canvas.svelte'
 import Docs from '../components/docs.svelte'
 import Code from '../components/code.svelte'
 
+
 onMount(() => {
   const { scene, camera, renderer } = useTrzy()
 
+  const disposeBvh = useBvhRaycast({ firstHitOnly: true })
   const { dispose } = pointerEvents({ target: renderer.domElement, camera: camera.current })
 
   setup()
@@ -34,6 +36,7 @@ onMount(() => {
     })
     mesh.addEventListener('pointerleave', () => material.color.set('yellow'))
     mesh.addEventListener('click', () => (material.color.set('blue')))
+    mesh.geometry.computeBoundsTree()
 
     return mesh
   })
@@ -52,6 +55,8 @@ onMount(() => {
   return () => {
     stop()
     dispose()
+    cubes.forEach((mesh) => mesh.geometry.disposeBoundsTree())
+    disposeBvh()
   }
 })
 
