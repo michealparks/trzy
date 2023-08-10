@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "A utility library for Three.js",
   "type": "module",
   "author": "Micheal Parks",
@@ -42,7 +42,8 @@
     "three": "*"
   },
   "dependencies": {
-    "simplex-noise": "^4.0.1"
+    "simplex-noise": "^4.0.1",
+    "three-mesh-bvh": "^0.6.3"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^2.0.3",
@@ -64,7 +65,7 @@
     "tailwindcss": "^3.3.3",
     "three": "^0.155.0",
     "three-inspect": "^0.3.4",
-    "three-mesh-bvh": "^0.6.3",
+    
     "tslib": "^2.6.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
