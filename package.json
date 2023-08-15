@@ -35,9 +35,7 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
   "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    }
+    ".": "./dist/index.js"
   },
   "peerDependencies": {
     "three": "*"
@@ -66,7 +64,6 @@
     "tailwindcss": "^3.3.3",
     "three": "^0.155.0",
     "three-inspect": "^0.3.4",
-    
     "tslib": "^2.6.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
