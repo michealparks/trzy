@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "A utility library for Three.js",
   "type": "module",
   "author": "Micheal Parks",
@@ -33,6 +33,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "import": "./dist/index.js"
