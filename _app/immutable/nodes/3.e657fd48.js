@@ -1,4 +1,4 @@
-import{s as C,o as w,n as v}from"../chunks/scheduler.b0c1c2c3.js";import{S as H,i as A,r as i,u as $,v as u,d as _,t as d,w as g,g as y,s as h,h as E,z,c as x,a as c,f}from"../chunks/index.f44ac6f0.js";import{s as D,u as S,A as T,C as b}from"../chunks/setup.ed225109.js";import{D as k,C as P}from"../chunks/code.98339067.js";const R=`
+import{s as C,o as w,n as v}from"../chunks/scheduler.b0c1c2c3.js";import{S as H,i as A,r as i,u as $,v as u,d as _,t as d,w as g,g as y,s as h,h as E,z,c as x,a as c,f}from"../chunks/index.f44ac6f0.js";import{s as D,u as S,A as T,C as b}from"../chunks/setup.ed225109.js";import{D as k,C as P}from"../chunks/code.b2d98291.js";const R=`
 import * as THREE from 'three'
 import { AxesHelper } from 'trzy'
 
