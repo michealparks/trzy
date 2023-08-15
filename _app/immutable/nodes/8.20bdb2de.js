@@ -1,4 +1,4 @@
-import{s as O,n as W}from"../chunks/scheduler.b0c1c2c3.js";import{S as D,i as H,r as _,u as h,v as C,d as x,t as g,w as P,g as y,s as u,h as S,z,c as d,a as l,f as c}from"../chunks/index.f44ac6f0.js";import{D as b,C as w}from"../chunks/code.b2d98291.js";function q($){let e,r="Circle",n,o,s,a,v="Sphere",f,i,p;return o=new w({props:{code:`
+import{s as O,n as W}from"../chunks/scheduler.b0c1c2c3.js";import{S as D,i as H,r as _,u as h,v as C,d as x,t as g,w as P,g as y,s as u,h as S,z,c as d,a as l,f as c}from"../chunks/index.f44ac6f0.js";import{D as b,C as w}from"../chunks/code.d409985a.js";function q($){let e,r="Circle",n,o,s,a,v="Sphere",f,i,p;return o=new w({props:{code:`
 import { randomPointOnCircle, randomPointWithinCircle } from 'trzy'
 
 const [x1, y1] = randomPointOnCircle()
