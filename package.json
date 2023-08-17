@@ -1,6 +1,6 @@
 {
   "name": "trzy",
-  "version": "0.3.12",
+  "version": "0.3.13",
   "description": "A utility library for Three.js",
   "type": "module",
   "author": "Micheal Parks",
@@ -35,7 +35,8 @@
   "types": "./dist/index.d.ts",
   "module": "./dist/index.js",
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   },
   "peerDependencies": {
     "three": "*"
